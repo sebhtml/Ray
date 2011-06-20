@@ -26,10 +26,16 @@
 using namespace std;
 
 class ColorSpaceDecoder{
-	int m_colors[16];
-public:
-	string decode(char*x);
+  static const char csBases[5];
+  static const char csValues[5];
+  static const char csMap[25];
+ public:
+  // could be condensed into a char[5], but a 5x5 array is easier to understand
 	ColorSpaceDecoder();
+  int csChrToInt(char tChr);
+	string decode(string x);
+	string encode(string x);
+  bool check();
 };
 
 #endif
