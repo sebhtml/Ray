@@ -1,6 +1,8 @@
 For color space:
 
 * For sequencing reads, the starting nucleotide and first color are removed and the remaining colors are 'double-encoded'.
+ - this doesn't make sense -- why remove information [particularly given Ray doesn't use quality values]
+ - ... and double-encoding is *really* confusing
 
 * The reverse-complement of a vertex is just its reverse.
 

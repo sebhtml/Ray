@@ -14,6 +14,7 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
 * Added a progression indicator for scaffolding.
 * Writting scaffold sequences is now faster.
 * Colour space conversion now a bit more robust (accepts ./N/?), implemented cs encode (base->colour).
+ - decode propogated down to colour space loader
 
 = 1.6.0 =
 2011-06-13

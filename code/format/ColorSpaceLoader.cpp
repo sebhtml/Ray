@@ -24,7 +24,7 @@
 #include<fstream>
 #include<core/common_functions.h>
 #include<iostream>
-#include<string.h>
+#include<string>
 using namespace std;
 
 #define _ENCODING_CHAR_A '0'
@@ -37,14 +37,14 @@ int ColorSpaceLoader::open(string file){
 	m_size=0;
 	m_loaded=0;
 
-	char bufferForLine[1024];
+	string bufferForLine;
 	while(!m_f.eof()){
-		m_f.getline(bufferForLine,1024);
-		if(bufferForLine[0]=='#'){
+		getline(m_f,bufferForLine);
+		if(bufferForLine.at(0) == '#'){
 			continue;// skip csfasta comment
 		}
-		if(bufferForLine[0]=='>'){
-			m_f.getline(bufferForLine,1024);
+		if(bufferForLine.at(0) == '>'){
+			getline(m_f,bufferForLine);
 			m_size++;
 		}
 	}
@@ -55,29 +55,19 @@ int ColorSpaceLoader::open(string file){
 }
 
 void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator){
-	char bufferForLine[1024];
-	int loadedSequences=0;
-	while(m_loaded<m_size&& loadedSequences<maxToLoad){
-		m_f.getline(bufferForLine,1024);
-		if(bufferForLine[0]=='#'){
+	string bufferForLine;
+	int loadedSequences = 0;
+	while((m_loaded < m_size) && (loadedSequences < maxToLoad)){
+		getline(m_f, bufferForLine);
+		if(bufferForLine.at(0) == '#'){
 			continue;// skip csfasta comment
 		}
 		// read two lines
-		if(bufferForLine[0]=='>'){
-			m_f.getline(bufferForLine,1024);
-			for(int j=0;j<(int)strlen(bufferForLine);j++){
-				if(bufferForLine[j]==_ENCODING_CHAR_A){
-					bufferForLine[j]='A';
-				}else if(bufferForLine[j]==_ENCODING_CHAR_T){
-					bufferForLine[j]='T';
-				}else if(bufferForLine[j]==_ENCODING_CHAR_C){
-					bufferForLine[j]='C';
-				}else if(bufferForLine[j]==_ENCODING_CHAR_G){
-					bufferForLine[j]='G';
-				}
-			}
+		if(bufferForLine.at(0) == '>'){
+			getline(m_f, bufferForLine);
+			string decodedLine = m_decoder.decode(bufferForLine);
 			Read t;
-			t.constructor(bufferForLine+2,seqMyAllocator,true);// remove the leading T & first color
+			t.constructor(decodedLine.c_str(),seqMyAllocator,true);
 			reads->push_back(&t);
 			loadedSequences++;
 			m_loaded++;
