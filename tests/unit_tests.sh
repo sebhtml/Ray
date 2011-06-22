@@ -23,5 +23,5 @@ g++ $CODE/memory/malloc_types.cpp  $CODE/structures/Vertex.cpp test_kmer.cpp $CO
 ./a.out \
 TGAAATGGAAATGGTCTGGGAAAAACAACTAAAAGATATTAT
 
-g++ $CODE/format/ColorSpaceDecoder.cpp test_cscodec.cpp -I$CODE -I. 
+g++ $CODE/format/ColorSpaceDecoder.cpp test_cscodec.cpp -I$CODE -I..
 ./a.out
