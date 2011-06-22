@@ -31,12 +31,17 @@
 /* Note: by default, this will not trim off the first base + first colour space read */
 
 /* Declare constant array values */
-const char ColorSpaceDecoder::csBases[5] = {'A','C','G','T','N'};
-const char ColorSpaceDecoder::csValues[5] = {'0','1','2','3','4'};
+const char ColorSpaceDecoder::bsBases[5] = {'A','C','G','T','N'};
+const char ColorSpaceDecoder::csColours[5] = {'0','1','2','3','4'};
 
 ColorSpaceDecoder::ColorSpaceDecoder(){
 }
 
+/*
+ * Convert colour-space character to a number. Anything other than [ACGT]
+ * (i.e. double encoded) or [0123] is not considered a valid colour-space
+ * character, so is converted to 4.
+ */
 int ColorSpaceDecoder::csChrToInt(char tChr){
 	switch(toupper(tChr)){
 	case 'A':
@@ -60,25 +65,49 @@ int ColorSpaceDecoder::csChrToInt(char tChr){
 }
 
 /*
- * decode color-space read, assuming it has a starting base.
+ * Convert base-space character to a number. Anything other than [ACGT] is not
+ * considered a valid base-space character, so is converted to 4.
+ */
+int ColorSpaceDecoder::bsChrToInt(char tChr){
+	switch(toupper(tChr)){
+	case 'A':
+		return(0);
+		break;
+	case 'C':
+		return(1);
+		break;
+	case 'G':
+		return(2);
+		break;
+	case 'T':
+		return(3);
+		break;
+	}
+	return(4);
+}
+
+
+
+/*
+ * decode color-space read into base-space, assuming it has a starting base.
  */
 string ColorSpaceDecoder::decode(string x){
 	if(x.length() == 0){
 		return "";
 	}
 	string output("");
-	// convert first base to A/C/G/T/N
-	output += csBases[csChrToInt(x.at(0))];
+	// transfer first base directly to output
+	output += toupper(x.at(0));
 	for(unsigned int pos = 1; pos < x.length(); pos++){
-		// get next bases, first from output, second from input
-		int mapX = csChrToInt(output.at(pos-1));
+		// get next bases, first (base) from output, second (colour) from input
+		int mapX = bsChrToInt(output.at(pos-1));
 		int mapY = csChrToInt(x.at(pos));
 		if((mapX >= 4) || (mapY >= 4)){
 			output += 'N';
 		} else {
 			// convert dimer into colour space
 			// add 4 to avoid modulus becoming negative
-			output += csBases[((mapX - mapY) + 4) % 4];
+			output += bsBases[((mapX - mapY) + 4) % 4];
 		}
 	}
 	return(output);
@@ -91,7 +120,7 @@ string ColorSpaceDecoder::decode(string x){
  * i.e. <starting base><colour-space encoding><reverse complement starting base>
  *
  */
-string ColorSpaceDecoder::decodeRC(string csInputRC, bool reverseComplement){
+string ColorSpaceDecoder::decodeCSRCtoBS(string csInputRC, bool reverseComplement){
 	string basicCS("");
 	basicCS.reserve(csInputRC.length()); // reserve space for input
 	if(reverseComplement){
@@ -109,7 +138,7 @@ string ColorSpaceDecoder::decodeRC(string csInputRC, bool reverseComplement){
 }
 
 /*
- * Convert base-pair sequence to colour space, with a starting base.
+ * Encode base-space sequence to colour space, with a starting base.
  */
 string ColorSpaceDecoder::encode(string x){
 	if(x.length() == 0){
@@ -118,17 +147,18 @@ string ColorSpaceDecoder::encode(string x){
 	// convert to A/C/G/T/N
 	string output("");
 	output.reserve(x.length());
-	output += csBases[csChrToInt(x.at(0))];
+	// transfer first base directly to output
+	output += x.at(0);
 	for(int pos = 0; pos < (x.length()-1); pos++){
-		// get next colours, both from input
-		int mapX = csChrToInt(x.at(pos));
-		int mapY = csChrToInt(x.at(pos+1));
+		// get next colours, both (bases) from input
+		int mapX = bsChrToInt(x.at(pos));
+		int mapY = bsChrToInt(x.at(pos+1));
 		if((mapX >= 4) || (mapY >= 4)){
 			output += 'N';
 		} else {
 			// convert dimer from colour space
 			// add 4 to avoid modulus becoming negative
-			output += csValues[((mapX - mapY) + 4) % 4];
+			output += csColours[((mapX - mapY) + 4) % 4];
 		}
 	}
 	return(output);
@@ -137,7 +167,7 @@ string ColorSpaceDecoder::encode(string x){
 /*
  * Convert base-pair sequence to colour space, with a starting base and ending reverse-complement base.
  */
-string ColorSpaceDecoder::encodeRC(string bsInput){
+string ColorSpaceDecoder::encodeBStoCSRC(string bsInput){
 	string output = encode(bsInput);
 	output.reserve(bsInput.length()+1);
 	output += complementNucleotide(bsInput.at(bsInput.length()-1));
