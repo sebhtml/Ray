@@ -34,6 +34,7 @@ class ColorSpaceDecoder{
 	int bsChrToInt(char tChr);
 	string decode(string x);
 	string decodeCSRCtoBS(string csInputRC, bool reverseComplement);
+	string decodeCSRCtoBS(string csInputRC);
 	string encode(string x);
 	string encodeBStoCSRC(string bsInput);
   bool check();

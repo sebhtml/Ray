@@ -118,7 +118,6 @@ string ColorSpaceDecoder::decode(string x){
  * and a reverse-complement starting base. The assumed input format is as follows:
  * [ACGT][0-3]+[ACGT]
  * i.e. <starting base><colour-space encoding><reverse complement starting base>
- *
  */
 string ColorSpaceDecoder::decodeCSRCtoBS(string csInputRC, bool reverseComplement){
 	string basicCS("");
@@ -135,6 +134,16 @@ string ColorSpaceDecoder::decodeCSRCtoBS(string csInputRC, bool reverseComplemen
 		basicCS = csInputRC.substr(0,csInputRC.length()-1); // trim off RC start base
 	}
 	return(decode(basicCS));
+}
+
+/*
+ * decode color-space read (forward direction), assuming an sequence has a starting base,
+ * and a reverse-complement starting base. The assumed input format is as follows:
+ * [ACGT][0-3]+[ACGT]
+ * i.e. <starting base><colour-space encoding><reverse complement starting base>
+ */
+string ColorSpaceDecoder::decodeCSRCtoBS(string csInputRC){
+	return(decodeCSRCtoBS(csInputRC, false));
 }
 
 /*
@@ -181,18 +190,24 @@ bool ColorSpaceDecoder::check(){
 	string cConv1("TANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
 	string csSeq2("T32002333220000303130320033020032123301032223033002");
 	string cConv2("TAGGGACGTCTTTTTAACACCGAAACGGAAACTGACGGCCGAGACCGTTTC");
+	string csSeq3("T32002333220000303130320033020032123301032223033002G");
+	string cConv3F("TAGGGACGTCTTTTTAACACCGAAACGGAAACTGACGGCCGAGACCGTTTC");
+	string cConv3R("GAAACGGTCTCGGCCGTCAGTTTCCGTTTCGGTGTTAAAAAGACGTCCCTA");
+	cout << "1: checking basic decode (junk characters)... ";
 	if(cd.decode(csSeq1).compare(cConv1) != 0){
 		cout << "Decode failed:"
 				<< csSeq1 << endl << "->\n"
 				<< cd.decode(csSeq1) << endl
 				<< cConv1 << " expected";
-	}
+	} else { cout << "SUCCESS!\n"; }
+	cout << "2: checking basic decode (fully informative sequence)... ";
 	if(cd.decode(csSeq2).compare(cConv2) != 0){
 		cout << "Decode failed:"
 				<< csSeq2 << endl << "->\n"
 				<< cd.decode(csSeq2) << endl
 				<< cConv2 << " expected";
-	}
+	} else { cout << "SUCCESS!\n"; }
+	cout << "3: checking basic decode (inverse function actions)... ";
 	if(cd.encode(cd.decode(csSeq2)).compare(csSeq2) != 0){
 		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
 				<< "for fully informative input:"
@@ -200,8 +215,35 @@ bool ColorSpaceDecoder::check(){
 				<< cd.decode(csSeq2) << "->\n"
 				<< cd.encode(cd.decode(csSeq2)) << endl
 				<< csSeq2 << " expected";
-	}
+	} else { cout << "SUCCESS!\n"; }
+	cout << "4: checking CSRC decode (forward decode)... ";
+	if(cd.decodeCSRCtoBS(csSeq3).compare(cConv3F) != 0){
+		cout << "Forward decode (CSRC) failed:"
+				<< csSeq3 << endl << "->\n"
+				<< cd.decodeCSRCtoBS(csSeq3) << endl
+				<< cConv3F << " expected";
+	} else { cout << "SUCCESS!\n"; }
+	cout << "5: checking CSRC decode (reverse decode)... ";
+	if(cd.decodeCSRCtoBS(csSeq3,true).compare(cConv3R) != 0){
+		cout << "Reverse complement decode (CSRC) failed:"
+				<< csSeq3 << endl << "->\n"
+				<< cd.decodeCSRCtoBS(csSeq3,true) << endl
+				<< cConv3R << " expected";
+	} else { cout << "SUCCESS!\n"; }
+	cout << "6: checking CSRC decode (inverse function actions)... ";
+	if(cd.encodeBStoCSRC(cd.decodeCSRCtoBS(csSeq3)).compare(csSeq3) != 0){
+		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
+				<< "for fully informative CSRC input:"
+				<< csSeq3 << endl << "->\n"
+				<< cd.decodeCSRCtoBS(csSeq3) << "->\n"
+				<< cd.encodeBStoCSRC(cd.decodeCSRCtoBS(csSeq3)) << endl
+				<< csSeq3 << " expected";
+	} else { cout << "SUCCESS!\n"; }
 	return ((cd.decode(csSeq1).compare(cConv1) == 0) &&
 			(cd.decode(csSeq2).compare(cConv2) == 0) &&
-			(cd.encode(cd.decode(csSeq2)).compare(csSeq2) == 0));
+			(cd.encode(cd.decode(csSeq2)).compare(csSeq2) == 0) &&
+			(cd.decodeCSRCtoBS(csSeq3,false).compare(cConv3F) == 0) &&
+			(cd.decodeCSRCtoBS(csSeq3,true).compare(cConv3R) == 0) &&
+			(cd.encodeBStoCSRC(cd.decodeCSRCtoBS(csSeq3,false)).compare(csSeq3) == 0)
+			);
 }
