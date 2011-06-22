@@ -19,6 +19,7 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
 * Added an assembler panic when no k-mers are found in reads.
 * Colour space conversion now a bit more robust (accepts ./N/?), implemented cs encode (base->colour).
  - decode propogated down to colour space loader
+ - added reverse complement colour space encoding
 * Colour space loader automatically works out CSFASTQ/CSFASTA format
 * Added colour space decoder unit test
 = 1.6.0 =

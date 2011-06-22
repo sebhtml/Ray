@@ -21,13 +21,14 @@
 
 #include<string>
 #include<iostream>
+#include<core/common_functions.h>
 #include<format/ColorSpaceDecoder.h>
 
 /*
  * see http://www.ploscompbiol.org/article/slideshow.action?uri=info:doi/10.1371/journal.pcbi.1000386&imageURI=info:doi/10.1371/journal.pcbi.1000386.g002
  */
 
-/* This decoder is approximately equivalent to the python code from Galaxy library lib/galaxy_utils/sequence/transform.py */
+/* Note: by default, this will not trim off the first base + first colour space read */
 
 /* Declare constant array values */
 const char ColorSpaceDecoder::csBases[5] = {'A','C','G','T','N'};
@@ -59,7 +60,7 @@ int ColorSpaceDecoder::csChrToInt(char tChr){
 }
 
 /*
- * decode color-space read.
+ * decode color-space read, assuming it has a starting base.
  */
 string ColorSpaceDecoder::decode(string x){
 	if(x.length() == 0){
@@ -84,7 +85,31 @@ string ColorSpaceDecoder::decode(string x){
 }
 
 /*
- * Convert base-pair sequence to colour space.
+ * decode color-space read, assuming an sequence has a starting base,
+ * and a reverse-complement starting base. The assumed input format is as follows:
+ * [ACGT][0-3]+[ACGT]
+ * i.e. <starting base><colour-space encoding><reverse complement starting base>
+ *
+ */
+string ColorSpaceDecoder::decodeRC(string csInputRC, bool reverseComplement){
+	string basicCS("");
+	basicCS.reserve(csInputRC.length()); // reserve space for input
+	if(reverseComplement){
+		// reverse input string
+		for(string::reverse_iterator rit = csInputRC.rbegin();
+				rit < csInputRC.rend(); rit++){
+			basicCS+= *rit;
+		}
+		// trim off forward start base (which is at the end of the reversed string)
+		basicCS.erase(basicCS.length() - 1, 1);
+	} else {
+		basicCS = csInputRC.substr(0,csInputRC.length()-1); // trim off RC start base
+	}
+	return(decode(basicCS));
+}
+
+/*
+ * Convert base-pair sequence to colour space, with a starting base.
  */
 string ColorSpaceDecoder::encode(string x){
 	if(x.length() == 0){
@@ -92,6 +117,7 @@ string ColorSpaceDecoder::encode(string x){
 	}
 	// convert to A/C/G/T/N
 	string output("");
+	output.reserve(x.length());
 	output += csBases[csChrToInt(x.at(0))];
 	for(int pos = 0; pos < (x.length()-1); pos++){
 		// get next colours, both from input
@@ -107,6 +133,17 @@ string ColorSpaceDecoder::encode(string x){
 	}
 	return(output);
 }
+
+/*
+ * Convert base-pair sequence to colour space, with a starting base and ending reverse-complement base.
+ */
+string ColorSpaceDecoder::encodeRC(string bsInput){
+	string output = encode(bsInput);
+	output.reserve(bsInput.length()+1);
+	output += complementNucleotide(bsInput.at(bsInput.length()-1));
+	return(output);
+}
+
 
 bool ColorSpaceDecoder::check(){
 	ColorSpaceDecoder cd;
