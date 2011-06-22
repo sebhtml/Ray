@@ -220,7 +220,6 @@ void MessageProcessor::call_RAY_MPI_TAG_SET_WORD_SIZE(Message*message){
 	void*buffer=message->getBuffer();
 	uint64_t*incoming=(uint64_t*)buffer;
 	(*m_wordSize)=incoming[0];
-	(*m_colorSpaceMode)=incoming[1];
 	m_subgraph->setWordSize(*m_wordSize);
 }
 
@@ -375,7 +374,7 @@ void MessageProcessor::call_RAY_MPI_TAG_GET_VERTEX_EDGES_COMPACT(Message*message
 		Vertex*node=m_subgraph->find(&vertex);
 		#ifdef ASSERT
 		if(node==NULL){
-			cout<<__func__<<" does not exist: "<<idToWord(&vertex,*m_wordSize)<<endl;
+			cout<<__func__<<" does not exist: "<<idToWord(&vertex,*m_wordSize,m_parameters->getColorSpaceMode())<<endl;
 		}
 		assert(node!=NULL);
 		#endif
@@ -762,7 +761,7 @@ void MessageProcessor::call_RAY_MPI_TAG_OUT_EDGES_DATA(Message*message){
 
 		#ifdef ASSERT
 		if(node==NULL){
-			cout<<"Rank="<<rank<<" "<<__func__<<" "<<idToWord(&prefix,(*m_wordSize))<<" does not exist"<<endl;
+			cout<<"Rank="<<rank<<" "<<__func__<<" "<<idToWord(&prefix,(*m_wordSize),m_parameters->getColorSpaceMode())<<" does not exist"<<endl;
 		}
 		assert(node!=NULL);
 		#endif
@@ -922,7 +921,7 @@ void MessageProcessor::call_RAY_MPI_TAG_START_SEEDING(Message*message){
 
 	int size=0;
 	GridTableIterator seedingIterator;
-	seedingIterator.constructor(m_subgraph,*m_wordSize);
+	seedingIterator.constructor(m_subgraph,*m_wordSize,m_parameters);
 	while(seedingIterator.hasNext()){
 		size++;
 		Vertex*node=seedingIterator.next();
@@ -977,11 +976,11 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_VERTEX_COVERAGE(Message*message)
 		int bufferPosition=i;
 		vertex.unpack(incoming,&bufferPosition);
 
-		string kmerStr=idToWord(&vertex,m_parameters->getWordSize());
+		string kmerStr=idToWord(&vertex,m_parameters->getWordSize(),m_parameters->getColorSpaceMode());
 		Vertex*node=m_subgraph->find(&vertex);
 		#ifdef ASSERT
 		if(node==NULL){
-			cout<<"Rank="<<rank<<" "<<__func__<<" "<<idToWord(&vertex,(*m_wordSize))<<" does not exist"<<endl;
+			cout<<"Rank="<<rank<<" "<<__func__<<" "<<idToWord(&vertex,(*m_wordSize),m_parameters->getColorSpaceMode())<<" does not exist"<<endl;
 		}
 		assert(node!=NULL);
 		#endif
@@ -1230,7 +1229,7 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_VERTEX_INGOING_EDGES(Message*mes
 		Vertex*node=m_subgraph->find(&vertex);
 		#ifdef ASSERT
 		if(node==NULL){
-			cout<<"Rank="<<rank<<" "<<idToWord(&vertex,*m_wordSize)<<" does not exist."<<endl;
+			cout<<"Rank="<<rank<<" "<<idToWord(&vertex,*m_wordSize,m_parameters->getColorSpaceMode())<<" does not exist."<<endl;
 		}
 		assert(node!=NULL);
 		#endif 
@@ -1382,7 +1381,7 @@ void MessageProcessor::call_RAY_MPI_TAG_ASK_READ_VERTEX_AT_POSITION(Message*mess
 	int source=message->getSource();
 	uint64_t*incoming=(uint64_t*)buffer;
 	char strand=incoming[2];
-	Kmer vertex=(*m_myReads)[incoming[0]]->getVertex(incoming[1],(*m_wordSize),strand,(*m_colorSpaceMode));
+	Kmer vertex=(*m_myReads)[incoming[0]]->getVertex(incoming[1],(*m_wordSize),strand,m_parameters->getColorSpaceMode());
 	uint64_t*message2=(uint64_t*)m_outboxAllocator->allocate(1*sizeof(uint64_t));
 	int bufferPosition=0;
 	vertex.pack(message2,&bufferPosition);
@@ -1504,7 +1503,7 @@ void MessageProcessor::call_RAY_MPI_TAG_ASK_VERTEX_PATHS_SIZE(Message*message){
 
 	#ifdef ASSERT
 	if(node==NULL){
-		cout<<"Source="<<message->getSource()<<" Destination="<<rank<<" "<<idToWord(&vertex,*m_wordSize)<<" does not exist, aborting"<<endl;
+		cout<<"Source="<<message->getSource()<<" Destination="<<rank<<" "<<idToWord(&vertex,*m_wordSize,m_parameters->getColorSpaceMode())<<" does not exist, aborting"<<endl;
 		cout.flush();
 	}
 	assert(node!=NULL);
@@ -1795,7 +1794,7 @@ void MessageProcessor::call_RAY_MPI_TAG_CLEAR_DIRECTIONS(Message*message){
 
 	// clear graph
 	GridTableIterator iterator;
-	iterator.constructor(m_subgraph,*m_wordSize);
+	iterator.constructor(m_subgraph,*m_wordSize,m_parameters);
 	while(iterator.hasNext()){
 		iterator.next();
 		Kmer key=*(iterator.getKey());
@@ -1821,7 +1820,8 @@ void MessageProcessor::call_RAY_MPI_TAG_CLEAR_DIRECTIONS(Message*message){
 
 			vector<Kmer> rc;
 			for(int j=(m_ed->m_EXTENSION_contigs)[i].size()-1;j>=0;j--){
-				rc.push_back(complementVertex(&((m_ed->m_EXTENSION_contigs)[i][j]),*m_wordSize,(*m_colorSpaceMode)));
+				rc.push_back(complementVertex(&((m_ed->m_EXTENSION_contigs)[i][j]),*m_wordSize,
+					m_parameters->getColorSpaceMode()));
 			}
 			fusions.push_back(rc);
 		}
@@ -2064,7 +2064,7 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_READ_SEQUENCE_REPLY(Message*mess
 	Read tmp;
 	tmp.setRawSequence(sequence,length);
 	char buffer2[4000];
-	tmp.getSeq(buffer2);
+	tmp.getSeq(buffer2,m_parameters->getColorSpaceMode(),false);
 	seedExtender->m_receivedString=buffer2;
 	seedExtender->m_sequenceReceived=true;
 }
@@ -2134,7 +2134,6 @@ SequencesLoader*sequencesLoader,ExtensionData*ed,
 	vector<uint64_t>*m_identifiers,
 	bool*m_mode_sendDistribution,
 	bool*m_alive,
-	bool*m_colorSpaceMode,
 	int*m_mode,
 	vector<vector<uint64_t> >*m_allPaths,
 	int*m_last_value,
@@ -2189,7 +2188,6 @@ SequencesIndexer*m_si){
 	this->m_identifiers=m_identifiers;
 	this->m_mode_sendDistribution=m_mode_sendDistribution;
 	this->m_alive=m_alive;
-	this->m_colorSpaceMode=m_colorSpaceMode;
 	this->m_messagesHandler=m_messagesHandler;
 	this->m_mode=m_mode;
 	this->m_allPaths=m_allPaths;

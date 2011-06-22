@@ -19,27 +19,31 @@
 
 */
 
-#ifndef _GridTableIterator
-#define _GridTableIterator
+#ifndef _CoverageGatherer_H
+#define _CoverageGatherer_H
 
 #include <core/Parameters.h>
-#include <core/common_functions.h>
+#include <structures/StaticVector.h>
 #include <graph/GridTable.h>
+#include <stdint.h>
+#include <map>
+#include <memory/RingAllocator.h>
+using namespace std;
 
-class GridTableIterator{
-	GridTable*m_table;
-	bool m_lowerKeyIsDone;
-	Kmer m_currentKey;
-	int m_wordSize;
-	int m_currentBin;
-	int m_currentPosition;
-	void getNext();
+class CoverageGatherer{
+	map<int,uint64_t> m_distributionOfCoverage;
+	map<int,uint64_t>::iterator m_coverageIterator;
+	bool m_waiting;
 	Parameters*m_parameters;
+	StaticVector*m_inbox;
+	StaticVector*m_outbox;
+	int*m_slaveMode;
+	GridTable*m_subgraph;
+	RingAllocator*m_outboxAllocator;
 public:
-	void constructor(GridTable*a,int wordSize,Parameters*b);
-	bool hasNext();
-	Vertex*next();
-	Kmer*getKey();
+	void constructor(Parameters*parameters,StaticVector*inbox,StaticVector*outbox,int*slaveMode,
+		GridTable*subgraph,RingAllocator*outboxAllocator);
+	void work();
 };
 
 #endif

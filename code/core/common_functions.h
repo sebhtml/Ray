@@ -45,12 +45,12 @@ string reverseComplement(string a,char*rev);
 /*
  * transform a Kmer in a string
  */
-string idToWord(Kmer*i,int wordSize);
+string idToWord(Kmer*i,int wordSize,bool color);
 
 /*
  * transform a encoded nucleotide in a char
  */
-char codeToChar(uint8_t a);
+char codeToChar(uint8_t a,bool color);
 
 /*
  * Encode a char
@@ -65,7 +65,7 @@ bool isValidDNA(char*x);
 /*
  * get the last letter of a uint64_t
  */
-char getLastSymbol(Kmer*i,int w);
+char getLastSymbol(Kmer*i,int w,bool color);
 
 /*
  * complement a vertex, and return another one
@@ -81,7 +81,9 @@ Kmer complementVertex(Kmer*a,int wordSize,bool colorSpace){
 		uint64_t chunk=a->getU64(u64_id);
 		uint64_t j=(chunk<<(62-bitPositionInChunk))>>62;
 		
-		j=~j&mask;
+		if(!colorSpace) /* in color space, reverse complement is just reverse */
+			j=~j&mask;
+
 		int outputChunk=bitPositionInOutput/64;
 		uint64_t oldValue=output.getU64(outputChunk);
 		oldValue=(oldValue|(j<<(bitPositionInOutput%64)));
@@ -126,9 +128,9 @@ string addLineBreaks(string sequence,int a);
 uint8_t getFirstSegmentFirstCode(Kmer*v,int w);
 uint8_t getSecondSegmentLastCode(Kmer*v,int w);
 
-string convertToString(vector<Kmer>*b,int m_wordSize);
+string convertToString(vector<Kmer>*b,int m_wordSize,bool color);
 
-int vertexRank(Kmer*a,int _size,int w);
+int vertexRank(Kmer*a,int _size,int w,bool color);
 
 Kmer kmerAtPosition(char*string,int pos,int w,char strand,bool color);
 
@@ -143,8 +145,8 @@ vector<Kmer> _getIngoingEdges(Kmer*a,uint8_t edges,int k);
 
 char complementNucleotide(char c);
 
-uint64_t hash_function_1(Kmer*a,int w);
-uint64_t hash_function_2(Kmer*a,int w,Kmer*b);
+uint64_t hash_function_1(Kmer*a,int w,bool color);
+uint64_t hash_function_2(Kmer*a,int w,Kmer*b,bool color);
 
 uint8_t invertEdges(uint8_t a);
 

@@ -45,7 +45,7 @@ class Parameters{
 	bool m_profiler;
 	bool m_debugBubbles;
 	bool m_showMemoryAllocations;
-
+	bool m_writeKmers;
 	int m_reducerPeriod;
 	int m_maximumDistance;
 
@@ -93,6 +93,8 @@ class Parameters{
 	string getLibraryFile(int library);
 	void showOption(string a,string b);
 	void showOptionDescription(string a);
+	void fileNameHook(string f);
+
 public:
 	Parameters();
 	string getReceivedMessagesFile();
@@ -174,6 +176,7 @@ public:
 	int getLargeContigThreshold();
 	void setRepeatCoverage(int a);
 	bool showMemoryAllocations();
+	bool writeKmers();
 };
 
 #endif

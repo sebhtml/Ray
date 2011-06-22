@@ -29,7 +29,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 	bool*edgesRequested,bool*vertexCoverageRequested,bool*vertexCoverageReceived,
 	RingAllocator*outboxAllocator,int size,int theRank,StaticVector*outbox,
  int*receivedVertexCoverage,vector<Kmer>*receivedOutgoingEdges,
-		int minimumCoverage,bool*edgesReceived,int wordSize){
+		int minimumCoverage,bool*edgesReceived,int wordSize,Parameters*parameters){
 	if(!m_doChoice_tips_dfs_initiated){
 		m_depthFirstSearchVisitedVertices.clear();
 		m_depthFirstSearchVisitedVertices_vector.clear();
@@ -57,7 +57,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 		(*vertexCoverageRequested)=false;
 		#ifdef SHOW_MINI_GRAPH
 		cout<<"<MiniGraph>"<<endl;
-		cout<<idToWord(root,wordSize)<<" -> "<<idToWord(a,wordSize)<<endl;
+		cout<<idToWord(root,wordSize,parameters->getColorSpaceMode())<<" -> "<<idToWord(a,wordSize,parameters->getColorSpaceMode())<<endl;
 		#endif
 	}
 	if(m_depthFirstSearchVerticesToVisit.size()>0){
@@ -69,7 +69,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 			uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(KMER_U64_ARRAY_SIZE*sizeof(uint64_t));
 			int j=0;
 			vertexToVisit.pack(message,&j);
-			int dest=vertexRank(&vertexToVisit,size,wordSize);
+			int dest=parameters->_vertexRank(&vertexToVisit);
 			
 			Message aMessage(message,j,MPI_UNSIGNED_LONG_LONG,dest,RAY_MPI_TAG_REQUEST_VERTEX_COVERAGE,theRank);
 			(*outbox).push_back(aMessage);
@@ -87,7 +87,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 				uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(1*sizeof(uint64_t));
 				int bufferPosition=0;
 				vertexToVisit.pack(message,&bufferPosition);
-				int destination=vertexRank(&vertexToVisit,size,wordSize);
+				int destination=parameters->_vertexRank(&vertexToVisit);
 				Message aMessage(message,bufferPosition,MPI_UNSIGNED_LONG_LONG,destination,RAY_MPI_TAG_REQUEST_VERTEX_OUTGOING_EDGES,theRank);
 				(*outbox).push_back(aMessage);
 				(*edgesRequested)=true;
@@ -129,7 +129,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 
 
 					#ifdef SHOW_MINI_GRAPH
-					cout<<idToWord(vertexToVisit,wordSize)<<" -> "<<idToWord(nextVertex,wordSize)<<endl;
+					cout<<idToWord(vertexToVisit,wordSize,parameters->getColorSpaceMode())<<" -> "<<idToWord(nextVertex,wordSize,parameters->getColorSpaceMode())<<endl;
 					#endif
 				}
 				(*edgesRequested)=false;
@@ -194,7 +194,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 			uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(KMER_U64_ARRAY_SIZE*sizeof(uint64_t));
 			int bufferPosition=0;
 			vertexToVisit.pack(message,&bufferPosition);
-			int dest=vertexRank(&vertexToVisit,size,parameters->getWordSize());
+			int dest=parameters->_vertexRank(&vertexToVisit);
 			Message aMessage(message,bufferPosition,MPI_UNSIGNED_LONG_LONG,dest,RAY_MPI_TAG_REQUEST_VERTEX_COVERAGE,theRank);
 			(*outbox).push_back(aMessage);
 		}else if((*vertexCoverageReceived)){
@@ -203,7 +203,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 
 				#ifdef ASSERT
 				if(m_depthFirstSearchVisitedVertices.count(vertexToVisit)>0){
-					cout<<"Already visited: "<<idToWord(&vertexToVisit,wordSize)<<" root is "<<idToWord(&a,wordSize)<<endl;
+					cout<<"Already visited: "<<idToWord(&vertexToVisit,wordSize,parameters->getColorSpaceMode())<<" root is "<<idToWord(&a,wordSize,parameters->getColorSpaceMode())<<endl;
 				}
 				assert(m_depthFirstSearchVisitedVertices.count(vertexToVisit)==0);
 				assert(*receivedVertexCoverage>0);
@@ -232,7 +232,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 				uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(1*sizeof(uint64_t));
 				int bufferPosition=0;
 				vertexToVisit.pack(message,&bufferPosition);
-				int destination=vertexRank(&vertexToVisit,size,parameters->getWordSize());
+				int destination=parameters->_vertexRank(&vertexToVisit);
 				Message aMessage(message,bufferPosition,MPI_UNSIGNED_LONG_LONG,destination,RAY_MPI_TAG_REQUEST_VERTEX_EDGES,theRank);
 
 				(*outbox).push_back(aMessage);
@@ -284,7 +284,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 
 				#ifdef ASSERT
 				if(m_outgoingEdges.count(vertexToVisit)>0){
-					cout<<idToWord(&vertexToVisit,wordSize)<<" is already in the data structure "<<m_outgoingEdges[vertexToVisit].size()<<" v. "<<outgoingEdges.size()<<endl;
+					cout<<idToWord(&vertexToVisit,wordSize,parameters->getColorSpaceMode())<<" is already in the data structure "<<m_outgoingEdges[vertexToVisit].size()<<" v. "<<outgoingEdges.size()<<endl;
 				}
 				assert(m_outgoingEdges.count(vertexToVisit)==0);
 				#endif

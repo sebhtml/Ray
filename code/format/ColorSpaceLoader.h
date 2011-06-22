@@ -27,6 +27,7 @@
 #include <structures/ArrayOfReads.h>
 #include <fstream>
 #include <memory/MyAllocator.h>
+#include <stdio.h>
 #include <format/ColorSpaceDecoder.h>
 #include <structures/Read.h>
 #include <memory/OnDiskAllocator.h>
@@ -35,7 +36,7 @@ using namespace std;
 class ColorSpaceLoader{
 	enum FileType {UNKNOWN, FASTA, FASTQ, INVALID};
 	ColorSpaceDecoder m_decoder;
-	ifstream m_f;
+	FILE*m_f;
 	int m_size;
 	int m_loaded;
 	FileType m_ft;

@@ -13,6 +13,9 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
 * Fixed a communication problem for k>32.
 * Added a progression indicator for scaffolding.
 * Writting scaffold sequences is now faster.
+* New option: -write-kmers writes k-mers
+* New experimental option: -color-space for .csfasta files.
+* Added an assembler panic when no k-mers are found in reads.
 * Colour space conversion now a bit more robust (accepts ./N/?), implemented cs encode (base->colour).
  - decode propogated down to colour space loader
 * Colour space loader automatically works out CSFASTQ/CSFASTA format

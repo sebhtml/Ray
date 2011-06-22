@@ -51,6 +51,7 @@ Parameters::Parameters(){
 	m_debugSeeds=false;
 	m_showMemoryUsage=false;
 	m_showEndingContext=false;
+	m_writeKmers=false;
 }
 
 bool Parameters::showEndingContext(){
@@ -128,6 +129,8 @@ void Parameters::parseCommands(){
 	set<string> interleavedCommands;
 	interleavedCommands.insert("-i");
 
+	set<string> colorSpaceMode;
+	colorSpaceMode.insert("-color-space");
 	set<string> outputAmosCommands;
 	outputAmosCommands.insert("-a");
 	outputAmosCommands.insert("-amos");
@@ -174,6 +177,9 @@ void Parameters::parseCommands(){
 	showContext.insert("-show-ending-context");
 	showContext.insert("--show-ending-context");
 
+	set<string> writeKmers;
+	writeKmers.insert("-write-kmers");
+
 	vector<set<string> > toAdd;
 	toAdd.push_back(singleReadsCommands);
 	toAdd.push_back(pairedReadsCommands);
@@ -189,6 +195,8 @@ void Parameters::parseCommands(){
 	toAdd.push_back(runProfiler);
 	toAdd.push_back(showContext);
 	toAdd.push_back(showMalloc);
+	toAdd.push_back(writeKmers);
+	toAdd.push_back(colorSpaceMode);
 
 	for(int i=0;i<(int)toAdd.size();i++){
 		for(set<string>::iterator j=toAdd[i].begin();j!=toAdd[i].end();j++){
@@ -215,9 +223,9 @@ void Parameters::parseCommands(){
 			}
 			token=m_commands[i];
 			m_singleEndReadsFile.push_back(token);
-			if(token.find(".csfasta")!=string::npos){
-				m_colorSpaceMode=true;
-			}
+
+			fileNameHook(token);
+
 			if(m_rank==MASTER_RANK){
 				cout<<endl;
 				cout<<"-s (single sequences)"<<endl;
@@ -273,14 +281,13 @@ void Parameters::parseCommands(){
 			}
 			i++;
 			token=m_commands[i];
-			if(token.find(".csfasta")!=string::npos){
-				m_colorSpaceMode=true;
-			}
 
 			string interleavedFile=token;
 			int interleavedFileIndex=m_singleEndReadsFile.size();
 			m_interleavedFiles.insert(interleavedFileIndex);
 			m_singleEndReadsFile.push_back(interleavedFile);
+
+			fileNameHook(interleavedFile);
 
 			int meanFragmentLength=0;
 			int standardDeviation=0;
@@ -352,9 +359,6 @@ void Parameters::parseCommands(){
 			}
 			i++;
 			token=m_commands[i];
-			if(token.find(".csfasta")!=string::npos){
-				m_colorSpaceMode=true;
-			}
 			string left=token;
 			// add left file
 			int leftFile=m_singleEndReadsFile.size();
@@ -369,6 +373,8 @@ void Parameters::parseCommands(){
 			m_rightFiles.insert(rightFile);
 			m_singleEndReadsFile.push_back(right);
 
+			fileNameHook(left);
+			fileNameHook(right);
 
 			int meanFragmentLength=0;
 			int standardDeviation=0;
@@ -472,12 +478,16 @@ void Parameters::parseCommands(){
 			}
 			if(m_rank==MASTER_RANK){
 				cout<<endl;
-				cout<<endl;
-				cout<<endl;
 				cout<<"-k (to set the k-mer size)"<<endl;
 				cout<<" Value: "<<m_wordSize<<endl;
 				cout<<endl;
+			}
+		}else if(writeKmers.count(token)>0){
+			m_writeKmers=true;
+			if(m_rank==MASTER_RANK){
 				cout<<endl;
+				cout<<"Ray will write k-mers ("<<token<<")"<<endl;
+
 			}
 		}else if(runProfiler.count(token)>0){
 			m_profiler=true;
@@ -488,6 +498,13 @@ void Parameters::parseCommands(){
 			m_debugBubbles=true;
 			if(m_rank==MASTER_RANK){
 				printf("Enabling bubble debug mode.\n");
+			}
+		}else if(colorSpaceMode.count(token)>0){
+			m_colorSpaceMode=true;
+			if(m_rank==MASTER_RANK){
+				cout<<endl;
+				cout<<"Enabling color-space mode"<<endl;
+				cout<<"All reads should be in color space."<<endl;
 			}
 		}else if(debugSeeds.count(token)>0){
 			m_debugSeeds=true;
@@ -874,31 +891,50 @@ void Parameters::showUsage(){
 	cout<<basicSpaces<<"mpirun -np NUMBER_OF_RANKS Ray -p l1_1.fastq l1_2.fastq -p l2_1.fastq l2_2.fastq"<<endl;
 	cout<<endl;
 	cout<<"DESCRIPTION:"<<endl;
-	showOption("-s sequenceFile","Provides a file containing single-end reads.");
+	showOption("-k kmerLength","Selects the length of k-mers. The default value is 21. ");
+	showOptionDescription("It must be odd because reverse-complement vertices are stored together.");
+	showOptionDescription("The maximum length is defined at compilation by MAXKMERLENGTH");
+	showOptionDescription("Larger k-mers utilise more memory.");
 	cout<<endl;
+
 	showOption("-p leftSequenceFile rightSequenceFile [averageOuterDistance standardDeviation]","Provides two files containing paired-end reads.");
 	showOptionDescription("averageOuterDistance and standardDeviation are automatically computed if not provided.");
 	cout<<endl;
 	showOption("-i interleavedSequenceFile [averageOuterDistance standardDeviation]","Provides one file containing interleaved paired-end reads.");
+
 	showOptionDescription("averageOuterDistance and standardDeviation are automatically computed if not provided.");
+	cout<<endl;
+
+	showOption("-s sequenceFile","Provides a file containing single-end reads.");
 	cout<<endl;
 	showOption("-o outputPrefix","Specifies the prefix for outputted files.");
 	cout<<endl;
-	showOption("-amos","Requests the AMOS file.");
+	showOption("-amos","Writes the AMOS file called PREFIX.AMOS.afg");
+	showOptionDescription("An AMOS file contains read positions on contigs.");
+	showOptionDescription("Can be opened with software with graphical user interface.");
 	cout<<endl;
-	showOption("-k kmerLength","Selects the length of k-mers. The default value is 21. It most be odd because reverse-complement vertices are stored together.");
+	showOption("-write-kmers","Writes k-mer graph to PREFIX.kmers.txt");
+	showOptionDescription("The resulting file is not utilised by Ray.");
+	showOptionDescription("The resulting file is very large.");
 	cout<<endl;
-	#ifdef HAVE_CLOCK_GETTIME
-	showOption("-run-profiler","Runs the profiler as the code runs. Needs real-time Linux.");
+	showOption("-run-profiler","Runs the profiler as the code runs. Needs a real-time POSIX system.");
+	showOptionDescription("Needs HAVE_CLOCK_GETTIME=y at compilation");
+	showOptionDescription("Running the profiler increases running times.");
 	cout<<endl;
-	#endif
+	showOption("-color-space","Runs in color-space");
+	showOptionDescription("Needs csfasta files");
+	cout<<endl;
 	showOption("-debug-bubbles","Debugs bubble code.");
+	showOptionDescription("Bubbles can be due to heterozygous sites or sequencing errors or other (unknown) events");
 	cout<<endl;
 	showOption("-debug-seeds","Debugs seed code.");
+	showOptionDescription("Seeds are paths in the graph that are likely unique.");
 	cout<<endl;
 	showOption("-show-memory-usage","Shows memory usage. Data is fetched from /proc on GNU/Linux");
+	showOptionDescription("Needs __linux__; Lines with string 'VmData' are outputted");
 	cout<<endl;
-	showOption("-show-ending-context","Shows the ending context of each extension.\n");
+	showOption("-show-ending-context","Shows the ending context of each extension.");
+	showOptionDescription("Shows the children of the vertex where extension was too difficult.");
 	cout<<endl;
 	showOption("-show-memory-allocations","Shows memory allocation events");
 	cout<<endl;
@@ -908,20 +944,13 @@ void Parameters::showUsage(){
 	cout<<"FILES"<<endl;
 
 	cout<<"     .fasta"<<endl;
-	#ifdef HAVE_LIBZ
-	cout<<"     .fasta.gz"<<endl;
-	#endif
-	#ifdef HAVE_LIBBZ2
-	cout<<"     .fasta.bz2"<<endl;
-	#endif
+	cout<<"     .fasta.gz (needs HAVE_LIBZ=y at compilation)"<<endl;
+	cout<<"     .fasta.bz2 (needs HAVE_LIBBZ2=y at compilation)"<<endl;
 	cout<<"     .fastq"<<endl;
-	#ifdef HAVE_LIBZ
-	cout<<"     .fastq.gz"<<endl;
-	#endif
-	#ifdef HAVE_LIBBZ2
-	cout<<"     .fastq.bz2"<<endl;
-	#endif
+	cout<<"     .fastq.gz (needs HAVE_LIBZ=y at compilation)"<<endl;
+	cout<<"     .fastq.bz2 (needs HAVE_LIBBZ2=y at compilation)"<<endl;
 	cout<<"     .sff (paired reads must be extracted manually)"<<endl;
+	cout<<"     .csfasta (color-space reads)"<<endl;
 
 	cout<<endl;
 	cout<<"     Note: file format is determined with file extension."<<endl;
@@ -1015,7 +1044,7 @@ bool Parameters::hasPairedReads(){
 }
 
 int Parameters::_vertexRank(Kmer*a){
-	return vertexRank(a,m_size,m_wordSize);
+	return vertexRank(a,m_size,m_wordSize,m_colorSpaceMode);
 }
 int Parameters::getSlaveMode(){
 	return *m_slaveMode;
@@ -1057,4 +1086,19 @@ int Parameters::getLargeContigThreshold(){
 
 bool Parameters::showMemoryAllocations(){
 	return m_showMemoryAllocations;
+}
+
+bool Parameters::writeKmers(){
+	return m_writeKmers;
+}
+
+void Parameters::fileNameHook(string fileName){
+	if(fileName.find(".csfasta")!=string::npos){
+		if(!m_colorSpaceMode&&m_rank==MASTER_RANK){
+			cout<<endl;
+			cout<<"Enabling color-space mode"<<endl;
+			cout<<"All reads should be in color space."<<endl;
+		}
+		m_colorSpaceMode=true;
+	}
 }
