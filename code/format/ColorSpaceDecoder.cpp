@@ -114,12 +114,27 @@ bool ColorSpaceDecoder::check(){
 	string cConv1("TANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
 	string csSeq2("T32002333220000303130320033020032123301032223033002");
 	string cConv2("TAGGGACGTCTTTTTAACACCGAAACGGAAACTGACGGCCGAGACCGTTTC");
+	if(cd.decode(csSeq1).compare(cConv1) != 0){
+		cout << "Decode failed:"
+				<< csSeq1 << endl << "->\n"
+				<< cd.decode(csSeq1) << endl
+				<< cConv1 << " expected";
+	}
+	if(cd.decode(csSeq2).compare(cConv2) != 0){
+		cout << "Decode failed:"
+				<< csSeq2 << endl << "->\n"
+				<< cd.decode(csSeq2) << endl
+				<< cConv2 << " expected";
+	}
+	if(cd.encode(cd.decode(csSeq2)).compare(csSeq2) != 0){
+		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
+				<< "for fully informative input:"
+				<< csSeq2 << endl << "->\n"
+				<< cd.decode(csSeq2) << "->\n"
+				<< cd.encode(cd.decode(csSeq2)) << endl
+				<< csSeq2 << " expected";
+	}
 	return ((cd.decode(csSeq1).compare(cConv1) == 0) &&
 			(cd.decode(csSeq2).compare(cConv2) == 0) &&
 			(cd.encode(cd.decode(csSeq2)).compare(csSeq2) == 0));
 }
-
-// int main(){
-//   ColorSpaceDecoder cd;
-//   cout << "The result of the check is " << (cd.check()?"true":"false") << endl;
-// }
