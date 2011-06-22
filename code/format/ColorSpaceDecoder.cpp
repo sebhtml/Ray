@@ -106,8 +106,12 @@ string ColorSpaceDecoder::decode(string x){
 			output += 'N';
 		} else {
 			// convert dimer into colour space
-			// add 4 to avoid modulus becoming negative
-			output += bsBases[((mapX - mapY) + 4) % 4];
+			if(mapX % 2 == 0){
+				output += bsBases[(mapX + mapY) % 4];
+			} else {
+				// add 4 to avoid modulus becoming negative
+				output += bsBases[((mapX - mapY) + 4) % 4];
+			}
 		}
 	}
 	return(output);
@@ -166,8 +170,12 @@ string ColorSpaceDecoder::encode(string x){
 			output += 'N';
 		} else {
 			// convert dimer from colour space
-			// add 4 to avoid modulus becoming negative
-			output += csColours[((mapX - mapY) + 4) % 4];
+			if(mapX % 2 == 0){
+				output += csColours[(mapX + mapY) % 4];
+			} else {
+				// add 4 to avoid modulus becoming negative
+				output += csColours[((mapX - mapY) + 4) % 4];
+			}
 		}
 	}
 	return(output);
@@ -189,55 +197,55 @@ bool ColorSpaceDecoder::check(){
 	string csSeq1("T3.020000223213003122002213101232303020002301033000");
 	string cConv1("TANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
 	string csSeq2("T32002333220000303130320033020032123301032223033002");
-	string cConv2("TAGGGACGTCTTTTTAACACCGAAACGGAAACTGACGGCCGAGACCGTTTC");
+	string cConv2("TAGGGATATCTTTTTAATGCCGAAATAAGGGCTGATAACCGAGATTATTTC");
 	string csSeq3("T32002333220000303130320033020032123301032223033002G");
-	string cConv3F("TAGGGACGTCTTTTTAACACCGAAACGGAAACTGACGGCCGAGACCGTTTC");
-	string cConv3R("GAAACGGTCTCGGCCGTCAGTTTCCGTTTCGGTGTTAAAAAGACGTCCCTA");
+	string cConv3F("TAGGGATATCTTTTTAATGCCGAAATAAGGGCTGATAACCGAGATTATTTC");
+	string cConv3R("GAAATAATCTCGGTTATCAGCCCTTATTTCGGCATTAAAAAGATATCCCTA");
 	cout << "1: checking basic decode (junk characters)... ";
 	if(cd.decode(csSeq1).compare(cConv1) != 0){
-		cout << "Decode failed:"
+		cout << "Decode failed:\n"
 				<< csSeq1 << endl << "->\n"
 				<< cd.decode(csSeq1) << endl
-				<< cConv1 << " expected";
+				<< cConv1 << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	cout << "2: checking basic decode (fully informative sequence)... ";
 	if(cd.decode(csSeq2).compare(cConv2) != 0){
-		cout << "Decode failed:"
+		cout << "Decode failed:\n"
 				<< csSeq2 << endl << "->\n"
 				<< cd.decode(csSeq2) << endl
-				<< cConv2 << " expected";
+				<< cConv2 << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	cout << "3: checking basic decode (inverse function actions)... ";
 	if(cd.encode(cd.decode(csSeq2)).compare(csSeq2) != 0){
 		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
-				<< "for fully informative input:"
+				<< "for fully informative input:\n"
 				<< csSeq2 << endl << "->\n"
 				<< cd.decode(csSeq2) << "->\n"
 				<< cd.encode(cd.decode(csSeq2)) << endl
-				<< csSeq2 << " expected";
+				<< csSeq2 << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	cout << "4: checking CSRC decode (forward decode)... ";
 	if(cd.decodeCSRCtoBS(csSeq3).compare(cConv3F) != 0){
-		cout << "Forward decode (CSRC) failed:"
+		cout << "Forward decode (CSRC) failed:\n"
 				<< csSeq3 << endl << "->\n"
 				<< cd.decodeCSRCtoBS(csSeq3) << endl
-				<< cConv3F << " expected";
+				<< cConv3F << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	cout << "5: checking CSRC decode (reverse decode)... ";
 	if(cd.decodeCSRCtoBS(csSeq3,true).compare(cConv3R) != 0){
-		cout << "Reverse complement decode (CSRC) failed:"
+		cout << "Reverse complement decode (CSRC) failed:\n"
 				<< csSeq3 << endl << "->\n"
 				<< cd.decodeCSRCtoBS(csSeq3,true) << endl
-				<< cConv3R << " expected";
+				<< cConv3R << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	cout << "6: checking CSRC decode (inverse function actions)... ";
 	if(cd.encodeBStoCSRC(cd.decodeCSRCtoBS(csSeq3)).compare(csSeq3) != 0){
 		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
-				<< "for fully informative CSRC input:"
+				<< "for fully informative CSRC input:\n"
 				<< csSeq3 << endl << "->\n"
 				<< cd.decodeCSRCtoBS(csSeq3) << "->\n"
 				<< cd.encodeBStoCSRC(cd.decodeCSRCtoBS(csSeq3)) << endl
-				<< csSeq3 << " expected";
+				<< csSeq3 << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
 	return ((cd.decode(csSeq1).compare(cConv1) == 0) &&
 			(cd.decode(csSeq2).compare(cConv2) == 0) &&
