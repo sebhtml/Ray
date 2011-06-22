@@ -76,6 +76,8 @@ int ColorSpaceLoader::open(string file){
 
 void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator){
 	string bufferForLine;
+	string sequence("");
+	string id("");
 	int loadedSequences = 0;
 	int lineMod4 = 0;
 	bool doneComments = false; // needed as # can appear at start of fastq quality string
@@ -94,14 +96,18 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 		if(m_ft == FASTA){
 			// read two lines
 			if(bufferForLine.at(0) == '>'){
-				//TODO check for multi-line fasta format
-				getline(m_f, bufferForLine);
-				string decodedLine = m_decoder.decode(bufferForLine);
-				Read t;
-				t.constructor(decodedLine.c_str(),seqMyAllocator,true);
-				reads->push_back(&t);
-				loadedSequences++;
-				m_loaded++;
+				if(id.compare("") != 0){
+					// a previous sequence has been read in
+					Read t;
+					t.constructor(sequence.c_str(),seqMyAllocator,true);
+					reads->push_back(&t);
+					loadedSequences++;
+					m_loaded++;
+				}
+				id = bufferForLine;
+				sequence.assign("");
+			} else {
+				sequence += m_decoder.decode(bufferForLine);
 			}
 		} else if(m_ft == FASTQ){
 			if(lineMod4 == 2){
@@ -117,6 +123,14 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 			 * loading to break out of while loop */
 			m_loaded++;
 		}
+	}
+	if((id.compare("") != 0) && (sequence.compare("") != 0)){
+		// sequence still exists in sequence buffer, so store in reads
+		Read t;
+		t.constructor(sequence.c_str(),seqMyAllocator,true);
+		reads->push_back(&t);
+		loadedSequences++;
+		m_loaded++;
 	}
 	if(m_loaded >= m_size){
 		m_f.close();
