@@ -38,6 +38,10 @@ int ColorSpaceLoader::open(string file){
 	string bufferForLine;
 	while(!m_f.eof()){
 		getline(m_f,bufferForLine);
+		if(bufferForLine.length() == 0){
+			// skip over empty lines (including at end of file)
+			continue;
+		}
 		if((m_ft == UNKNOWN) && (bufferForLine.at(0) == '#')){
 			continue;// skip initial comment lines
 		}
@@ -75,8 +79,12 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 	int loadedSequences = 0;
 	int lineMod4 = 0;
 	bool doneComments = false; // needed as # can appear at start of fastq quality string
-	while((m_loaded < m_size) && (loadedSequences < maxToLoad)){
+	while(!m_f.eof() && (m_loaded < m_size) && (loadedSequences < maxToLoad)){
 		getline(m_f, bufferForLine);
+		if(bufferForLine.length() == 0){
+			// skip over empty lines (including at end of file)
+			continue;
+		}
 		if(!doneComments && (bufferForLine.at(0) == '#')){
 			continue;// skip over comments
 		} else {
