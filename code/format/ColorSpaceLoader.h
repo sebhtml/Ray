@@ -36,7 +36,7 @@ using namespace std;
 class ColorSpaceLoader{
 	enum FileType {UNKNOWN, FASTA, FASTQ, INVALID};
 	ColorSpaceDecoder m_decoder;
-	FILE*m_f;
+	ifstream m_f;
 	int m_size;
 	int m_loaded;
 	FileType m_ft;

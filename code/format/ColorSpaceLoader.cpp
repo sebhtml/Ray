@@ -29,7 +29,7 @@ using namespace std;
 
 // Find number of sequences in file
 int ColorSpaceLoader::open(string file){
-	m_f=fopen(file.c_str(),"r");
+	m_f.open(file.c_str());
 	m_size=0;
 	m_loaded=0;
 	int lineMod4 = 0;
