@@ -27,10 +27,10 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
  - update to show output (no output == success is clean, but not as rewarding)
 * New option: -write-kmers writes k-mers
 * New experimental option: -color-space for .csfasta files.
- - fixed unit tests to work with colour space modifications
 * Added an assembler panic when no k-mers are found in reads.
 * New options: -minimumCoverage, -peakCoverage, -repeatCoverage -- provides
 coverage values automatically.
+
 
 = 1.6.0 =
 2011-06-13

@@ -101,7 +101,7 @@ ifeq ($(INTEL_COMPILER),n)
 # g++ options
 ifeq ($(uname_S),Linux)
 	CXXFLAGS += -Wall -std=c++98
-  #CXXFLAGS-$(OPTIMIZE) += -fomit-frame-pointer -finline-functions -funroll-loops
+	#CXXFLAGS-$(OPTIMIZE) += -fomit-frame-pointer -finline-functions -funroll-loops
 	CXXFLAGS-$(PEDANTIC) += -pedantic -Wextra 
 endif
 endif
