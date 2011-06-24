@@ -894,14 +894,13 @@ void MessageProcessor::call_RAY_MPI_TAG_COVERAGE_END(Message*message){
 void MessageProcessor::call_RAY_MPI_TAG_SEND_COVERAGE_VALUES(Message*message){
 	void*buffer=message->getBuffer();
 	uint64_t*incoming=(uint64_t*)buffer;
-	(*m_minimumCoverage)=incoming[0];
-	(*m_peakCoverage)=incoming[1];
-	Message aMessage(NULL,0,MPI_UNSIGNED_LONG_LONG,MASTER_RANK,RAY_MPI_TAG_RECEIVED_COVERAGE_INFORMATION,rank);
-	m_outbox->push_back(aMessage);
-	m_oa->constructor((*m_peakCoverage));
-	m_parameters->setPeakCoverage(*m_peakCoverage);
-	m_parameters->setMinimumCoverage(*m_minimumCoverage);
+	m_parameters->setMinimumCoverage(incoming[0]);
+	m_parameters->setPeakCoverage(incoming[1]);
 	m_parameters->setRepeatCoverage(incoming[2]);
+	m_oa->constructor(m_parameters->getPeakCoverage());
+
+	Message aMessage(NULL,0,MPI_UNSIGNED_LONG_LONG,MASTER_RANK,RAY_MPI_TAG_SEND_COVERAGE_VALUES_REPLY,rank);
+	m_outbox->push_back(aMessage);
 }
 
 void MessageProcessor::call_RAY_MPI_TAG_READY_TO_SEED(Message*message){
@@ -2013,7 +2012,7 @@ void MessageProcessor::call_RAY_MPI_TAG_UPDATE_LIBRARY_INFORMATION(Message*messa
 	}
 }
 
-void MessageProcessor::call_RAY_MPI_TAG_RECEIVED_COVERAGE_INFORMATION(Message*message){
+void MessageProcessor::call_RAY_MPI_TAG_SEND_COVERAGE_VALUES_REPLY(Message*message){
 	(*m_numberOfRanksWithCoverageData)++;
 	if((*m_numberOfRanksWithCoverageData)==size){
 		(*m_master_mode)=RAY_MASTER_MODE_TRIGGER_INDEXING;
@@ -2091,14 +2090,19 @@ void MessageProcessor::call_RAY_MPI_TAG_GET_CONTIG_CHUNK(Message*message){
 	int position=incoming[1];
 	int index=m_fusionData->m_FUSION_identifier_map[contigId];
 	int length=m_ed->m_EXTENSION_contigs[index].size();
-	int outputPosition=0;
 	uint64_t*messageContent=(uint64_t*)m_outboxAllocator->allocate(MAXIMUM_MESSAGE_SIZE_IN_BYTES);
+	int outputPosition=0;
+	int origin=outputPosition;
+	outputPosition++;
+	int count=0;
 	while(position<length
-	 && outputPosition<(int)(MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t))){
+	 && (outputPosition+KMER_U64_ARRAY_SIZE)<(int)(MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t))){
 		m_ed->m_EXTENSION_contigs[index][position++].pack(messageContent,&outputPosition);
+		count++;
 	}
-	
-	Message aMessage(messageContent,outputPosition,
+	messageContent[origin]=count;
+	Message aMessage(messageContent,
+		m_virtualCommunicator->getElementsPerQuery(RAY_MPI_TAG_GET_CONTIG_CHUNK),
 		MPI_UNSIGNED_LONG_LONG,message->getSource(),RAY_MPI_TAG_GET_CONTIG_CHUNK_REPLY,
 		m_parameters->getRank());
 	m_outbox->push_back(aMessage);
@@ -2128,9 +2132,6 @@ SequencesLoader*sequencesLoader,ExtensionData*ed,
 			int*m_numberOfMachinesDoneSendingEdges,
 			FusionData*m_fusionData,
 			int*m_wordSize,
-			int*m_minimumCoverage,
-			int*m_seedCoverage,
-			int*m_peakCoverage,
 			ArrayOfReads*m_myReads,
 		int size,
 	RingAllocator*m_inboxAllocator,
@@ -2181,9 +2182,6 @@ SequencesIndexer*m_si){
 	this->m_numberOfMachinesDoneSendingEdges=m_numberOfMachinesDoneSendingEdges;
 	this->m_fusionData=m_fusionData;
 	this->m_wordSize=m_wordSize;
-	this->m_minimumCoverage=m_minimumCoverage;
-	this->m_seedCoverage=m_seedCoverage;
-	this->m_peakCoverage=m_peakCoverage;
 	this->m_myReads=m_myReads;
 	this->size=size;
 	this->m_inboxAllocator=m_inboxAllocator;
