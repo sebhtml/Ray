@@ -48,20 +48,20 @@ int ColorSpaceLoader::open(string file){
 		lineMod4 = ((lineMod4 + 1) % 4);
 		if(firstLine){
 			if(bufferForLine.at(0) == '>'){
-				m_ft = FASTA;
+				m_ft = CSFASTA;
 			}
 			if(bufferForLine.at(0) == '@'){
-				m_ft = FASTQ;
+				m_ft = CSFASTQ;
 			}
 			firstLine = false;
 		}
-		if(m_ft == FASTA){
+		if(m_ft == CSFASTA){
 			if(bufferForLine.at(0) == '>'){
 				getline(m_f,bufferForLine); // skip over next line -- definitely won't be ID line
 				m_size++;
 			}
 		}
-		if(m_ft == FASTQ){
+		if(m_ft == CSFASTQ){
 			// 1: ID, 2: sequence, 3: ID, 4: quality
 			if(lineMod4 == 2){
 				m_size++;
@@ -93,7 +93,7 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 			doneComments = true;
 		}
 		lineMod4 = ((lineMod4 + 1) % 4);
-		if(m_ft == FASTA){
+		if(m_ft == CSFASTA){
 			// read two lines
 			if(bufferForLine.at(0) == '>'){
 				if(id.compare("") != 0){
@@ -109,7 +109,7 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 			} else {
 				sequence += m_decoder.decodeCStoBS(bufferForLine);
 			}
-		} else if(m_ft == FASTQ){
+		} else if(m_ft == CSFASTQ){
 			if(lineMod4 == 2){
 				string decodedLine = m_decoder.decodeCStoBS(bufferForLine);
 				Read t;
