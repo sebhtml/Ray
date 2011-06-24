@@ -101,7 +101,7 @@ ifeq ($(INTEL_COMPILER),n)
 # g++ options
 ifeq ($(uname_S),Linux)
 	CXXFLAGS += -Wall -std=c++98
-	#CXXFLAGS-$(OPTIMIZE) += -fomit-frame-pointer -finline-functions -funroll-loops
+  #CXXFLAGS-$(OPTIMIZE) += -fomit-frame-pointer -finline-functions -funroll-loops
 	CXXFLAGS-$(PEDANTIC) += -pedantic -Wextra 
 endif
 endif
@@ -160,7 +160,7 @@ obj-y += code/communication/mpi_tags.o code/communication/VirtualCommunicator.o 
 code/communication/Message.o code/communication/MessageProcessor.o code/communication/MessagesHandler.o
 
 #formats
-obj-y += code/format/ColorSpaceDecoder.o code/format/ColorSpaceLoader.o code/format/FastaLoader.o \
+obj-y += code/format/ColorSpaceCodec.o code/format/ColorSpaceLoader.o code/format/FastaLoader.o \
 code/format/FastqLoader.o code/format/SffLoader.o \
 code/format/Amos.o
 
@@ -232,7 +232,7 @@ showOptions:
 	@echo LDFLAGS = $(LDFLAGS)
 	@echo ""
 	@touch showOptions
-	
+
 # how to make Ray
 code/Ray: showOptions $(obj-y)
 	@echo "  MPICXX $@"

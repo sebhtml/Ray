@@ -107,11 +107,11 @@ void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAl
 				id = bufferForLine;
 				sequence.assign("");
 			} else {
-				sequence += m_decoder.decode(bufferForLine);
+				sequence += m_decoder.decodeCStoBS(bufferForLine);
 			}
 		} else if(m_ft == FASTQ){
 			if(lineMod4 == 2){
-				string decodedLine = m_decoder.decode(bufferForLine);
+				string decodedLine = m_decoder.decodeCStoBS(bufferForLine);
 				Read t;
 				t.constructor(decodedLine.c_str(),seqMyAllocator,true);
 				reads->push_back(&t);

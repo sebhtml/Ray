@@ -7,9 +7,9 @@
  *  Checks to make sure colour space encoding / decoding works correctly
  */
 
-#include<format/ColorSpaceDecoder.h>
+#include<format/ColorSpaceCodec.h>
 
 int main(){
-	ColorSpaceDecoder cd;
+	ColorSpaceCodec cd;
 	return(cd.check()?0:1);
 }

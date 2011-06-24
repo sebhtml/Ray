@@ -18,8 +18,10 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
  - Implemented cs encode (base->colour)
  - decode propogated down to colour space loader
  - loading can now handle multi-line colour space sequences
- - added reverse complement colour space encoding
+ - added reverse complement colour space decoding
  - distinguish between 'base-space->colour-space' and 'cs->bs'
+ - rename ColorSpaceDecoder -> ColorSpaceCodec
+ - rename encode -> encodeBStoCS to remove method name confusion
 * Colour space loader automatically works out CSFASTQ/CSFASTA format
 * Added colour space decoder unit test
  - update to show output (no output == success is clean, but not as rewarding)

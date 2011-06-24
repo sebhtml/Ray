@@ -28,14 +28,14 @@
 #include <fstream>
 #include <memory/MyAllocator.h>
 #include <stdio.h>
-#include <format/ColorSpaceDecoder.h>
+#include <format/ColorSpaceCodec.h>
 #include <structures/Read.h>
 #include <memory/OnDiskAllocator.h>
 using namespace std;
 
 class ColorSpaceLoader{
 	enum FileType {UNKNOWN, FASTA, FASTQ, INVALID};
-	ColorSpaceDecoder m_decoder;
+	ColorSpaceCodec m_decoder;
 	ifstream m_f;
 	int m_size;
 	int m_loaded;
