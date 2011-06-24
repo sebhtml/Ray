@@ -123,21 +123,8 @@ string ColorSpaceCodec::decodeCStoBS(string csInput, bool reverseComplement){
 	if(reverseComplement){
 		// reverse string in-place
 		std::reverse(output.begin(), output.end());
-		/*
-		// Note: this temporarily consumes double the memory, and additional time
-		//       an 'in-place' reverse would probably be better
-		string reversed("");
-		reversed.reserve(output.length());
-		for(string::reverse_iterator rit = output.rbegin();
-				rit < output.rend(); rit++){
-			reversed+= *rit;
-		}
-		return(reversed);
-		*/
-		return(output);
-	} else {
-		return(output);
 	}
+	return(output);
 }
 
 /*
@@ -186,21 +173,21 @@ bool ColorSpaceCodec::check(){
 	string csSeq2("T32002333220000303130320033020032123301032223033002");
 	string cConv2F("TAGGGATATCTTTTTAATGCCGAAATAAGGGCTGATAACCGAGATTATTTC");
 	string cConv2R("GAAATAATCTCGGTTATCAGCCCTTATTTCGGCATTAAAAAGATATCCCTA");
-	cout << "1: checking basic decode (junk characters)... ";
+	cout << "1: checking colour-space decode (junk characters)... ";
 	if(cd.decodeCStoBS(csSeq1).compare(cConv1F) != 0){
 		cout << "Decode failed:\n"
 				<< csSeq1 << endl << "->\n"
 				<< cd.decodeCStoBS(csSeq1) << endl
 				<< cConv1F << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
-	cout << "2: checking basic decode (fully informative sequence)... ";
+	cout << "2: checking colour-space decode (fully informative sequence)... ";
 	if(cd.decodeCStoBS(csSeq2).compare(cConv2F) != 0){
 		cout << "Decode failed:\n"
 				<< csSeq2 << endl << "->\n"
 				<< cd.decodeCStoBS(csSeq2) << endl
 				<< cConv2F << " expected\n";
 	} else { cout << "SUCCESS!\n"; }
-	cout << "3: checking basic decode (inverse function actions)... ";
+	cout << "3: checking colour-space decode (inverse function actions)... ";
 	if(cd.encodeBStoCS(cd.decodeCStoBS(csSeq2)).compare(csSeq2) != 0){
 		cout << "Encode+Decode failed... encoding is not the inverse of decoding "
 				<< "for fully informative input:\n"
