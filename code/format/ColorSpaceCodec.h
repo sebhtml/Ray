@@ -25,11 +25,17 @@
 #include<string>
 using namespace std;
 
-class ColorSpaceDecoder{
-	int m_colors[16];
-public:
-	string decode(char*x);
-	ColorSpaceDecoder();
+class ColorSpaceCodec{
+  static const char csColours[5];
+  static const char bsBases[5];
+ public:
+	ColorSpaceCodec();
+	int csChrToInt(char tChr);
+	int bsChrToInt(char tChr);
+	string decodeCStoBS(string csInput);
+	string decodeCStoBS(string csInput, bool reverseComplement);
+	string encodeBStoCS(string bsInput);
+  bool check();
 };
 
 #endif

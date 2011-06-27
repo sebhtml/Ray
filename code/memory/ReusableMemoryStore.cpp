@@ -19,6 +19,7 @@
 
 */
 
+#include <cstddef>
 #include <memory/ReusableMemoryStore.h>
 #include <assert.h>
 

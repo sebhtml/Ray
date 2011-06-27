@@ -12,7 +12,19 @@ distribution. Thanks to pmiguel on SEQanswers for providing raw data points.
 * Changed MAXKMERLENGTH=128 for MAXKMERLENGTH=64 in examples.
 * Fixed a communication problem for k>32.
 * Added a progression indicator for scaffolding.
-* Writting scaffold sequences is now faster.
+* Writing scaffold sequences is now faster.
+* Colour space conversion modifications
+ - conversion now a bit more robust (accepts ./N/?)
+ - Implemented cs encode (base->colour)
+ - decode propogated down to colour space loader
+ - loading can now handle multi-line colour space sequences
+ - added reverse complement colour space decoding
+ - distinguish between 'base-space->colour-space' and 'cs->bs'
+ - rename ColorSpaceDecoder -> ColorSpaceCodec
+ - rename encode -> encodeBStoCS to remove method name confusion
+* Colour space loader automatically works out CSFASTQ/CSFASTA format
+* Added colour space decoder unit test
+ - update to show output (no output == success is clean, but not as rewarding)
 * New option: -write-kmers writes k-mers
 * New experimental option: -color-space for .csfasta files.
 * Added an assembler panic when no k-mers are found in reads.

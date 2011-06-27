@@ -28,16 +28,18 @@
 #include <fstream>
 #include <memory/MyAllocator.h>
 #include <stdio.h>
-#include <format/ColorSpaceDecoder.h>
+#include <format/ColorSpaceCodec.h>
 #include <structures/Read.h>
 #include <memory/OnDiskAllocator.h>
 using namespace std;
 
 class ColorSpaceLoader{
-	ColorSpaceDecoder m_decoder;
-	FILE*m_f;
+	enum FileType {UNKNOWN, FASTA, FASTQ, CSFASTA, CSFASTQ, INVALID};
+	ColorSpaceCodec m_decoder;
+	ifstream m_f;
 	int m_size;
 	int m_loaded;
+	FileType m_ft;
 public:
 	void load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator);
 	int open(string file);

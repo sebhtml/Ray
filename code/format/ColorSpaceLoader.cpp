@@ -24,61 +24,116 @@
 #include<fstream>
 #include<core/common_functions.h>
 #include<iostream>
-#include<string.h>
+#include<string>
 using namespace std;
 
+// Find number of sequences in file
 int ColorSpaceLoader::open(string file){
-	m_f=fopen(file.c_str(),"r");
+	m_f.open(file.c_str());
 	m_size=0;
 	m_loaded=0;
-	char bufferForLine[1024];
-	while(NULL!=fgets(bufferForLine,4096,m_f)){
-		if(bufferForLine[0]=='#'){
-			continue;// skip csfasta comment
+	int lineMod4 = 0;
+	m_ft = UNKNOWN;
+	bool firstLine = true;
+	string bufferForLine;
+	while(!m_f.eof()){
+		getline(m_f,bufferForLine);
+		if(bufferForLine.length() == 0){
+			// skip over empty lines (including at end of file)
+			continue;
 		}
-
-		if(bufferForLine[0]=='>'){
-			fgets(bufferForLine,4096,m_f);
-			m_size++;
+		if((m_ft == UNKNOWN) && (bufferForLine.at(0) == '#')){
+			continue;// skip initial comment lines
+		}
+		lineMod4 = ((lineMod4 + 1) % 4);
+		if(firstLine){
+			if(bufferForLine.at(0) == '>'){
+				m_ft = CSFASTA;
+			}
+			if(bufferForLine.at(0) == '@'){
+				m_ft = CSFASTQ;
+			}
+			firstLine = false;
+		}
+		if(m_ft == CSFASTA){
+			if(bufferForLine.at(0) == '>'){
+				getline(m_f,bufferForLine); // skip over next line -- definitely won't be ID line
+				m_size++;
+			}
+		}
+		if(m_ft == CSFASTQ){
+			// 1: ID, 2: sequence, 3: ID, 4: quality
+			if(lineMod4 == 2){
+				m_size++;
+			}
 		}
 	}
-	fclose(m_f);
-	m_f=fopen(file.c_str(),"r");
+	// reset file pointer to start of file
+	m_f.close();
+	m_f.open(file.c_str());
 	return EXIT_SUCCESS;
 }
 
 void ColorSpaceLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator){
-	char bufferForLine[1024];
-	int loadedSequences=0;
-	while(m_loaded<m_size&& loadedSequences<maxToLoad){
-		fgets(bufferForLine,4096,m_f);
-		if(bufferForLine[0]=='#'){
-			continue;// skip csfasta comment
+	string bufferForLine;
+	string sequence("");
+	string id("");
+	int loadedSequences = 0;
+	int lineMod4 = 0;
+	bool doneComments = false; // needed as # can appear at start of fastq quality string
+	while(!m_f.eof() && (m_loaded < m_size) && (loadedSequences < maxToLoad)){
+		getline(m_f, bufferForLine);
+		if(bufferForLine.length() == 0){
+			// skip over empty lines (including at end of file)
+			continue;
 		}
-		// read two lines
-		if(bufferForLine[0]=='>'){
-			fgets(bufferForLine,4096,m_f);
-			for(int j=0;j<(int)strlen(bufferForLine);j++){
-				if(bufferForLine[j]==DOUBLE_ENCODING_A_COLOR){
-					bufferForLine[j]='A';
-				}else if(bufferForLine[j]==DOUBLE_ENCODING_T_COLOR){
-					bufferForLine[j]='T';
-				}else if(bufferForLine[j]==DOUBLE_ENCODING_C_COLOR){
-					bufferForLine[j]='C';
-				}else if(bufferForLine[j]==DOUBLE_ENCODING_G_COLOR){
-					bufferForLine[j]='G';
+		if(!doneComments && (bufferForLine.at(0) == '#')){
+			continue;// skip over comments
+		} else {
+			doneComments = true;
+		}
+		lineMod4 = ((lineMod4 + 1) % 4);
+		if(m_ft == CSFASTA){
+			// read two lines
+			if(bufferForLine.at(0) == '>'){
+				if(id.compare("") != 0){
+					// a previous sequence has been read in
+					Read t;
+					t.constructor(sequence.c_str(),seqMyAllocator,true);
+					reads->push_back(&t);
+					loadedSequences++;
+					m_loaded++;
 				}
+				id = bufferForLine;
+				sequence.assign("");
+			} else {
+				sequence += m_decoder.decodeCStoBS(bufferForLine);
 			}
-			Read t;
-			// remove the leading T & first color
-			t.constructor(bufferForLine+2,seqMyAllocator,true);
-			reads->push_back(&t);
-			loadedSequences++;
+		} else if(m_ft == CSFASTQ){
+			if(lineMod4 == 2){
+				string decodedLine = m_decoder.decodeCStoBS(bufferForLine);
+				Read t;
+				t.constructor(decodedLine.c_str(),seqMyAllocator,true);
+				reads->push_back(&t);
+				loadedSequences++;
+				m_loaded++;
+			}
+		} else {
+			/* if file type is unknown [and m_size > 0], simulate
+			 * loading to break out of while loop */
 			m_loaded++;
 		}
 	}
-	if(m_loaded==m_size){
-		fclose(m_f);
+	if((id.compare("") != 0) && (sequence.compare("") != 0)){
+		// sequence still exists in sequence buffer, so store in reads
+		Read t;
+		t.constructor(sequence.c_str(),seqMyAllocator,true);
+		reads->push_back(&t);
+		loadedSequences++;
+		m_loaded++;
+	}
+	if(m_loaded >= m_size){
+		m_f.close();
 	}
 }
 
