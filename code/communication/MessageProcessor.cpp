@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -48,7 +48,7 @@ void MessageProcessor::call_RAY_MPI_TAG_LOAD_SEQUENCES(Message*message){
 void MessageProcessor::call_RAY_MPI_TAG_CONTIG_INFO(Message*message){
 	uint64_t*incoming=(uint64_t*)message->getBuffer();
 	m_scaffolder->addMasterContig(incoming[0],incoming[1]);
-	
+
 	uint64_t*outgoingMessage=(uint64_t*)m_outboxAllocator->allocate(MAXIMUM_MESSAGE_SIZE_IN_BYTES);
 	Message aMessage(outgoingMessage,message->getCount(),
 		message->getSource(),RAY_MPI_TAG_CONTIG_INFO_REPLY,m_rank);
@@ -95,7 +95,7 @@ void MessageProcessor::call_RAY_MPI_TAG_SCAFFOLDING_LINKS(Message*message){
 	}
 
 	//cout<<__func__<<" "<<leftContig<<" "<<leftStrand<<" "<<rightContig<<" "<<rightStrand<<" "<<average<<" "<<number<<endl;
-	
+
 	SummarizedLink link(leftContig,leftStrand,rightContig,rightStrand,average,number,standardDeviation);
 	m_scaffolder->addMasterLink(&link);
 
@@ -194,7 +194,7 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_VERTEX_READS(Message*message){
 		if(ptr==NULL){
 			ptr=m_subgraph->getReads(&vertex);
 		}
-	
+
 		bool gotOne=false;
 		while(ptr!=NULL&&!gotOne){
 			int rank=ptr->getRank();
@@ -357,7 +357,7 @@ void MessageProcessor::call_RAY_MPI_TAG_GET_VERTEX_EDGES_COMPACT(Message*message
 			outgoingMessage[i+1]=node->getCoverage(&vertex);
 		}
 	}
-	
+
 	Message aMessage(outgoingMessage,count,message->getSource(),RAY_MPI_TAG_GET_VERTEX_EDGES_COMPACT_REPLY,m_rank);
 	m_outbox->push_back(aMessage);
 }
@@ -543,7 +543,7 @@ void MessageProcessor::call_RAY_MPI_TAG_VERTICES_DATA(Message*message){
 				showMemoryUsage(m_rank);
 			}
 		}
-		
+
 		KmerCandidate*candidate=m_subgraph->getKmerAcademy()->find(&l);
 
 		/** the candidate remained in the Bloom filter ! , good.*/
@@ -563,7 +563,7 @@ void MessageProcessor::call_RAY_MPI_TAG_VERTICES_DATA(Message*message){
 		assert(tmp!=NULL);
 		#endif
 		if(m_subgraph->inserted()){
-			tmp->constructor(); 
+			tmp->constructor();
 		}
 		tmp->setCoverage(&l,tmp->getCoverage(&l)+1);
 	}
@@ -797,7 +797,7 @@ void MessageProcessor::call_RAY_MPI_TAG_READY_TO_SEED(Message*message){
 
 void MessageProcessor::call_RAY_MPI_TAG_START_SEEDING(Message*message){
 	/* read checkpoints ReadOffsets and OptimalMarkers */
-	
+
 	if(m_parameters->hasCheckpoint("OptimalMarkers") && m_parameters->hasCheckpoint("ReadOffsets")){
 		cout<<"Rank "<<m_parameters->getRank()<<" is reading checkpoint ReadOffsets"<<endl;
 		ifstream f(m_parameters->getCheckpointFile("ReadOffsets").c_str());
@@ -835,7 +835,7 @@ void MessageProcessor::call_RAY_MPI_TAG_START_SEEDING(Message*message){
 				marker->read(&f2,isLower);
 
 				Vertex*node=m_subgraph->find(&kmer);
-	
+
 				#ifdef ASSERT
 				if(node==NULL){
 					cout<<"Not found: "<<kmer.idToWord(m_parameters->getWordSize(),
@@ -864,13 +864,13 @@ void MessageProcessor::call_RAY_MPI_TAG_START_SEEDING(Message*message){
 			m_myReads->at(i)->writeOffsets(&f);
 		}
 		f.close();
-	
+
 		cout<<"Rank "<<m_parameters->getRank()<<" is writing checkpoint OptimalMarkers"<<endl;
 		ofstream f2(m_parameters->getCheckpointFile("OptimalMarkers").c_str());
 
 		GridTableIterator iterator;
 		iterator.constructor(m_subgraph,m_parameters->getWordSize(),m_parameters);
-	
+
 		count=m_subgraph->size();
 		f2.write((char*)&count,sizeof(uint64_t));
 
@@ -999,7 +999,7 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_VERTEX_EDGES(Message*message){
 
 	vector<Kmer> outgoingEdges=node->getOutgoingEdges(&vertex,*m_wordSize);
 	vector<Kmer> ingoingEdges=node->getIngoingEdges(&vertex,*m_wordSize);
-	
+
 	message2[outputPosition++]=outgoingEdges.size();
 	for(int i=0;i<(int)outgoingEdges.size();i++){
 		outgoingEdges[i].pack(message2,&outputPosition);
@@ -1079,7 +1079,7 @@ void MessageProcessor::call_RAY_MPI_TAG_SEND_SEED_LENGTHS(Message*message){
 		int number=incoming[i+1];
 		m_seedingData->m_masterSeedLengths[seedLength]+=number;
 	}
-	
+
 	Message aMessage(NULL,0,message->getSource(),RAY_MPI_TAG_SEND_SEED_LENGTHS_REPLY,m_rank);
 	m_outbox->push_back(aMessage);
 }
@@ -1142,7 +1142,7 @@ void MessageProcessor::call_RAY_MPI_TAG_REQUEST_VERTEX_INGOING_EDGES(Message*mes
 			cout<<"Rank="<<m_rank<<" "<<vertex.idToWord(*m_wordSize,m_parameters->getColorSpaceMode())<<" does not exist."<<endl;
 		}
 		assert(node!=NULL);
-		#endif 
+		#endif
 		vector<Kmer> ingoingEdges=node->getIngoingEdges(&vertex,*m_wordSize);
 		int outputPosition=i*5;
 		message2[outputPosition++]=ingoingEdges.size();
@@ -1278,7 +1278,7 @@ void MessageProcessor::call_RAY_MPI_TAG_ATTACH_SEQUENCE(Message*message){
 		if(coverage==1){
 			continue;
 		}
-		
+
 		ReadAnnotation*e=(ReadAnnotation*)m_si->getAllocator()->allocate(sizeof(ReadAnnotation));
 
 		#ifdef ASSERT
@@ -1330,7 +1330,7 @@ void MessageProcessor::call_RAY_MPI_TAG_ASK_READ_LENGTH(Message*message){
 	assert(read!=NULL);
 	#endif
 	int length=read->length();
-	
+
 	uint64_t*message2=(uint64_t*)m_outboxAllocator->allocate(3*sizeof(uint64_t));
 	int pos=0;
 	message2[pos++]=length;
@@ -1374,7 +1374,7 @@ void MessageProcessor::call_RAY_MPI_TAG_SAVE_WAVE_PROGRESSION(Message*message){
 		#endif
 
 		uint64_t wave=incoming[pos++];
-		
+
 		#ifdef ASSERT
 		if(getRankFromPathUniqueId(wave)>=m_size){
 			cout<<"Invalid rank: "<<getRankFromPathUniqueId(wave)<<" maximum is "<<m_size-1<<endl;
@@ -1413,7 +1413,7 @@ void MessageProcessor::call_RAY_MPI_TAG_START_FUSION(Message*message){
 }
 
 void MessageProcessor::call_RAY_MPI_TAG_FUSION_DONE(Message*message){
-	
+
 	uint64_t*incoming=message->getBuffer();
 	bool reductionOccured=incoming[0];
 
@@ -1548,7 +1548,7 @@ void MessageProcessor::call_RAY_MPI_TAG_GET_PATH_LENGTH_REPLY(Message*message){
 input: Kmer ; index
 output: Kmer ; index ; list
 
-Receives a k-mer and a first index, and returns a message containing 
+Receives a k-mer and a first index, and returns a message containing
 the k-mer, the new first index, and a list of path identifiers in the graph.
 
 */
@@ -2367,7 +2367,7 @@ MessageProcessor::MessageProcessor(){
 	m_consumed=0;
 	m_sentinelValue=0;
 	m_sentinelValue--;// overflow it in an obvious manner
-	
+
 	assignHandlers();
 }
 

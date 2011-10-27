@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -56,7 +56,7 @@ void Library::updateDistances(){
 		/** wait for a reply */
 		}else if(m_inbox->size()>0 && m_inbox->at(0)->getTag()==RAY_MPI_TAG_UPDATE_LIBRARY_INFORMATION_REPLY){
 			m_ranksThatReplied++;
-	
+
 			/** when everyone replied, we can proceed with the next library */
 			if(m_ranksThatReplied==m_parameters->getSize()){
 				m_currentLibrary++;
@@ -118,7 +118,7 @@ void Library::detectDistances(){
 		updateStates();
 
 		//  add one worker to active workers
-		//  reason is that those already in the pool don't communicate anymore -- 
+		//  reason is that those already in the pool don't communicate anymore --
 		//  as for they need responses.
 		if(!m_virtualCommunicator->getGlobalPushedMessageStatus()&&m_activeWorkers.empty()){
 			// there is at least one worker to start
@@ -156,7 +156,7 @@ void Library::detectDistances(){
 		fflush(stdout);
 		printf("Rank %i is calculating library lengths [%i/%i] (completed)\n",getRank(),(int)m_seedingData->m_SEEDING_seeds.size(),(int)m_seedingData->m_SEEDING_seeds.size());
 		fflush(stdout);
-		
+
 		Message aMessage(NULL,0,MASTER_RANK,RAY_MPI_TAG_AUTOMATIC_DISTANCE_DETECTION_IS_DONE,getRank());
 		m_outbox->push_back(aMessage);
 		(*m_mode)=RAY_SLAVE_MODE_DO_NOTHING;

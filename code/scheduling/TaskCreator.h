@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -25,7 +25,7 @@
 #include <scheduling/VirtualProcessor.h>
 #include <memory/MyAllocator.h>
 
-/** this is an interface that should be implemented by child classes 
+/** this is an interface that should be implemented by child classes
  * m_initialized must be set to false in the child class
  * */
 class TaskCreator{

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -48,7 +48,7 @@ void TaskCreator::mainLoop(){
 			#endif
 
 			m_virtualProcessor->addWorker(worker);
-	
+
 			/* tell the VirtualProcessor that no more tasks will be created */
 			if(!hasUnassignedTask()){
 				#ifdef DEBUG_TASK_CREATOR

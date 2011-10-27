@@ -17,7 +17,7 @@ core, then MyProgram may use them if needed and/or was designed to.
 
 
 When using the message-passing interface (MPI), a program built around it can be
-run on more than one processor logical core. 
+run on more than one processor logical core.
 
 With the message-passing interface, a program is started using an
 auxiliary program. Its standard name is mpiexec, and this name stands for
@@ -36,7 +36,7 @@ magic of this is that the 4 MPI ranks can be on different computers, thus
 enabling the true potential of compute clusters with distributed resources. For
 instance, 16 computers connected with an Internet protocol (TCP/IP) network is a
 compute cluster with distributed resources. Let's assume that each has 8
-processor logical cores. In the MPI world, it means that we can have 
+processor logical cores. In the MPI world, it means that we can have
 8 MPI ranks per computer. 16 computers thus give a total of 16*8 = 128 MPI
 ranks.
 
@@ -86,7 +86,7 @@ messages can be agglomerated in one large message of 4000 bytes (500 * 8 = 4000)
 The idea of the VirtualCommunicator is to push each of these small 500 messages
 individually to a virtual communication device. This way, the programmer does
 not need to care about actually grouping its messages at all. This can be tricky
-and/or boring to do manually in the code. 
+and/or boring to do manually in the code.
 
 This so-called VirtualCommunicator will do the multiplexing and de-multiplexing
 of all message contents.
@@ -102,7 +102,7 @@ code/communication/VirtualCommunicator.cpp
 
 Effectively write code that can push a lot of small messages on the
 VirtualCommunicator is also easy. You simply have to split the work load in
-slices. 
+slices.
 
 Then, you have to assign each of these slices to a single worker.
 

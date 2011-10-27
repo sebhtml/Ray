@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -89,7 +89,7 @@ public:
 				int*m_mode
 			);
 	void setReadiness();
-	
+
 	bool finished();
 	void flushAll(RingAllocator*m_outboxAllocator,StaticVector*m_outbox,int rank);
 	void assertBuffersAreEmpty();

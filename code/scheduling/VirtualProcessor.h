@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -76,7 +76,7 @@ work()
 /** an implementation of a VirtualProcessor
  * It enables the sheduling of many workers on the same process.
  * While some sleep, other work.
- * Workers sleep when they wait for messages 
+ * Workers sleep when they wait for messages
  *
  * \author Sébastien Boisvert
 */

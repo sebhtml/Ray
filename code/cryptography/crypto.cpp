@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -30,11 +30,11 @@
  */
 uint64_t uniform_hashing_function_1_64_64(uint64_t key){
 	// some magic here and there.
-	key = (~key) + (key << 21); 
+	key = (~key) + (key << 21);
 	key = key ^ (key >> 24);
-	key = (key + (key << 3)) + (key << 8); 
+	key = (key + (key << 3)) + (key << 8);
 	key = key ^ (key >> 14);
-	key = (key + (key << 2)) + (key << 4); 
+	key = (key + (key << 2)) + (key << 4);
 	key = key ^ (key >> 28);
 	key = key + (key << 31);
 	return key;
@@ -44,11 +44,11 @@ uint64_t uniform_hashing_function_1_64_64(uint64_t key){
  * based on uniform_hashing_function_1_64_64, but with different values
  */
 uint64_t uniform_hashing_function_2_64_64(uint64_t key){
-	key = (~key) + (key << 31); 
+	key = (~key) + (key << 31);
 	key = key ^ (key >> 14);
-	key = (key + (key << 7)) + (key << 11); 
+	key = (key + (key << 7)) + (key << 11);
 	key = key ^ (key >> 13);
-	key = (key + (key << 4)) + (key << 8); 
+	key = (key + (key << 4)) + (key << 8);
 	key = key ^ (key >> 44);
 	key = key + (key << 6);
 	return key;

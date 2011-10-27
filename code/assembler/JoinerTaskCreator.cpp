@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -69,7 +69,7 @@ void JoinerTaskCreator::finalizeMethod(){
 	/** make sure this number is at le ast all the rreverse paths */
 
 	bool removedPaths=false;
-	
+
 	if(eliminatedPaths >= 1)
 		removedPaths = true;
 
@@ -97,7 +97,7 @@ bool JoinerTaskCreator::hasUnassignedTask(){
 	return m_iterator < (uint64_t)m_paths->size();
 }
 
-/** assign the next task to a worker and return this worker 
+/** assign the next task to a worker and return this worker
  *
  * \author Sébastien Boisvert
  *

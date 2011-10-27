@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -27,7 +27,7 @@
 using namespace std;
 
 /*
- * implemented as linked lists, read annotations give 
+ * implemented as linked lists, read annotations give
  * information about read index in the graph.
  * The read paths are restored using read annotations.
  * \author Sébastien Boisvert

@@ -28,7 +28,7 @@ for i in $(seq 1 $numberOfTags)
 do
 	currentTag=$(head -n $i sortedTags.txt|tail -n1)
 	tagDate=$(git show $currentTag|grep ^Date|head -n1|sed 's/Date:   //g')
-	
+
 	previousTag=$firstCommit
 	if test $i -lt $numberOfTags
 	then

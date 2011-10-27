@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -72,7 +72,7 @@ class MessageProcessor{
 
 	SequencesLoader*m_sequencesLoader;
 
-	/** the array of callback methods 
+	/** the array of callback methods
  * 	as of 2011-07-21, there are 167 MPI tags*/
 	/* 2011-09-20 -> 146 callbacks */
 	FNMETHOD m_methods[256];
@@ -147,7 +147,7 @@ class MessageProcessor{
 	#define MACRO_LIST_ITEM(x) void call_ ## x ( Message*m ) ;
 	#include <communication/mpi_tag_macros.h>
 	#undef MACRO_LIST_ITEM
-	
+
 public:
 	void constructor(
 SeedingData*seedingData,

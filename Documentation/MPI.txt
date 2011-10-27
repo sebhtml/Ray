@@ -10,7 +10,7 @@ In Ray, starting from version 1.0.0, the standard MPI 2.2 is used.
 No assumption is done in the code regarding the MPI implementation used, only
 the standard MPI 2.2 is considered.
 
-MPI 2.2  
+MPI 2.2
 http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report.pdf (PDF, 647 pages)
 
 == MPI 2.2 and Ray ==
@@ -65,7 +65,7 @@ http://www.mcs.anl.gov/research/projects/mpich2/downloads/license.txt
 
 Open-MPI
 http://www.open-mpi.org/
-License: BSD 
+License: BSD
 http://www.opensource.org/licenses/bsd-license.php
 
 
@@ -96,7 +96,7 @@ http://www.pik-potsdam.de/~bloh/pdffile/pe_mpi_prog_guide_v3r10.pdf
 Best books to learn MPI programming
 http://stackoverflow.com/questions/1617624/best-books-to-learn-mpi-programming
 
-MPI 2.2  
+MPI 2.2
 http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report.pdf (PDF, 647 pages)
 
 

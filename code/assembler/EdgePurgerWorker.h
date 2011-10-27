@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -59,8 +59,8 @@ public:
 	void constructor(uint64_t workerId,Vertex*vertex,Kmer*currentKmer,GridTable*subgraph,VirtualCommunicator*virtualCommunicator,RingAllocator*outboxAllocator,Parameters*parameters,
 		StaticVector*inbox,StaticVector*outbox);
 
-	/** work a little bit 
-	 * the class Worker provides no implementation for that 
+	/** work a little bit
+	 * the class Worker provides no implementation for that
 	*/
 	void work();
 

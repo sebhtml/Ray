@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -121,7 +121,7 @@ Parameters*parameters){
 	if(coverageWinner!=IMPOSSIBLE_CHOICE && invalidChoices.count(coverageWinner) == 0)
 		return coverageWinner;
 
-		
+
 	int withPairedInformation=0;
 	/** prepare data for the NovaEngine */
 	vector<map<int,int> > novaData;
@@ -165,7 +165,7 @@ Parameters*parameters){
 
 
 	m_c->chooseWithPairedReads(ed,minimumCoverage,m_maxCoverage,m_pairedEndMultiplicator,&battleVictories,parameters);
-	
+
 	int pairedChoice=getWinner(&battleVictories,ed->m_enumerateChoices_outgoingEdges.size());
 
 	battleVictories.clear();
@@ -185,7 +185,7 @@ Parameters*parameters){
 		}
 		// if both have paired reads and that is not enough for one of them to win, then abort
 		int withPairedReads=0;
-		
+
 		for(int j=0;j<(int)ed->m_enumerateChoices_outgoingEdges.size();j++){
 			Kmer key=ed->m_enumerateChoices_outgoingEdges[j];
 			if(ed->m_EXTENSION_pairedReadPositionsForVertices[key].size()>0){
@@ -229,8 +229,8 @@ Parameters*parameters){
 		}
 
 		for(int j=0;j<(int)ed->m_enumerateChoices_outgoingEdges.size();j++){
-			if((CHOOSER_theMaxs[i] > m_singleEndMultiplicator*CHOOSER_theMaxs[j]) 
-				&& (CHOOSER_theSums[i] > m_singleEndMultiplicator*CHOOSER_theSums[j]) 
+			if((CHOOSER_theMaxs[i] > m_singleEndMultiplicator*CHOOSER_theMaxs[j])
+				&& (CHOOSER_theSums[i] > m_singleEndMultiplicator*CHOOSER_theSums[j])
 				&& (CHOOSER_theNumbers[i] > m_singleEndMultiplicator*CHOOSER_theNumbers[j])
 				){
 				battleVictories[i].insert(j);

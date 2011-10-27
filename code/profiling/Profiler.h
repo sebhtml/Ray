@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -59,8 +59,8 @@ public:
 
 /* if CONFIG_PROFILER_COLLECT is defined, MACRO_COLLECT_PROFILING_INFORMATION() will collect profiling information
  * if -run-profiler was provided
- * otherwise, nothing is collected even if -run-profiler is provided 
- * the default is to define CONFIG_PROFILER_COLLECT 
+ * otherwise, nothing is collected even if -run-profiler is provided
+ * the default is to define CONFIG_PROFILER_COLLECT
  * and enable the profiler with -run-profiler (default is to not enable it)
  *
  * m_profiler must be a boolean in the context where the MACRO_COLLECT_PROFILING_INFORMATION is written.

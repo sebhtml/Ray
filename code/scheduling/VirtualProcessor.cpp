@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -150,7 +150,7 @@ bool VirtualProcessor::run(){
 			m_waitingWorkers.push_back(workerId);
 		}else if(m_aliveWorkers[workerId]->isDone()){
 			m_workersDone.push_back(workerId);
-		} 
+		}
 
 		m_activeWorkerIterator++;
 
@@ -159,7 +159,7 @@ bool VirtualProcessor::run(){
 		updateStates();
 
 		//  add one worker to active workers
-		//  reason is that those already in the pool don't communicate anymore -- 
+		//  reason is that those already in the pool don't communicate anymore --
 		//  as for they need responses.
 		if(!m_virtualCommunicator->getGlobalPushedMessageStatus() && m_activeWorkers.empty()){
 			/** if no more worker will be added, we need to forceFlush */

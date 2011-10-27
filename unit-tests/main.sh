@@ -9,7 +9,7 @@ for i in $(ls test_*.sh)
 do
 	echo "Test Suite: $i"
 	bash $i
-done 
+done
 
 ) &> UnitTests.txt
 

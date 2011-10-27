@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -96,7 +96,7 @@ void JoinerWorker::work(){
 			vector<uint64_t> response;
 			m_virtualCommunicator->getMessageResponseElements(m_workerIdentifier,&response);
 			m_numberOfPaths=response[0];
-		
+
 			if(m_parameters->hasOption("-debug-fusions2"))
 				cout<<"worker "<<m_workerIdentifier<<" Got "<<m_numberOfPaths<<endl;
 
@@ -118,7 +118,7 @@ void JoinerWorker::work(){
 				Kmer kmer=m_path->at(m_position);
 				if(m_reverseStrand)
 					kmer=kmer.complementVertex(m_parameters->getWordSize(),m_parameters->getColorSpaceMode());
-	
+
 				int destination=kmer.vertexRank(m_parameters->getSize(),
 					m_parameters->getWordSize(),m_parameters->getColorSpaceMode());
 				int elementsPerQuery=m_virtualCommunicator->getElementsPerQuery(RAY_MPI_TAG_ASK_VERTEX_PATH);
@@ -152,7 +152,7 @@ void JoinerWorker::work(){
 
 				if(otherPathIdentifier != m_identifier){
 					m_hits[otherPathIdentifier]++;
-			
+
 					/* TODO: these values should be updated in a better way. */
 
 					int positionOnSelf=m_position;
@@ -312,7 +312,7 @@ void JoinerWorker::work(){
 			int hitLength=m_hitLengths[selectedHit];
 			int selfLength=m_path->size();
 			int matches=m_hits[hit];
-			
+
 			if(m_parameters->hasOption("-debug-fusions")){
 				cout<<"SelectedHit selfPath= "<<m_identifier<<" selfStrand="<<m_reverseStrand<<" selfLength= "<<selfLength<<" MinSelf="<<m_minPositionOnSelf[hit]<<" MaxSelf="<<m_maxPositionOnSelf[hit]<<" Path="<<hit<<"	matches= "<<matches<<"	length= "<<hitLength<<" minPosition= "<<m_minPosition[hit]<<" maxPosition= "<<m_maxPosition[hit]<<endl;
 			}
@@ -351,7 +351,7 @@ void JoinerWorker::work(){
 				Kmer kmer;
 				kmer.unpack(&response,&position);
 				m_hitVertices.push_back(kmer);
-				
+
 				m_hitPosition++;
 				m_requestedHitVertex=false;
 			}
@@ -384,7 +384,7 @@ void JoinerWorker::work(){
 			/* self can be forward or reverse
  * 				self can hit on its left or on its right side
  * 			other can be forward
- * 			other can hit on its left and on its right side 
+ * 			other can hit on its left and on its right side
  * 			*/
 
 			int selfMiddle=(m_minPositionOnSelf[hitName]+m_maxPositionOnSelf[hitName])/2;
@@ -408,7 +408,7 @@ void JoinerWorker::work(){
  * 				*/
 			if(selfSide==RIGHT_SIDE && otherSide == LEFT_SIDE){
 				cout<<"VALID"<<endl;
-				
+
 				vector<Kmer> newPath;
 
 				/* we take directly the path */

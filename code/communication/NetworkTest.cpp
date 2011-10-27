@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -60,17 +60,17 @@ void NetworkTest::constructor(int rank,int*masterMode,int*slaveMode,int size,Sta
 	m_sumOfMicroSeconds=0;
 
 	/* a word is 8 bytes */
-	/* MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000 per default so 
+	/* MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000 per default so
 		numberOfWords must be <= 500 */
 	/* this is only for the network test */
 	/* default is 500 */
 	m_numberOfWords=500;
 }
 
-/** call the slave method 
+/** call the slave method
  *
  * To test the network:
- * 
+ *
  * n=1000
  *
  * i=n
@@ -122,7 +122,7 @@ void NetworkTest::slaveWork(){
 			//cout<<m_rank<<" sends RAY_MPI_TAG_TEST_NETWORK_MESSAGE to "<<destination<<endl;
 		}else if(m_inbox->size()>0 && m_inbox->at(0)->getTag()==RAY_MPI_TAG_TEST_NETWORK_MESSAGE_REPLY){
 			uint64_t endingMicroSeconds=getMicroseconds();
-			
+
 			if(m_parameters->hasOption("-write-network-test-raw-data")){
 				m_receivedMicroseconds.push_back(endingMicroSeconds);
 			}
@@ -163,7 +163,7 @@ void NetworkTest::writeData(){
 		ostringstream file;
 		file<<m_parameters->getPrefix();
 		file<<"Rank"<<m_parameters->getRank()<<".NetworkTestData.txt";
-	
+
 		cout<<"Rank "<<m_parameters->getRank()<<" is writing "<<file.str()<<" (-write-network-test-raw-data)"<<endl;
 
 		ofstream f(file.str().c_str());
@@ -178,7 +178,7 @@ void NetworkTest::writeData(){
 		f<<"# average latency measured in microseconds: "<<m_averageLatencyInMicroSeconds<<endl;
 		f<<"# next line contains column names"<<endl;
 		f<<"# TestMessage SourceRank DestinationRank QueryTimeInMicroseconds ReplyTimeInMicroseconds Latency MessagesSentToDestination"<<endl;
-	
+
 		#ifdef ASSERT
 		assert(m_sentMicroseconds.size() == m_destinations.size());
 		assert(m_sentMicroseconds.size() == m_receivedMicroseconds.size());
@@ -253,7 +253,7 @@ void NetworkTest::masterWork(){
 		cout<<endl;
 		m_timePrinter->printElapsedTime("Network testing");
 		cout<<endl;
-		
+
 		if(m_parameters->hasOption("-test-network-only")){
 			(*m_masterMode)=RAY_MASTER_MODE_KILL_ALL_MPI_RANKS;
 			return;

@@ -10,7 +10,7 @@ I used this C program to filter Assemblathon 2/Parrot/Illumina UK/TruSeq 3 expor
 Author: Sébastien Boisvert
 Distributed with the Ray assembler
 License: GPL
-2011-06-23 
+2011-06-23
 ^^
 */
 
@@ -57,7 +57,7 @@ int main(int argc,char**argv){
 
 	strcpy(fastq1,file1);
 	strcpy(fastq2,file2);
-	
+
 	strcpy(fastq1+strlen(fastq1),extension);
 	strcpy(fastq2+strlen(fastq2),extension);
 
@@ -65,7 +65,7 @@ int main(int argc,char**argv){
 	FILE*fout2=fopen(fastq2,"w");
 
 	int qseqNumberOfColumns=11+1; /* change me */
-	
+
 	int qseqSequenceColumn=9;
 
 	int pair=0;
@@ -76,13 +76,13 @@ int main(int argc,char**argv){
 			fscanf(fp1,"%s",sequence1);
 		while(i++<qseqNumberOfColumns)
 			fscanf(fp1,"%s",trash);
-		
+
 		i=0;
 		while(i++<qseqSequenceColumn)
 			fscanf(fp2,"%s",sequence2);
 		while(i++<qseqNumberOfColumns)
 			fscanf(fp2,"%s",trash);
-		
+
 		if(!valid(sequence1))
 			continue;
 		if(!valid(sequence2))

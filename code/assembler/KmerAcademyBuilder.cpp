@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -45,7 +45,7 @@ void KmerAcademyBuilder::process(int*m_mode_send_vertices_sequence_id,
 				RingAllocator*m_outboxAllocator,
 				int*m_mode
 				){
-	
+
 	MACRO_COLLECT_PROFILING_INFORMATION();
 
 	if(this->m_outbox==NULL){
@@ -112,7 +112,7 @@ void KmerAcademyBuilder::process(int*m_mode_send_vertices_sequence_id,
 	}else{
 		if(m_mode_send_vertices_sequence_id_position==0){
 			(*m_myReads)[(*m_mode_send_vertices_sequence_id)]->getSeq(m_readSequence,m_parameters->getColorSpaceMode(),false);
-		
+
 		}
 		int len=strlen(m_readSequence);
 
@@ -124,7 +124,7 @@ void KmerAcademyBuilder::process(int*m_mode_send_vertices_sequence_id,
 
 		char memory[MAXKMERLENGTH+1];
 		int lll=len-wordSize+1;
-		
+
 		#ifdef ASSERT
 		assert(m_readSequence!=NULL);
 		#endif
@@ -149,7 +149,7 @@ void KmerAcademyBuilder::process(int*m_mode_send_vertices_sequence_id,
 				lowerKmer=reverseComplementKmer;
 
 			int rankToFlush=lowerKmer.hash_function_1()%m_parameters->getSize();
-			
+
 			for(int i=0;i<KMER_U64_ARRAY_SIZE;i++){
 				m_bufferedData.addAt(rankToFlush,lowerKmer.getU64(i));
 			}
@@ -166,7 +166,7 @@ void KmerAcademyBuilder::process(int*m_mode_send_vertices_sequence_id,
 			(*m_mode_send_vertices_sequence_id)++;
 			(m_mode_send_vertices_sequence_id_position)=0;
 		}
-			
+
 		MACRO_COLLECT_PROFILING_INFORMATION();
 	}
 
@@ -186,7 +186,7 @@ void KmerAcademyBuilder::constructor(int size,Parameters*parameters,GridTable*gr
 	m_outbox=NULL;
 	m_mode_send_vertices_sequence_id_position=0;
 	m_bufferedData.constructor(size,MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t),RAY_MALLOC_TYPE_KMER_ACADEMY_BUFFER,m_parameters->showMemoryAllocations(),KMER_U64_ARRAY_SIZE);
-	
+
 	m_pendingMessages=0;
 	m_size=size;
 }

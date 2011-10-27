@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -32,7 +32,7 @@
 using namespace std;
 
 /*
- * Get the markers for a Kmer and also send progression 
+ * Get the markers for a Kmer and also send progression
  * information to the appropriate MPI rank.
  * \author Sébastien Boisvert
  */

@@ -15,14 +15,14 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You have received a copy of the GNU General Public License
-along with this program (COPYING).  
+along with this program (COPYING).
 see <http://www.gnu.org/licenses/>
 
 */
 
 #include <memory/malloc_types.h>
 
-/* use a macro to define the array 
+/* use a macro to define the array
  * #x means x in quotes   FOO becomes "FOO" */
 
 #define MACRO_LIST_ITEM(x) #x,

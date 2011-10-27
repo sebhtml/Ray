@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -75,7 +75,7 @@ void LibraryWorker::work(){
 			assert(m_EXTENSION_currentPosition<(int)m_seedingData->m_SEEDING_seeds[m_SEEDING_i].size());
 			#endif
 			Kmer vertex=m_seedingData->m_SEEDING_seeds[m_SEEDING_i][m_EXTENSION_currentPosition];
-		
+
 			m_readFetcher.constructor(&vertex,m_outboxAllocator,m_inbox,m_outbox,m_parameters,m_virtualCommunicator,m_SEEDING_i);
 			#ifdef ASSERT
 			assert(!m_readFetcher.isDone());
@@ -107,7 +107,7 @@ void LibraryWorker::work(){
 					#ifdef ASSERT
 					assert((int)buffer.size()==4);
 					#endif
-	
+
 					/** this is a sentinel value */
 					/** data: readLength, rank, id, library */
 					if((int)buffer[1] != MAX_NUMBER_OF_MPI_PROCESSES){
@@ -123,7 +123,7 @@ void LibraryWorker::work(){
 								char rightStrand=annotation.getStrand();
 								char leftStrand=element->m_readStrand;
 								int leftStrandPosition=element->m_strandPosition;
-											
+
 								if(( leftStrand=='F' && rightStrand=='R' )
 								||(  leftStrand=='R' && rightStrand=='F' )){// make sure the orientation is OK
 									int p1=element->m_readPosition;

@@ -14,7 +14,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You have received a copy of the GNU General Public License
-along with this program (COPYING).  
+along with this program (COPYING).
 see <http://www.gnu.org/licenses/>
 
 */
@@ -26,7 +26,7 @@ see <http://www.gnu.org/licenses/>
 #define RAY_VERSION "Unknown"
 #endif
 
-/* 
+/*
  * Define the maximum k-mer length when
  * the compiler/make does not.
  */
@@ -50,7 +50,7 @@ see <http://www.gnu.org/licenses/>
 #include <xiosbase>
 #include <stdexcept>
 /* http://msdn.microsoft.com/en-us/library/b0084kay%28VS.80%29.aspx */
-#define __func__ __FUNCTION__ 
+#define __func__ __FUNCTION__
 #endif
 
 #ifdef FORCE_PACKING
@@ -91,7 +91,7 @@ see <http://www.gnu.org/licenses/>
 #define MAX_ALLOCATED_OUTPUT_BUFFERS 17
 
 /* maximum value for a uint16_t */
-#define RAY_MAXIMUM_READ_LENGTH 65535 
+#define RAY_MAXIMUM_READ_LENGTH 65535
 
 #define MAX_VERTICES_TO_VISIT 500
 #define TIP_LIMIT 40
@@ -99,7 +99,7 @@ see <http://www.gnu.org/licenses/>
 /*
  Open-MPI eager threshold is 4k (4096), and this include Open-MPI's metadata.
  tests show that 4096-100 bytes are sent eagerly, too.
- divide that by eight and you get the number of 64-bit integers 
+ divide that by eight and you get the number of 64-bit integers
  allowed in a single eager communication
 
  * "4096 is rendezvous. For eager, try 4000 or lower. "

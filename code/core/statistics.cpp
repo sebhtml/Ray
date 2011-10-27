@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -56,7 +56,7 @@ int getStandardDeviation(vector<int>*x){
 	}
 
 	int standardDeviation=(int)sqrt((sum+0.0));
-	
+
 	if(n > 0){
 		standardDeviation=(int)sqrt((sum+0.0)/n);
 	}

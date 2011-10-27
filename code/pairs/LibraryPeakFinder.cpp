@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -100,7 +100,7 @@ void callPeak(vector<int>*x,vector<int>*y,int peak,vector<int>*peakAverages,vect
 	int threshold=20;
 	if(occupancy<threshold)
 		return;
-	
+
 	#ifdef VERBOSE
 	cout<<"Peak Average= "<<average<<" StandardDeviation= "<<standardDeviation<<" Count= "<<n<<" Points= "<<dataPoints<<" Quality= "<<occupancy<<" %"<<endl;
 	#endif

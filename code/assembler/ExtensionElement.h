@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -43,7 +43,7 @@ class ExtensionElement{
 
 	/** the overall agreement of this molecular target */
 	uint16_t m_agreement;
-	
+
 public:
 	bool m_activated;
 

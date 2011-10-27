@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -31,7 +31,7 @@
  checkpoint type (4 bytes, int)
  checkpoint content (the rest)
 
-for now, I don't use these in checkpointing files 
+for now, I don't use these in checkpointing files
 */
 
 #define RAY_CHECKPOINT_FILE_MAGIC_NUMBER 0xce8e612800a9a266

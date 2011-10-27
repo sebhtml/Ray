@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -40,7 +40,7 @@ void MyAllocator::reset(){
 /** the constructor does not allocate a chunk */
 void MyAllocator::constructor(int chunkSize,int type,bool show){
 	m_show=show;
-	m_CHUNK_SIZE=chunkSize; 
+	m_CHUNK_SIZE=chunkSize;
 	m_type=type;
 }
 
@@ -90,7 +90,7 @@ void*MyAllocator::allocate(int s){
 		assert(false);
 		return NULL;// you asked too much.., this is critical..
 	}
-	
+
 	int left=m_CHUNK_SIZE-m_currentPosition;
 	if(s>left){
 		if(!(m_currentChunkId+1<(int)m_chunks.size())){
@@ -101,12 +101,12 @@ void*MyAllocator::allocate(int s){
 		m_currentPosition=0;
 		return allocate(s);
 	}
-	
+
 	#ifdef ASSERT
 	if(m_currentChunkId>=(int)m_chunks.size()){
 		cout<<"ChunkId="<<m_currentChunkId<<" Chunks="<<m_chunks.size()<<endl;
 	}
-	
+
 	assert(m_currentChunkId<(int)m_chunks.size());
 	if(m_currentPosition>=m_CHUNK_SIZE){
 		cout<<"Error: ToAllocate="<<s<<" Chunks="<<m_chunks.size()<<" CurrentChunk="<<m_currentChunkId<<" ChunkPosition="<<m_currentPosition<<" ChunkSize="<<m_CHUNK_SIZE<<endl;

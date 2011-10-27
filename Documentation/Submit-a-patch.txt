@@ -48,7 +48,7 @@ git format-patch -1 cdefecb3ab --stdout > fix.patch
 
 git apply --stat fix.patch
 git apply --check fix.patch
-git am --signoff < fix.patch 
+git am --signoff < fix.patch
 
 === Result ===
 
@@ -61,6 +61,6 @@ Commit:     Sébastien Boisvert <Sebastien.Boisvert.3@ulaval.ca>
 CommitDate: Thu Jul 21 08:04:17 2011 -0400
 
     SMU MSG
-    
+
     Signed-off-by: Sébastien Boisvert <Sebastien.Boisvert.3@ulaval.ca>
 

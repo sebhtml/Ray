@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -96,7 +96,7 @@ void VertexMessenger::getReadsForRepeatedVertex(){
 		m_vertex.pack(message,&j);
 		message[j++]=(uint64_t)m_pointer;
 		int maximumMates=MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t)/4;
-		
+
 		int processed=0;
 		while(processed<maximumMates&&m_mateIterator!=m_matesToMeet->end()){
 			uint64_t mate=*m_mateIterator;

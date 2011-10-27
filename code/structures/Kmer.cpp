@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -139,7 +139,7 @@ uint8_t Kmer::getSecondSegmentLastCode(int w){
 	int bitPositionInChunk=bitPosition%64;
 	uint64_t chunk=getU64(chunkId);
 	chunk=(chunk<<(sizeof(uint64_t)*8-bitPositionInChunk))>>(sizeof(uint64_t)*8-2); // clecar bits
-	
+
 	return (uint8_t)chunk;
 }
 
@@ -212,7 +212,7 @@ vector<Kmer> Kmer::_getIngoingEdges(uint8_t edges,int k){
 	vector<Kmer> b;
 	Kmer aTemplate;
 	aTemplate=*this;
-	
+
 	int posToClear=2*k;
 
 	for(int i=0;i<aTemplate.getNumberOfU64();i++){
@@ -229,7 +229,7 @@ vector<Kmer> Kmer::_getIngoingEdges(uint8_t edges,int k){
 //	00cdefghij  klmnopqr00		// reset the 2 last
 
 /**
- * Now, we need to copy 2 bits from 
+ * Now, we need to copy 2 bits from
  */
 		if(i!=0){
 			// the 2 last of the previous will be the 2 first of this one
@@ -243,7 +243,7 @@ vector<Kmer> Kmer::_getIngoingEdges(uint8_t edges,int k){
  *	Otherwise, it will change the hash value of the Kmer...
  *	The chunk number i contains bits from i to i*64-1
  *	Therefore, if posToClear is inside these boundaries,
- *	then it is obvious that these awful bits must be changed 
+ *	then it is obvious that these awful bits must be changed
  *	to 0
  */
 		if(i*64<=posToClear&&posToClear<i*64+64){
@@ -383,7 +383,7 @@ Kmer Kmer::complementVertex(int wordSize,bool colorSpace){
 		int bitPositionInChunk=(2*positionInMer)%64;
 		uint64_t chunk=getU64(u64_id);
 		uint64_t j=(chunk<<(62-bitPositionInChunk))>>62;
-		
+
 		if(!colorSpace) /* in color space, reverse complement is just reverse */
 			j=~j&mask;
 

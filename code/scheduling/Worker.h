@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -26,15 +26,15 @@
 #include <memory/RingAllocator.h>
 #include <communication/VirtualCommunicator.h>
 
-/** a general worker class 
+/** a general worker class
  * \author Sébastien Boisvert
  */
 class Worker{
 
 public:
 
-	/** work a little bit 
-	 * the class Worker provides no implementation for that 
+	/** work a little bit
+	 * the class Worker provides no implementation for that
 	*/
 	virtual void work() = 0;
 

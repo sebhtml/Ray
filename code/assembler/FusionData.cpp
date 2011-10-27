@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -38,14 +38,14 @@ void FusionData::distribute(SeedingData*m_seedingData,ExtensionData*m_ed,int get
 		if(m_parameters->hasCheckpoint("ContigPaths")){
 			cout<<"Rank "<<m_parameters->getRank()<<" is reading checkpoint ContigPaths"<<endl;
 			ifstream f(m_parameters->getCheckpointFile("ContigPaths").c_str());
-	
+
 			/* delete old stuff */
 			m_ed->m_EXTENSION_identifiers.clear();
 			m_ed->m_EXTENSION_contigs.clear();
-	
+
 			int theSize=0;
 			f.read((char*)&theSize,sizeof(int));
-	
+
 			/* write each path with its name and vertices */
 			for(int i=0;i<theSize;i++){
 				uint64_t name=0;
@@ -58,12 +58,12 @@ void FusionData::distribute(SeedingData*m_seedingData,ExtensionData*m_ed,int get
 					kmer.read(&f);
 					path.push_back(kmer);
 				}
-	
+
 				#ifdef ASSERT
 				assert(vertices!=0);
 				assert(vertices == (int)path.size());
 				#endif
-	
+
 				m_ed->m_EXTENSION_identifiers.push_back(name);
 				m_ed->m_EXTENSION_contigs.push_back(path);
 			}
@@ -160,7 +160,7 @@ void FusionData::constructor(int size,int max,int rank,StaticVector*outbox,
 	#ifdef ASSERT
 	assert(m_wordSize>0);
 	#endif
-	
+
 	m_FINISH_pathsForPosition=new vector<vector<Direction> >;
 	m_mappingConfirmed=false;
 	m_validationPosition=0;
@@ -232,11 +232,11 @@ void FusionData::finishFusions(){
 		overlapMinimumLength=candidateOverlapLength;
 
 	if((int)m_ed->m_EXTENSION_contigs[m_seedingData->m_SEEDING_i].size()<overlapMinimumLength){
-	
+
 		if(m_seedingData->m_SEEDING_i%10==0){
 			printf("Rank %i is finishing fusions [%i/%i]\n",getRank(),(int)m_seedingData->m_SEEDING_i+1,(int)m_ed->m_EXTENSION_contigs.size());
 			fflush(stdout);
-	
+
 			if(m_parameters->showMemoryUsage()){
 				showMemoryUsage(getRank());
 				showDate();
@@ -254,7 +254,7 @@ void FusionData::finishFusions(){
 		return;
 	}
 	// check if the path begins with someone else.
-	
+
 	uint64_t currentId=m_ed->m_EXTENSION_identifiers[m_seedingData->m_SEEDING_i];
 	#ifdef ASSERT
 	assert(getRankFromPathUniqueId(currentId)<m_size);
@@ -265,7 +265,7 @@ void FusionData::finishFusions(){
 	// start threading the extension
 	// as the algorithm advance on it, it stores the path positions.
 	// when it reaches a choice, it will use the available path as basis.
-	
+
 	// we have the extension in m_ed->m_EXTENSION_contigs[m_SEEDING_i]
 	// we get the paths with getPaths
 	bool done=false;
@@ -297,7 +297,7 @@ void FusionData::finishFusions(){
 			m_FINISH_pathsForPosition->push_back(a);
 			m_FINISH_coverages.push_back(m_seedingData->m_SEEDING_receivedVertexCoverage);
 			if(m_ed->m_EXTENSION_currentPosition==0){
-				
+
 				if(m_debugFusionCode){
 					cout<<"Trying to join path "<<m_ed->m_EXTENSION_identifiers[m_seedingData->m_SEEDING_i]<<" (";
 					cout<<m_ed->m_EXTENSION_contigs[m_seedingData->m_SEEDING_i].size()<<" vertices) with something else."<<endl;
@@ -306,7 +306,7 @@ void FusionData::finishFusions(){
 				if(m_seedingData->m_SEEDING_i%10==0){
 					printf("Rank %i is finishing fusions [%i/%i]\n",getRank(),(int)m_seedingData->m_SEEDING_i+1,(int)m_ed->m_EXTENSION_contigs.size());
 					fflush(stdout);
-	
+
 					if(m_parameters->showMemoryUsage()){
 						showMemoryUsage(getRank());
 						showDate();
@@ -349,13 +349,13 @@ void FusionData::finishFusions(){
 		// there is a pair x,y with x in directions1 ad y in directions2
 		// with the property that the difference of progressions are exactly overlapMinimumLength (progressions
 		// are simply positions of these vertices on another path.)
-		// 
+		//
 
 			int hits=0;
 			map<uint64_t,vector<int> > indexOnDirection2;
 
 			set<uint64_t> in1;
-			
+
 			for(int j=0;j<(int)directions1.size();j++){
 				uint64_t waveId=directions1[j].getWave();
 				in1.insert(waveId);
@@ -373,7 +373,7 @@ void FusionData::finishFusions(){
 				}
 				indexOnDirection2[waveId].push_back(j);
 			}
-	
+
 			// find all hits
 			//
 			for(int i=0;i<(int)directions1.size();i++){
@@ -388,12 +388,12 @@ void FusionData::finishFusions(){
 					int otherProgression=directions2[index2].getProgression();
 					int observedDistance=(progression1-otherProgression+1);
 					int expectedDistance=(overlapMinimumLength-2*capLength);
-					
+
 					if(m_debugFusionCode)
 						cout<<"Rank "<<m_parameters->getRank()<<" selfDistance: "<<expectedDistance<<" otherDistance: "<<observedDistance<<endl;
 
 					if(observedDistance==expectedDistance){
-						// this is 
+						// this is
 						done=false;
 						hits++;
 						m_selectedPath=wave1;
@@ -403,7 +403,7 @@ void FusionData::finishFusions(){
 			}
 
 			indexOnDirection2.clear();
-	
+
 			/**
  	*		if there is more than one hit, they must be repeated regions. (?)
  	*
@@ -475,11 +475,11 @@ void FusionData::finishFusions(){
 				int rankId=getRankFromPathUniqueId(pathId);
 				uint64_t*message=(uint64_t*)m_outboxAllocator->allocate(sizeof(uint64_t));
 				message[0]=pathId;
-	
+
 				#ifdef ASSERT
 				assert(rankId<m_size);
 				#endif
-	
+
 				Message aMessage(message,1,rankId,RAY_MPI_TAG_GET_PATH_LENGTH,getRank());
 				m_outbox->push_back(aMessage);
 				m_FUSION_pathLengthRequested=true;

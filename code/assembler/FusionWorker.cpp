@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -83,7 +83,7 @@ void FusionWorker::work(){
 			vector<uint64_t> response;
 			m_virtualCommunicator->getMessageResponseElements(m_workerIdentifier,&response);
 			m_numberOfPaths=response[0];
-		
+
 			if(m_parameters->hasOption("-debug-fusions2"))
 				cout<<"worker "<<m_workerIdentifier<<" Got "<<m_numberOfPaths<<endl;
 
@@ -105,7 +105,7 @@ void FusionWorker::work(){
 				Kmer kmer=m_path->at(m_position);
 				if(m_reverseStrand)
 					kmer=kmer.complementVertex(m_parameters->getWordSize(),m_parameters->getColorSpaceMode());
-	
+
 				int destination=kmer.vertexRank(m_parameters->getSize(),
 					m_parameters->getWordSize(),m_parameters->getColorSpaceMode());
 				int elementsPerQuery=m_virtualCommunicator->getElementsPerQuery(RAY_MPI_TAG_ASK_VERTEX_PATH);

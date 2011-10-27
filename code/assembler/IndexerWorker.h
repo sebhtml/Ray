@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -74,8 +74,8 @@ public:
 	map<int,map<int,int> >*forwardStatistics,
 	map<int,map<int,int> >*reverseStatistics);
 
-/** work a little bit 
-	 * the class Worker provides no implementation for that 
+/** work a little bit
+	 * the class Worker provides no implementation for that
 	*/
 	void work();
 

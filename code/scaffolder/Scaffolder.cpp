@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -51,7 +51,7 @@ void Scaffolder::solve(){
  *  However, it reduces significantly the number of scaffolds.
  *  Therefore, its usage is warranted.
  */
-	int minimumNumberOfRawLinks=3; 
+	int minimumNumberOfRawLinks=3;
 
 	map<uint64_t,map<char,map<uint64_t,map<char,vector<int> > > > > keys;
 	for(int i=0;i<(int)m_masterLinks.size();i++){
@@ -99,7 +99,7 @@ void Scaffolder::solve(){
 					vector<int> countValues;
 					vector<int> averageValues;
 					vector<int> standardDeviationValues;
-	
+
 					for(vector<int>::iterator m=l->second.begin();m!=l->second.end();m++){
 						/* +0 is average, +1 is the count */
 						if(pos%3==1){
@@ -116,8 +116,8 @@ void Scaffolder::solve(){
 						}
 						pos++;
 					}
-					
-					/* we want contig A to reach contig B and 
+
+					/* we want contig A to reach contig B and
 						we want contig B to reach contig A */
 					if(n==2){
 						int average=sum/n;
@@ -139,7 +139,7 @@ void Scaffolder::solve(){
 						}
 						f<<endl;
 
-	
+
 						ScaffoldingEdge scaffoldingEdge(leftContig,leftStrand,rightContig,rightStrand,average,averageValues[0],countValues[0],standardDeviationValues[0],
 averageValues[1],countValues[1],standardDeviationValues[1]);
 
@@ -150,7 +150,7 @@ averageValues[1],countValues[1],standardDeviationValues[1]);
 		}
 	}
 	f.close();
-	
+
 	// write contig list
 	ostringstream contigList;
 	contigList<<m_parameters->getPrefix()<<"ContigLengths.txt";
@@ -566,7 +566,7 @@ void Scaffolder::processVertex(Kmer*vertex){
 		if(m_positionOnContig==0){
 			m_scaffoldingSummary.clear();
 			m_summaryPerformed=false;
-		
+
 			m_vertexCoverageValues.clear();
 		}
 		if(m_positionOnContig==(int)(*m_contigs)[m_contigId].size()-1){
@@ -593,7 +593,7 @@ void Scaffolder::processVertex(Kmer*vertex){
 		m_receivedCoverage=coverage;
 		m_coverageReceived=true;
 		m_initialisedFetcher=false;
-		
+
 		/* receive the coverage value at this position */
 		m_vertexCoverageValues.push_back(m_receivedCoverage);
 
@@ -863,7 +863,7 @@ void Scaffolder::processAnnotation(){
 /*
 Case 6. (allowed)
 
-                    ---->                              
+                    ---->
                                                            ---->
 ------------------------>              ------------------------>
 */
@@ -883,7 +883,7 @@ Case 6. (allowed)
 /*
 Case 1. (allowed)
 
----->                              
+---->
                                        ---->
 ------------------------>              ------------------------>
 */
@@ -995,7 +995,7 @@ Case 13. (allowed)
 		#endif
 
 		bool invalidVertex=(!(parents == 1 && children == 1));
-	
+
 		// don't judge a vertex by its parents and children
 		// TODO: dump invalid parents and children by using their coverage (see SeedWorker.cpp)
 		invalidVertex=false;
@@ -1024,7 +1024,7 @@ Case 13. (allowed)
 		m_virtualCommunicator->getMessageResponseElements(m_workerId,&response);
 		m_pairedReverseDirectionLength=response[0];
 		m_reverseDirectionLengthReceived=true;
-		
+
 		int range=m_parameters->getLibraryMaxAverageLength(m_pairedReadLibrary)+3*m_parameters->getLibraryMaxStandardDeviation(m_pairedReadLibrary);
 
 		if(m_pairedReverseDirectionLength<range
@@ -1033,7 +1033,7 @@ Case 13. (allowed)
 		|| 2*m_pairedReverseMarkerCoverage<m_receivedCoverage){
 			return;
 		}
-	
+
 		if(m_parameters->hasOption("-debug-scaffolder")){
 			cout<<endl;
 			cout<<"AverageDistance: "<<m_parameters->getLibraryMaxAverageLength(m_pairedReadLibrary)<<endl;
@@ -1076,7 +1076,7 @@ Case 13. (allowed)
 /*
 Case 4. (allowed)
 
----->                              
+---->
                                                            <----
 ------------------------>              ------------------------>
 */
@@ -1093,12 +1093,12 @@ Case 4. (allowed)
 				hit.constructor(distance,m_receivedCoverage,m_pairedReverseMarkerCoverage);
 				m_scaffoldingSummary[(*m_contigNames)[m_contigId]]['R'][m_pairedReverseDirectionName]['R'].push_back(hit);
 			}
-		
+
 
 /*
 Case 7. (allowed)
 
-                    ---->                              
+                    ---->
                                        <----
 ------------------------>              ------------------------>
 */
@@ -1114,7 +1114,7 @@ Case 7. (allowed)
 				hit.constructor(distance,m_receivedCoverage,m_pairedReverseMarkerCoverage);
 				m_scaffoldingSummary[(*m_contigNames)[m_contigId]]['F'][m_pairedReverseDirectionName]['F'].push_back(hit);
 			}
-	
+
 
 /*
 Case 11. (allowed)
@@ -1174,7 +1174,7 @@ void Scaffolder::getContigSequence(uint64_t id){
 		m_contigPath.clear();
 		m_requestedContigChunk=false;
 	}
-	
+
 	if(m_position<m_theLength){
 		if(!m_requestedContigChunk){
 			m_requestedContigChunk=true;
@@ -1264,7 +1264,7 @@ void Scaffolder::writeScaffolds(){
 						outputBuffer<<"\n";
 					}
 				}
-				
+
 				fprintf(m_fp,"%s",outputBuffer.str().c_str());
 
 				if(m_contigId<(int)m_scaffoldContigs[m_scaffoldId].size()-1){

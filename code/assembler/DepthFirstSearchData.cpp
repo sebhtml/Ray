@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -65,12 +65,12 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 		if(!(*vertexCoverageRequested)){
 			(*vertexCoverageRequested)=true;
 			(*vertexCoverageReceived)=false;
-			
+
 			uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(KMER_U64_ARRAY_SIZE*sizeof(uint64_t));
 			int j=0;
 			vertexToVisit.pack(message,&j);
 			int dest=parameters->_vertexRank(&vertexToVisit);
-			
+
 			Message aMessage(message,j,dest,RAY_MPI_TAG_REQUEST_VERTEX_COVERAGE,theRank);
 			(*outbox).push_back(aMessage);
 		}else if((*vertexCoverageReceived)){
@@ -82,7 +82,7 @@ void DepthFirstSearchData::depthFirstSearch(Kmer root,Kmer a,int maxDepth,
 				if(theDepth> m_depthFirstSearch_maxDepth){
 					m_depthFirstSearch_maxDepth=theDepth;
 				}
-			
+
 				// visit the vertex, and ask next edges.
 				uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(1*sizeof(uint64_t));
 				int bufferPosition=0;
@@ -190,7 +190,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 
 			(*vertexCoverageRequested)=true;
 			(*vertexCoverageReceived)=false;
-			
+
 			uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(KMER_U64_ARRAY_SIZE*sizeof(uint64_t));
 			int bufferPosition=0;
 			vertexToVisit.pack(message,&bufferPosition);
@@ -227,7 +227,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 				if(theDepth> m_depthFirstSearch_maxDepth){
 					m_depthFirstSearch_maxDepth=theDepth;
 				}
-			
+
 				// visit the vertex, and ask next edges.
 				uint64_t*message=(uint64_t*)(*outboxAllocator).allocate(1*sizeof(uint64_t));
 				int bufferPosition=0;
@@ -243,7 +243,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 				int theDepth=m_depthFirstSearchDepths.top();
 
 				#ifdef ASSERT
-	
+
 				assert(theDepth>=0);
 				assert(theDepth<=maxDepth);
 				#endif
@@ -276,7 +276,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 					}
 					m_depthFirstSearchVerticesToVisit.push(nextVertex);
 					m_depthFirstSearchDepths.push(newDepth);
-		
+
 					m_depthFirstSearchVisitedVertices_vector.push_back(vertexToVisit);
 					m_depthFirstSearchVisitedVertices_vector.push_back(nextVertex);
 					m_depthFirstSearchVisitedVertices_depths.push_back(newDepth);
@@ -320,7 +320,7 @@ void DepthFirstSearchData::depthFirstSearchBidirectional(Kmer a,int maxDepth,
 
 				#ifdef ASSERT
 				assert(m_ingoingEdges.count(vertexToVisit)==0);
-	
+
 				#endif
 
 				m_ingoingEdges[vertexToVisit]=ingoingEdges;

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -38,7 +38,7 @@ CoverageDistribution::CoverageDistribution(map<int,uint64_t>*distributionOfCover
 		}
 		f.close();
 	}
-	
+
 	vector<int> x;
 	vector<uint64_t> y;
 	for(map<int,uint64_t>::iterator i=distributionOfCoverage->begin();i!=distributionOfCoverage->end();i++){
@@ -64,16 +64,16 @@ CoverageDistribution::CoverageDistribution(map<int,uint64_t>*distributionOfCover
 			if(y.at(position) > y.at(largestPosition))
 				largestPosition=position;
 		}
-	
+
 		if(x[largestPosition]>maximumX)
 			continue;
 
 		if(x[largestPosition]<minimumX)
 			continue;
-	
+
 		if(x[largestPosition] >= safeThreshold && y[largestPosition] < minimumY2)
 			continue;
-		
+
 		if(y.at(largestPosition)>minimumY)
 			votes[largestPosition]++;
 	}
@@ -85,7 +85,7 @@ CoverageDistribution::CoverageDistribution(map<int,uint64_t>*distributionOfCover
 			largestPosition=i->first;
 		//cout<<"x: "<<x[i->first]<<" votes: "<<i->second<<" y: "<<y[i->first]<<endl;
 	}
-	
+
 	int minimumPosition=largestPosition;
 	int i=largestPosition;
 	while(i >= 0){

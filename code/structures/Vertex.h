@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -33,7 +33,7 @@ using namespace std;
 
 /*
  * the vertex is important in the algorithm
- * a DNA sequence is simply an ordered array of vertices. Two consecutive 
+ * a DNA sequence is simply an ordered array of vertices. Two consecutive
  * vertices always respect the de Bruijn property.
  * a Vertex actually stores two k-mers: only the lower is stored.
  * This halves the memory usage.
@@ -52,7 +52,7 @@ public:
  *	the ingoing and outgoing edges.
  */
 	// outgoing  ingoing
-	
+
 	uint8_t m_edges_lower;
 	uint8_t m_edges_higher;
 

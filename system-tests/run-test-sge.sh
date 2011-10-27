@@ -25,4 +25,4 @@ sed -i $expression3 $qsubFile
 expression2="s@__RAY_GIT_PATH__@$RAY_GIT_PATH@g"
 sed -i $expression2 $qsubFile
 qsubOut=qsub-out-$testName
-qsub $qsubFile 
+qsub $qsubFile

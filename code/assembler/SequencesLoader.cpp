@@ -14,7 +14,7 @@ Ray
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -48,7 +48,7 @@ void SequencesLoader::registerSequence(){
 	Read*theRead=m_loader.at(m_distribution_sequence_id);
 	char read[RAY_MAXIMUM_READ_LENGTH];
 	theRead->getSeq(read,m_parameters->getColorSpaceMode(),false);
-	
+
 	//cout<<"DEBUG2 Read="<<m_distribution_sequence_id<<" color="<<m_parameters->getColorSpaceMode()<<" Seq= "<<read<<endl;
 
 	Read myRead;
@@ -81,7 +81,7 @@ void SequencesLoader::registerSequence(){
 		uint64_t rightSequenceIdOnRank=m_parameters->getIdFromGlobalId(rightSequenceGlobalId);
 
 		int library=m_parameters->getLibrary(m_distribution_file_id);
-		
+
 		(*m_myReads)[leftSequenceIdOnRank]->setLeftType();
 		(*m_myReads)[leftSequenceIdOnRank]->getPairedRead()->constructor(rightSequenceRank,rightSequenceIdOnRank,library);
 	}else if(m_LOADER_isRightFile){
@@ -115,7 +115,7 @@ void SequencesLoader::registerSequence(){
 		uint64_t leftSequenceIdOnRank=m_myReads->size()-1;
 
 		int library=m_parameters->getLibrary(m_distribution_file_id);
-		
+
 		(*m_myReads)[leftSequenceIdOnRank]->setLeftType();
 		(*m_myReads)[leftSequenceIdOnRank]->getPairedRead()->constructor(rightSequenceRank,rightSequenceIdOnRank,library);
 
@@ -127,7 +127,7 @@ void SequencesLoader::registerSequence(){
 		int leftSequenceRank=m_parameters->getRankFromGlobalId(leftSequenceGlobalId);
 		uint64_t leftSequenceIdOnRank=m_parameters->getIdFromGlobalId(leftSequenceGlobalId);
 		int library=m_parameters->getLibrary(m_distribution_file_id);
-		
+
 		(*m_myReads)[rightSequenceIdOnRank]->setRightType();
 		(*m_myReads)[rightSequenceIdOnRank]->getPairedRead()->constructor(leftSequenceRank,leftSequenceIdOnRank,library);
 	}
@@ -201,7 +201,7 @@ bool SequencesLoader::loadSequences(int rank,int size,
 	m_rank=rank;
 
 	this->m_parameters=m_parameters;
-	
+
 	printf("Rank %i is loading sequence reads\n",m_rank);
 	fflush(stdout);
 
@@ -231,7 +231,7 @@ bool SequencesLoader::loadSequences(int rank,int size,
 
 	// count the number of sequences in all files.
 	vector<string> allFiles=(*m_parameters).getAllFiles();
-	
+
 	uint64_t totalNumberOfSequences=0;
 	for(int i=0;i<(int)m_parameters->getNumberOfFiles();i++){
 		totalNumberOfSequences+=m_parameters->getNumberOfSequences(i);
@@ -239,7 +239,7 @@ bool SequencesLoader::loadSequences(int rank,int size,
 
 	uint64_t sequencesPerRank=totalNumberOfSequences/size;
 	uint64_t sequencesOnRanksBeforeThisOne=rank*sequencesPerRank;
-	
+
 	uint64_t startingSequenceId=sequencesOnRanksBeforeThisOne;
 	uint64_t endingSequenceId=startingSequenceId+sequencesPerRank-1;
 
@@ -309,7 +309,7 @@ bool SequencesLoader::loadSequences(int rank,int size,
 
 		m_loader.reset();
 	}
-	
+
 	m_loader.clear();
 	Message aMessage(NULL,0,MASTER_RANK,RAY_MPI_TAG_SEQUENCES_READY,rank);
 	m_outbox->push_back(aMessage);

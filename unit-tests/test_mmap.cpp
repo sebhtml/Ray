@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <map>
 #include <vector>
-#include <sys/mman.h> 
+#include <sys/mman.h>
 #include <string>
 #include <iostream>
 using namespace std;

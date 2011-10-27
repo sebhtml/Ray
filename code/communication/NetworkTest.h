@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -54,7 +54,7 @@ class NetworkTest{
 
 	/* number of words to use for network test */
 	/* a word is 8 bytes */
-	/* MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000 per default so 
+	/* MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000 per default so
 		numberOfWords must be <= 500 */
 	/* this is only for the network test */
 	/* default is 500 */

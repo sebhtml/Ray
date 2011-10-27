@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -26,8 +26,8 @@
 #include <heuristics/RayNovaEngine.h>
 
 /**
- * de Bruijn heuristic to choose extension direction in a graph, described in paper 
- * 	
+ * de Bruijn heuristic to choose extension direction in a graph, described in paper
+ *
  * 	Ray: simultaneous assembly of reads from a mix of high-throughput sequencing technologies.
  * 	Sébastien Boisvert, François Laviolette, and Jacques Corbeil.
  * 	Journal of Computational Biology (Mary Ann Liebert, Inc. publishers).
@@ -44,7 +44,7 @@ class OpenAssemblerChooser{
 	void updateMultiplicators(int a);
 
 	int getWinner(vector<set<int> >*battleVictories,int choices);
-	
+
 	/**
  * choose where to go based on coverage
  */

@@ -12,7 +12,7 @@ int main(){
 	uint64_t h1=392176;
 	uint64_t h2=937741;
 	uint64_t buckets=2097152;
-	
+
 	int*hits=(int*)malloc(sizeof(int)*buckets);
 	for(int bucket=0;bucket<buckets;bucket++)
 		hits[bucket]=0;
@@ -28,7 +28,7 @@ int main(){
 		if(hits[bucket]==1)
 			at1++;
 	}
-	
+
 	assert(at1==buckets);
 
 	return 0;

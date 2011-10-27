@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -77,7 +77,7 @@ KmerCandidate*KmerAcademy::insert(Kmer*key){
  * 	we only insert the lowest so when we do so we virtually insert 2 k-mers
  */
 	if(m_inserted)
-		m_size+=2; 
+		m_size+=2;
 	return entry;
 }
 

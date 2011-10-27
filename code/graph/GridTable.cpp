@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -102,7 +102,7 @@ bool GridTable::isAssembled(Kmer*a){
 	#endif
 
 	Vertex*entry=find(a);
-	
+
 	#ifdef ASSERT
 	assert(entry!=NULL);
 	#endif
@@ -200,7 +200,7 @@ void GridTable::clearDirections(Kmer*a){
 	#ifdef ASSERT
 	assert(i!=NULL);
 	#endif
-	
+
 	i->clearDirections(a);
 }
 

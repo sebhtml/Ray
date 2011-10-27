@@ -14,9 +14,9 @@ workers communicate with the virtual communicator and not directly the outbox an
 
 # Purging dead edges
 
-class EdgePurger : public TaskCreator 
+class EdgePurger : public TaskCreator
 
-class EdgePurgerWorker : public Worker 
+class EdgePurgerWorker : public Worker
 
 
 # Merging similar paths

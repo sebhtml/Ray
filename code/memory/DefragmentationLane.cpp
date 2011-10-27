@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -25,7 +25,7 @@
 using namespace std;
 
 /**
- * Time complexity: O(GROUPS_PER_LANE) to initializing DefragmentationGroup objects 
+ * Time complexity: O(GROUPS_PER_LANE) to initializing DefragmentationGroup objects
  */
 void DefragmentationLane::constructor(int number,int ,bool ){
 	m_number=number;
@@ -53,7 +53,7 @@ void DefragmentationLane::getFastGroup(int n,int bytesPerElement,bool show){
 		}
 	}
 
-	/* update m_fastGroups using the m_numberOfActiveGroups DefragmentationGroup objects 
+	/* update m_fastGroups using the m_numberOfActiveGroups DefragmentationGroup objects
 	Time complexity: O(m_numberOfActiveGroups) where m_numberOfActiveGroups <= GROUPS_PER_LANE */
 	int target=64;
 	m_numberOfFastGroups=0;
@@ -64,7 +64,7 @@ void DefragmentationLane::getFastGroup(int n,int bytesPerElement,bool show){
 			m_fastGroups[m_numberOfFastGroups++]=group;
 		group++;
 	}
-		
+
 	/* if there is at least 1 fast group */
 	if(m_numberOfFastGroups>0){
 		m_fastGroup=m_fastGroups[0];
@@ -97,7 +97,7 @@ void DefragmentationLane::getFastGroup(int n,int bytesPerElement,bool show){
 }
 
 /**
- * can the DefragmentationLane allocates rapidly n elements ? 
+ * can the DefragmentationLane allocates rapidly n elements ?
  * Time complexity: O(1) if m_fastGroup can deliver
  * otherwise, O(GROUPS_PER_LANE)
  * */

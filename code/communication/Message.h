@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -38,22 +38,22 @@ class Message{
  * 	if NULL, m_count must be 0 */
 	uint64_t*m_buffer;
 
-	/** the number of uint64_t that the m_buffer contains 
+	/** the number of uint64_t that the m_buffer contains
  * 	can be 0 regardless of m_buffer value
  * 	*/
 	int m_count;
 
-	/** the Message-passing interface rank destination 
+	/** the Message-passing interface rank destination
  * 	Must be >=0 and <= MPI_Comm_size()-1 */
 	int m_dest;
 
 	/**
  * 	Ray message-passing interface message tags are named RAY_MPI_TAG_<something>
- * 	see mpi_tag_macros.h 
+ * 	see mpi_tag_macros.h
  */
 	int m_tag;
 
-	/** the message-passing interface rank source 
+	/** the message-passing interface rank source
  * 	Must be >=0 and <= MPI_Comm_size()-1 */
 	int m_source;
 public:

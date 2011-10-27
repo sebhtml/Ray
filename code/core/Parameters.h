@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -169,7 +169,7 @@ public:
 	* debug the code for bubble detection
 	*/
 	bool debugBubbles();
-	/** 
+	/**
 	* debug the code that computes seeds
 	*/
 	bool debugSeeds();

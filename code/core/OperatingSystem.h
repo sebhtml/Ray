@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -24,7 +24,7 @@
 
 /** only this file knows the operating system */
 #include <string>
-#include <core/constants.h> 
+#include <core/constants.h>
 #include <communication/MessagesHandler.h>
 using namespace std;
 
@@ -36,7 +36,7 @@ string getOperatingSystem();
 void showDate();
 
 /**
- * get the process identifier 
+ * get the process identifier
  */
 int portableProcessId();
 

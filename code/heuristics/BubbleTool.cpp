@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -34,7 +34,7 @@ map<Kmer,int>*coverages){
 	cout<<"root="<<root.idToWord(m_wordSize,m_parameters->getColorSpaceMode())<<endl;
 	cout<<"digraph{"<<endl;
 	map<Kmer,set<Kmer> > printedEdges;
-	
+
 	for(map<Kmer ,int>::iterator i=coverages->begin();i!=coverages->end();i++){
 		Kmer kmer=i->first;
 		cout<<kmer.idToWord(m_wordSize,m_parameters->getColorSpaceMode())<<" [label=\""<<kmer.idToWord(m_wordSize,m_parameters->getColorSpaceMode())<<" "<<i->second<<"\"]"<<endl;
@@ -169,7 +169,7 @@ map<Kmer ,int>*coverages){
 		vector<int> aVector;
 		observedValues.push_back(aVector);
 		set<Kmer > visited;
-		
+
 		Kmer startingPoint=trees->at(j).at(0);
 		Kmer current=target;
 
@@ -207,7 +207,7 @@ map<Kmer ,int>*coverages){
 	for(int i=0;i<(int)observedValues[1].size();i++){
 		sum2+=observedValues[1][i];
 	}
-	
+
 	if(m_parameters->debugBubbles()){
 		cout<<"O2Values= ";
 		for(int i=0;i<(int)observedValues[1].size();i++){
@@ -235,7 +235,7 @@ map<Kmer ,int>*coverages){
 				m_choice=trees->at(0).at(1);
 			}
 		}
-		
+
 		if(m_parameters->debugBubbles()){
 			cout<<"This is a genuine bubble"<<endl;
 			cout<<"root="<<root.idToWord(m_wordSize,m_parameters->getColorSpaceMode())<<" target="<<target.idToWord(m_wordSize,m_parameters->getColorSpaceMode())<<endl;

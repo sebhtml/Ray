@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -43,12 +43,12 @@ using namespace std;
 #define BUSY_CHUNK 18446744073709551615UL
 
 /**
- *  Return true if the DefragmentationGroup can allocate n elements 
+ *  Return true if the DefragmentationGroup can allocate n elements
  *  Time complexity: O(1)
  */
 bool DefragmentationGroup::canAllocate(int n){
-	/* we want fast allocation in the end...  
-	if a contiguous segment is not available, we can't handle it... 
+	/* we want fast allocation in the end...
+	if a contiguous segment is not available, we can't handle it...
 */
 	#ifdef ASSERT
 	assert((ELEMENTS_PER_GROUP-m_freeSliceStart)<=m_availableElements);
@@ -66,7 +66,7 @@ bool DefragmentationGroup::canAllocate(int n){
  *                             |
  *                     m_freeSliceStart
  *
- *  fragmented slice:  
+ *  fragmented slice:
  *
  *      part of m_block that will undergo fragmentation and defragmentation
  *
@@ -77,7 +77,7 @@ bool DefragmentationGroup::canAllocate(int n){
  *
  *  m_freeSliceStart:
  *      indicates where the free slice begins
- *      
+ *
  *      Allocation algorithm:
  *
  * First, we try to find n consecutive AVAILABLE elements in the
@@ -85,7 +85,7 @@ bool DefragmentationGroup::canAllocate(int n){
  * This is O(ELEMENTS_PER_GROUP), and is a read-only operation, thus pretty fast.
  *
  * 64-element chunks that are filled completely are just not investigated.
- * 
+ *
  * This will defragment the fragmented slice and make the free slice
  * larger.
  * AVAILABLE elements.
@@ -107,8 +107,8 @@ SmallSmartPointer DefragmentationGroup::allocate(int n){
 	assert(m_allocatedSizes!=NULL);
 	#endif
 
-/** 
- * get an handle 
+/**
+ * get an handle
  * This is O(256) if an available handle is found in m_fastPointers
  * Otherwise, it is O(65536) -- but the worst case is actually very rare.
  * */
@@ -140,7 +140,7 @@ SmallSmartPointer DefragmentationGroup::allocate(int n){
 	#endif
 
 	m_availableElements-=n;
-	
+
 	#ifdef ASSERT
 	if(m_availableElements<0)
 		cout<<"m_availableElements "<<m_availableElements<<endl;
@@ -156,11 +156,11 @@ SmallSmartPointer DefragmentationGroup::allocate(int n){
  * that is available. To do so, the list m_fastPointers is searched.
  * This list contains FAST_POINTERS entries (default is 256).
  * If there is a hit, it is returned to the caller.
- * 
+ *
  * Otherwise, all the possible SmallSmartPointer handles are probed
  * (there are ELEMENTS_PER_GROUP (default is 65536) of them)
  * and those available are appended to m_fastPointers.
- * 
+ *
  * Finally, the SmallSmartPointer that was the last to be recorded to m_fastPointers
  * is returned.
  *
@@ -251,7 +251,7 @@ void DefragmentationGroup::deallocate(SmallSmartPointer a,int bytesPerElement,ui
 	#ifdef LOW_LEVEL_ASSERT
 	assert(m_allocatedSizes[a]==0);
 	#endif
-	
+
 	m_availableElements+=allocatedSize;
 
 	#ifdef ASSERT
@@ -266,7 +266,7 @@ void DefragmentationGroup::deallocate(SmallSmartPointer a,int bytesPerElement,ui
 	int fragmentedElements=m_availableElements-elementsInFreeSlice;
 
 	/** this threshold is the minimum number of bins in the fragmented zone
- * 	that are necessary to trigger a defragmentation 
+ * 	that are necessary to trigger a defragmentation
  *	low value will trigger a lot of defragmentation events, but defragmentation
  *	is kind of slow. Therefore, you want a amortized time complexity -- that is
  *	in general we don't defragment (fast), but sometimes we do (slow)
@@ -288,12 +288,12 @@ void DefragmentationGroup::constructor(int bytesPerElement,bool show){
 	#endif
 
 	m_availableElements=ELEMENTS_PER_GROUP;
-	
+
 	#ifdef ASSERT
 	assert(m_availableElements<=ELEMENTS_PER_GROUP);
 	assert(m_availableElements>=0);
 	#endif
-	
+
 	for(int i=0;i<FAST_POINTERS;i++)
 		m_fastPointers[i]=i;
 
@@ -304,7 +304,7 @@ void DefragmentationGroup::constructor(int bytesPerElement,bool show){
 	/** initialise sizes */
 	m_allocatedSizes=(uint8_t*)__Malloc(ELEMENTS_PER_GROUP*sizeof(uint8_t),RAY_MALLOC_TYPE_DEFRAG_GROUP,show);
 	m_allocatedOffsets=(uint16_t*)__Malloc(ELEMENTS_PER_GROUP*sizeof(uint16_t),RAY_MALLOC_TYPE_DEFRAG_GROUP,show);
-	
+
 	for(int i=0;i<ELEMENTS_PER_GROUP;i++){
 		m_allocatedSizes[i]=0;
 		m_allocatedOffsets[i]=0;
@@ -449,12 +449,12 @@ bool DefragmentationGroup::defragment(int bytesPerElement,uint16_t*cellContents,
 		}
 		assert(m_allocatedSizes[smartPointer]!=0);
 		#endif
-		
+
 		int n=m_allocatedSizes[smartPointer];
 		for(int i=0;i<n;i++){
 			for(int byte=0;byte<bytesPerElement;byte++){
 				m_block[(destination+i)*bytesPerElement+byte]=m_block[(source+i)*bytesPerElement+byte];
-			
+
 			}
 		}
 
@@ -480,7 +480,7 @@ bool DefragmentationGroup::defragment(int bytesPerElement,uint16_t*cellContents,
 		while(cellOccupancies[source]==0 && source<ELEMENTS_PER_GROUP)
 			source++;
 	}
-	
+
 	m_freeSliceStart=destination;
 
 	#ifdef ASSERT
