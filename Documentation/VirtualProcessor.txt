@@ -16,7 +16,7 @@ any point, but they all get to work.
 
 The idea is that when a worker pushes a message on the VirtualCommunicator, it has
 to wait for a reply. And this reply may arrive later. The idea of the
-VirtualProcessor is to easily submit communication-intensive tasks. 
+VirtualProcessor is to easily submit communication-intensive tasks.
 
 Basically, the VirtualCommunicator groups smaller messages into larger messages
 to send fewer messages on the physical network.
@@ -37,7 +37,7 @@ code/scheduling/VirtualProcessor.cpp
 
 In Ray, each MPI rank actually has thousands of workers within it. All these
 workers are scheduled, one after the other, inside the same process. No thread
-are utilised as these would trash the processor cache. 
+are utilised as these would trash the processor cache.
 
 At any point in time, each of these worker is in one of these states:
 
@@ -47,7 +47,7 @@ At any point in time, each of these worker is in one of these states:
 
 
 
-active 
+active
 
 	The worker is not waiting for a message reply.
 

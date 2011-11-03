@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -96,7 +96,7 @@ void IndexerWorker::work(){
 				}
 			}
 
-			// find a vertex that is not an error 
+			// find a vertex that is not an error
 			if(selectedPosition==-1){
 				for(int i=0;i<(int)m_coverages.size();i++){
 					int coverage=(m_coverages).at(i);
@@ -105,7 +105,7 @@ void IndexerWorker::work(){
 						break;
 					}
 				}
-	
+
 			}
 			// index it
 			if(selectedPosition!=-1){
@@ -144,7 +144,7 @@ void IndexerWorker::work(){
 				}
 			}
 
-			// find a vertex that is not an error 
+			// find a vertex that is not an error
 			if(selectedPosition==-1){
 				for(int i=(int)(m_coverages).size()-1;i>=0;i--){
 					int coverage=(m_coverages).at(i);
@@ -153,7 +153,7 @@ void IndexerWorker::work(){
 						break;
 					}
 				}
-	
+
 			}
 
 			// index it

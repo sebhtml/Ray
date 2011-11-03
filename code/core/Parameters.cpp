@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -209,7 +209,7 @@ void Parameters::parseCommands(){
 	pairedReadsCommands.insert("LoadPairedEndReads");
 	pairedReadsCommands.insert("-LoadPairedEndReads");
 	pairedReadsCommands.insert("--LoadPairedEndReads");
-	
+
 	set<string> interleavedCommands;
 	interleavedCommands.insert("-i");
 
@@ -230,7 +230,7 @@ void Parameters::parseCommands(){
 	outputFileCommands.insert("-o");
 	outputFileCommands.insert("-OutputFile");
 	outputFileCommands.insert("--OutputFile");
-	
+
 	set<string> memoryMappedFileCommands;
 	memoryMappedFileCommands.insert("-MemoryPrefix");
 
@@ -285,7 +285,7 @@ void Parameters::parseCommands(){
 	toAdd.push_back(interleavedCommands);
 	toAdd.push_back(reduceMemoryUsage);
 	toAdd.push_back(memoryMappedFileCommands);
-	toAdd.push_back(showMemory);	
+	toAdd.push_back(showMemory);
 	toAdd.push_back(debugBubbles);
 	toAdd.push_back(debugSeeds);
 	toAdd.push_back(runProfiler);
@@ -462,7 +462,7 @@ void Parameters::parseCommands(){
 			m_singleEndReadsFile.push_back(left);
 			i++;
 			token=m_commands[i];
-			
+
 			// add right file
 			string right=token;
 			int rightFile=m_singleEndReadsFile.size();
@@ -542,7 +542,7 @@ void Parameters::parseCommands(){
 
 			m_reducerIsActivated=true;
 			m_reducerPeriod=1000000;
-			
+
 			if(items==1){
 				m_reducerPeriod=atoi(m_commands[i+1].c_str());
 			}
@@ -666,7 +666,7 @@ void Parameters::parseCommands(){
 	}
 
 	int maximumNumberOfFiles=MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint32_t);
-	
+
 	assert((int)m_singleEndReadsFile.size()<=maximumNumberOfFiles);
 
 	uint64_t result=1;
@@ -692,7 +692,7 @@ void Parameters::writeCommandFile(){
 	cout<<endl;
 
 	cout<<"k-mer length: "<<m_wordSize<<endl;
-	
+
 	if(m_reducerIsActivated){
 		cout<<"Memory Consumption Reducer is enabled, threshold="<<m_reducerPeriod<<endl;
 	}
@@ -882,11 +882,11 @@ void Parameters::computeAverageDistances(){
 		vector<int> deviations;
 		LibraryPeakFinder finder;
 		finder.findPeaks(&x,&y,&averages,&deviations);
-	
+
 		for(int i=0;i<(int)averages.size();i++)
 			addLibraryData(library,averages[i],deviations[i]);
 
-	}	
+	}
 	cout<<endl;
 	cout<<endl;
 
@@ -940,7 +940,7 @@ void Parameters::addLibraryData(int library,int average,int deviation){
 
 	m_libraryAverageLength[library].push_back(average);
 	m_libraryDeviation[library].push_back(deviation);
-	
+
 	int distance=average+4*deviation;
 	if(distance>m_maximumDistance){
 		m_maximumDistance=distance;
@@ -1240,7 +1240,7 @@ void Parameters::showUsage(){
 	cout<<"         The resulting file is not utilised by Ray."<<endl;
 	cout<<"         The resulting file is very large."<<endl;
 	cout<<endl;
-	
+
 	cout<<"  Assembly steps"<<endl;
 	cout<<endl;
 	cout<<"     RayOutput/SeedLengthDistribution.txt"<<endl;
@@ -1328,7 +1328,7 @@ void Parameters::showUsage(){
 	cout<<"Ray "<<RAY_VERSION<<endl;
 }
 
-/* get the prefix for mmap'ed files 
+/* get the prefix for mmap'ed files
  * currently not used. */
 string Parameters::getMemoryPrefix(){
 	return m_memoryFilePrefix;

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -30,7 +30,7 @@ typedef struct{
 	void*m_next;
 }Element;
 
-/** 
+/**
  * the ReusableMemoryStore don't allocate much memory
  * it bins freed chunks by size  and these are linked in list.
  * The m_next pointer is actually in the freed chunk.

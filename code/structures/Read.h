@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -47,7 +47,7 @@ class Read{
 	/* maximum value: 65535 */
 	uint16_t m_length;
 	uint8_t m_type;
-	
+
 	// for the scaffolder:
 	uint8_t m_forwardOffset;
 	uint8_t m_reverseOffset;

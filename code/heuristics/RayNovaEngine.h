@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -28,7 +28,7 @@
 #include <set>
 using namespace std;
 
-/** This the new Ray NovaEngine(*) 
+/** This the new Ray NovaEngine(*)
  *NovaEngine decides where to go in the k-mer graph
  * \author Sébastien Boisvert
  */

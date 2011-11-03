@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -164,7 +164,7 @@ void Machine::start(){
 	MAX_ALLOCATED_MESSAGES_IN_INBOX=1;
 
 	// this peak is attained in VerticesExtractor::deleteVertices
-	m_maximumAllocatedOutputBuffers = MAX_ALLOCATED_OUTPUT_BUFFERS; 
+	m_maximumAllocatedOutputBuffers = MAX_ALLOCATED_OUTPUT_BUFFERS;
 
 	if(MAX_ALLOCATED_MESSAGES_IN_OUTBOX<m_maximumAllocatedOutputBuffers){
 		MAX_ALLOCATED_MESSAGES_IN_OUTBOX=m_maximumAllocatedOutputBuffers;
@@ -256,7 +256,7 @@ void Machine::start(){
 		m_parameters.showMemoryAllocations());
 
 	/** create the directory for the assembly */
-	
+
 	string directory=m_parameters.getPrefix();
 	if(fileExists(directory.c_str())){
 		if(m_parameters.getRank() == MASTER_RANK)
@@ -267,7 +267,7 @@ void Machine::start(){
 	}
 
 	m_messagesHandler.barrier();
-	
+
 	if(m_parameters.getRank() == MASTER_RANK){
 		createDirectory(directory.c_str());
 		m_parameters.writeCommandFile();
@@ -341,7 +341,7 @@ void Machine::start(){
 	&m_parameters,&m_fileId,m_seedingData,&m_inbox,&m_virtualCommunicator);
 
 	m_subgraph.constructor(getRank(),&m_parameters);
-	
+
 	m_seedingData->constructor(&m_seedExtender,getRank(),getSize(),&m_outbox,&m_outboxAllocator,&m_slave_mode,&m_parameters,&m_wordSize,&m_subgraph,&m_inbox,&m_virtualCommunicator);
 
 	m_alive=true;
@@ -482,7 +482,7 @@ void Machine::run(){
 }
 
 /**
- * the while loop is *the* main loop of Ray for each 
+ * the while loop is *the* main loop of Ray for each
  * processor.
  * it is similar to the main loop of a video game, actually, but without a display.
  */
@@ -492,7 +492,7 @@ void Machine::runVanilla(){
 	while(m_timeToLive){
 		// 1. receive the message (0 or 1 message is received)
 		// blazing fast, receives 0 or 1 message, never more, never less, other messages will wait for the next iteration !
-		receiveMessages(); 
+		receiveMessages();
 
 		// 2. process the received message, if any
 		// consume the one message received, if any, also very fast because it is done with an array mapping tags to function pointers
@@ -527,7 +527,7 @@ void Machine::runWithProfiler(){
 	map<int,int> receivedTags;
 	map<int,int> sentTagsInProcessMessages;
 	map<int,int> sentTagsInProcessData;
-	
+
 	int resolution=100;// milliseconds
 	int parts=1000/resolution;
 
@@ -589,10 +589,10 @@ void Machine::runWithProfiler(){
 /*
 				int average1=getAverage(&distancesForProcessMessages);
 				int deviation1=getStandardDeviation(&distancesForProcessMessages);
-			
+
 				cout<<"Rank "<<m_parameters.getRank()<<" distance between processMessages messages: average= "<<average1<<", stddev= "<<deviation1<<
 					", n= "<<distancesForProcessMessages.size()<<endl;
-				
+
 */
 				#ifdef FULL_DISTRIBUTION
 				map<int,int> distribution1;
@@ -619,10 +619,10 @@ void Machine::runWithProfiler(){
 /*
 				int average2=getAverage(&distancesForProcessData);
 				int deviation2=getStandardDeviation(&distancesForProcessData);
-	
+
 				cout<<"Rank "<<m_parameters.getRank()<<" distance between processData messages: average= "<<average2<<", stddev= "<<deviation2<<
 					", n= "<<distancesForProcessData.size()<<endl;
-				
+
 */
 				#ifdef FULL_DISTRIBUTION
 				map<int,int> distribution2;
@@ -654,9 +654,9 @@ void Machine::runWithProfiler(){
 		/* collect some statistics for the profiler */
 
 		// 1. receive the message (0 or 1 message is received)
-		receiveMessages(); 
+		receiveMessages();
 		receivedMessages+=m_inbox.size();
-		
+
 		for(int i=0;i<(int)m_inbox.size();i++){
 			receivedTags[m_inbox[i]->getTag()]++;
 		}
@@ -685,7 +685,7 @@ void Machine::runWithProfiler(){
 		uint64_t endingTime = getThreadMicroseconds();
 
 		int difference = endingTime - startingTime;
-		
+
 		m_profiler->addGranularity(currentSlaveMode,difference);
 
 		/* threshold to say something is taking too long */
@@ -843,7 +843,7 @@ void Machine::call_RAY_MASTER_MODE_COUNT_FILE_ENTRIES(){
 	m_partitioner.masterMethod();
 }
 
-/** actually, call_RAY_MASTER_MODE_LOAD_SEQUENCES 
+/** actually, call_RAY_MASTER_MODE_LOAD_SEQUENCES
  * writes the AMOS file */
 void Machine::call_RAY_MASTER_MODE_LOAD_SEQUENCES(){
 	m_timePrinter.printElapsedTime("File partitioning");
@@ -872,7 +872,7 @@ void Machine::call_RAY_MASTER_MODE_LOAD_SEQUENCES(){
 	for(int i=0;i<(int)m_parameters.getNumberOfFiles();i++){
 		messageInInts[1+i]=(uint64_t)m_parameters.getNumberOfSequences(i);
 	}
-	
+
 	for(int i=0;i<getSize();i++){
 		Message aMessage(message,MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t),
 		i,RAY_MPI_TAG_LOAD_SEQUENCES,getRank());
@@ -895,7 +895,7 @@ void Machine::call_RAY_SLAVE_MODE_LOAD_SEQUENCES(){
 void Machine::call_RAY_MASTER_MODE_TRIGGER_VERTICE_DISTRIBUTION(){
 	m_timePrinter.printElapsedTime("Sequence loading");
 	cout<<endl;
-	
+
 	for(int i=0;i<getSize();i++){
 		Message aMessage(NULL,0,i,RAY_MPI_TAG_START_VERTICES_DISTRIBUTION,getRank());
 		m_outbox.push_back(aMessage);
@@ -964,7 +964,7 @@ void Machine::call_RAY_MASTER_MODE_SEND_COVERAGE_VALUES(){
 	uint64_t numberOfVertices=0;
 	uint64_t verticesWith1Coverage=0;
 	int lowestCoverage=9999;
-	
+
 	uint64_t genomeKmers=0;
 
 	for(map<int,uint64_t>::iterator i=m_coverageDistribution.begin();
@@ -1150,7 +1150,7 @@ void Machine::call_RAY_MASTER_MODE_WRITE_KMERS(){
 		m_edgeDistribution.clear();
 		f.close();
 		cout<<"Rank "<<getRank()<<" wrote "<<edgeFile.str()<<endl;
-	
+
 	}else if(m_coverageRank==m_numberOfRanksDone){
 		Message aMessage(NULL,0,m_coverageRank,RAY_MPI_TAG_WRITE_KMERS,getRank());
 		m_outbox.push_back(aMessage);
@@ -1161,7 +1161,7 @@ void Machine::call_RAY_MASTER_MODE_WRITE_KMERS(){
 void Machine::call_RAY_SLAVE_MODE_WRITE_KMERS(){
 	if(m_parameters.writeKmers())
 		m_coverageGatherer.writeKmers();
-	
+
 	/* send edge distribution */
 	GridTableIterator iterator;
 	iterator.constructor(&m_subgraph,m_parameters.getWordSize(),&m_parameters);
@@ -1190,7 +1190,7 @@ void Machine::call_RAY_SLAVE_MODE_WRITE_KMERS(){
 
 void Machine::call_RAY_MASTER_MODE_TRIGGER_INDEXING(){
 	m_master_mode=RAY_MASTER_MODE_DO_NOTHING;
-	
+
 	m_timePrinter.printElapsedTime("Edge purge");
 	cout<<endl;
 
@@ -1357,7 +1357,7 @@ void Machine::call_RAY_SLAVE_MODE_SEND_EXTENSION_DATA(){
 		}
 		total++;
 		string contig=convertToString(&(m_ed->m_EXTENSION_contigs[i]),m_parameters.getWordSize(),m_parameters.getColorSpaceMode());
-		
+
 		string withLineBreaks=addLineBreaks(contig,m_parameters.getColumns());
 		fp<<">contig-"<<uniqueId<<" "<<contig.length()<<" nucleotides"<<endl<<withLineBreaks<<endl;
 	}
@@ -1412,7 +1412,7 @@ void Machine::call_RAY_MASTER_MODE_UPDATE_DISTANCES(){
 void Machine::call_RAY_MASTER_MODE_TRIGGER_FUSIONS(){
 	m_timePrinter.printElapsedTime("Bidirectional extension of seeds");
 	cout<<endl;
-	
+
 	m_master_mode=RAY_MASTER_MODE_TRIGGER_FIRST_FUSIONS;
 	m_cycleNumber=0;
 }
@@ -1521,7 +1521,7 @@ void Machine::call_RAY_MASTER_MODE_START_FUSION_CYCLE(){
 			m_outbox.push_back(aMessage);
 		}
 		m_DISTRIBUTE_n=0;
-	
+
 		cout<<"Rank 0: starting distribution step"<<endl;
 	}else if(m_DISTRIBUTE_n==getSize() && m_isFinalFusion && m_currentCycleStep==5){
 		cout<<"cycleStep= "<<m_currentCycleStep<<endl;
@@ -1548,7 +1548,7 @@ void Machine::call_RAY_MASTER_MODE_START_FUSION_CYCLE(){
 			Message aMessage(NULL,0,i,RAY_MPI_TAG_START_FUSION,getRank());
 			m_outbox.push_back(aMessage);
 		}
-		
+
 	}else if(m_fusionData->m_FUSION_numberOfRanksDone==getSize() && m_isFinalFusion && m_currentCycleStep==6){
 
 		/** always force cycle number 2 */
@@ -1560,7 +1560,7 @@ void Machine::call_RAY_MASTER_MODE_START_FUSION_CYCLE(){
 
 		cout<<"DEBUG m_reductionOccured= "<<m_reductionOccured<<endl;
 
-		if(!m_reductionOccured || m_cycleNumber == lastAllowedCycleNumber){ 
+		if(!m_reductionOccured || m_cycleNumber == lastAllowedCycleNumber){
 			m_mustStop=true;
 		}
 
@@ -1592,7 +1592,7 @@ void Machine::call_RAY_MASTER_MODE_ASK_EXTENSIONS(){
 			m_master_mode=RAY_MASTER_MODE_SCAFFOLDER;
 			m_scaffolder.m_numberOfRanksFinished=0;
 		}
-		
+
 	}else if(!m_ed->m_EXTENSION_currentRankIsStarted){
 		m_ed->m_EXTENSION_currentRankIsStarted=true;
 		Message aMessage(NULL,0,m_ed->m_EXTENSION_rank,RAY_MPI_TAG_ASK_EXTENSION_DATA,getRank());
@@ -1673,14 +1673,14 @@ void Machine::call_RAY_SLAVE_MODE_DIE(){
 	/** actually die */
 	m_alive=false;
 
-	/** tell master that the rank died 
+	/** tell master that the rank died
  * 	obviously, this message won't be recorded in the MessagePassingInterface file...
  * 	Because of that, MessagesHandler will do it for us.
  * 	*/
 	Message aMessage(NULL,0,MASTER_RANK,RAY_MPI_TAG_GOOD_JOB_SEE_YOU_SOON_REPLY,m_rank);
 	m_outbox.push_back(aMessage);
 
-	/** do nothing while dying 
+	/** do nothing while dying
  * 	the aging process takes a while -- 1024 cycles.
  * 	after that, it is death itself.
  * 	*/
@@ -1710,7 +1710,7 @@ void Machine::call_RAY_MASTER_MODE_KILL_ALL_MPI_RANKS(){
 		/** empty the file if it exists */
 		ostringstream file;
 		file<<m_parameters.getPrefix()<<"MessagePassingInterface.txt";
-		
+
 		FILE*fp=fopen(file.str().c_str(),"w+");
 		fprintf(fp,"# Source\tDestination\tTag\tCount\n");
 		fclose(fp);
@@ -1720,7 +1720,7 @@ void Machine::call_RAY_MASTER_MODE_KILL_ALL_MPI_RANKS(){
  * a message.
  * For the other ones, we wait for the response of the previous.
  */
-	if(m_machineRank==m_parameters.getSize()-1 || 
+	if(m_machineRank==m_parameters.getSize()-1 ||
 	(m_inbox.size()>0 && m_inbox[0]->getTag()==RAY_MPI_TAG_GOOD_JOB_SEE_YOU_SOON_REPLY)){
 
 		/**

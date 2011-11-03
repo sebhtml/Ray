@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -25,7 +25,7 @@
 
 #define INVALID_GROUP 123467
 
-/** 
+/**
  * the number of DefragmentationGroup per DefragmentationLane
  */
 #define GROUPS_PER_LANE 1024

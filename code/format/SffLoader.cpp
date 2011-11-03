@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -32,7 +32,7 @@
 #include <memory/malloc_types.h>
 using namespace std;
 
-/** TODO: this code will fail on big-endian systems 
+/** TODO: this code will fail on big-endian systems
  *
  *  SFF files are stored as big-endian
  *
@@ -112,13 +112,13 @@ int SffLoader::openSff(string file){
 	fread_result=fread((char*)&number_of_reads,1,sizeof(uint32_t),m_fp);
 	invert32(&index_length);
 	invert32(&number_of_reads);
-	
+
 	m_size=number_of_reads;
 
 	uint16_t header_length;
 	fread_result=fread((char*)&header_length,1,sizeof(uint16_t),m_fp);
 	invert16(&header_length);
-	
+
 	fread_result=fread((char*)&key_length,1,sizeof(uint16_t),m_fp);
 	invert16(&key_length);
 	fread_result=fread((char*)&m_number_of_flows_per_read,1,sizeof(uint16_t),m_fp);
@@ -131,7 +131,7 @@ int SffLoader::openSff(string file){
 	key_sequence=(char*)__Malloc(key_length+1,RAY_MALLOC_TYPE_454,false);
 	fread_result=fread(key_sequence,1,key_length,m_fp);
 	key_sequence[key_length]='\0';
-	
+
 	if(fread_result)
 		fread_result=0;
 
@@ -144,7 +144,7 @@ int SffLoader::openSff(string file){
 
 // see manual http://sequence.otago.ac.nz/download/GS_FLX_Software_Manual.pdf,
 // page 445-448
-// or 
+// or
 // http://blog.malde.org/index.php/2008/11/14/454-sequencing-and-parsing-the-sff-binary-format/
 void SffLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator){
 
@@ -208,7 +208,7 @@ void SffLoader::load(int maxToLoad,ArrayOfReads*reads,MyAllocator*seqMyAllocator
 		Read read;
 		read.constructor(sequence.substr(first-1,last-first+1).c_str(),seqMyAllocator,true);
 		reads->push_back(&read);
-	
+
 		loadedSequences++;
 		m_loaded++;
 

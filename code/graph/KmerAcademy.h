@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -39,7 +39,7 @@ public:
 }ATTRIBUTE_PACKED;
 
 /**
- * The KmerAcademy is the place where KmerCandidate  
+ * The KmerAcademy is the place where KmerCandidate
  * train to become  Vertex.
  * If they fail to endure their hard training,
  * they remain here. Usually, those failing are observed

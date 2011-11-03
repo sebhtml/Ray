@@ -15,7 +15,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -67,7 +67,7 @@ int Loader::load(string file,bool isGenome){
 		file.substr(file.length()-csfastaExtension.length(),csfastaExtension.length())==csfastaExtension){
 		m_type=FORMAT_CSFASTA;
 		int ret=m_color.open(file);
-		m_size=m_color.getSize();	
+		m_size=m_color.getSize();
 		return ret;
 	}
 	if(file.substr(file.length()-4,4)==".sff"){
@@ -75,7 +75,7 @@ int Loader::load(string file,bool isGenome){
 		int ret=m_sff.open(file);
 		m_size=m_sff.getSize();
 		return ret;
-		
+
 	}
 	if(file.substr(file.length()-6,6)==".fasta"){
 		m_type=FORMAT_FASTA;
@@ -122,7 +122,7 @@ int Loader::load(string file,bool isGenome){
 		return ret;
 	}
 	#endif
-	
+
 	cout<<file<<": unknown extension, exiting. (see Ray --help for valid extensions)"<<endl;
 
 	return EXIT_FAILURE;

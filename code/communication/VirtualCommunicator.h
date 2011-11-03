@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -97,9 +97,9 @@ public:
  * initiate the object
  * called once
  * time complexity: constant
- */ 
+ */
 	void constructor(int rank,int size,RingAllocator*outboxAllocator,StaticVector*inbox,StaticVector*outbox);
-	
+
 	/**
  * associate a resonse tag to a query tag
  * called once
@@ -115,7 +115,7 @@ public:
  * time complexity: constant
  */
 	void setElementsPerQuery(int tag,int size);
-	
+
 /**
  * get the number of elements per query
  */
@@ -135,11 +135,11 @@ public:
  * if a worker calls it, then the iteration is stopped and won't be resumed until
  * the VirtualCommunicator is ready.
  * to do so, isReady is called before calling each worker.
- * if a called calls pushMessage and because of that a buffer becomes full, then isReady will return false 
+ * if a called calls pushMessage and because of that a buffer becomes full, then isReady will return false
  * for the next call
  * time complexity: log (number of tags) + log(number of MPI ranks)
  */
-	
+
 	void pushMessage(uint64_t workerId,Message*message);
 
 	/**
@@ -147,10 +147,10 @@ public:
  * time complexity: log(number of workers)
  */
 	bool isMessageProcessed(uint64_t workerId);
-	
+
 	/**
  *
- * after calling isMessageProcessed, the worker must retrieve its data with 
+ * after calling isMessageProcessed, the worker must retrieve its data with
  * getMessageResponseElements, else the whole thing will fail
  *
  * after reading the response, it is erased from
@@ -158,9 +158,9 @@ public:
  * time complexity: log(number of workers)
  */
 	void getMessageResponseElements(uint64_t workerId,vector<uint64_t>*out);
-	
+
 /**
- * if all workers are awaiting responses and 
+ * if all workers are awaiting responses and
  * none of the buffer is full, then this forces the flushing of a buffer
  * non-empty buffer.
  * time complexity: log(number of priority values)

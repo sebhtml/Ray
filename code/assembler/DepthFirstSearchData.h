@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -76,7 +76,7 @@ public:
  int*receivedVertexCoverage,SeedingData*seedingData,
 		int minimumCoverage,bool*edgesReceived,Parameters*parameters);
 
-	
+
 	map<Kmer,vector<Kmer> >*getIngoingEdges();
 	map<Kmer,vector<Kmer> >*getOutgoingEdges();
 

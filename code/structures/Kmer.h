@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -32,7 +32,7 @@
 using namespace std;
 
 /*
- * Determine the number of uint64_t necessary to host 
+ * Determine the number of uint64_t necessary to host
  * k-mers of maximum length MAXKMERLENGTH
  */
 #define KMER_REQUIRED_BITS (2*MAXKMERLENGTH)
@@ -91,7 +91,7 @@ public:
  * complement a vertex, and return another one
  */
 	Kmer complementVertex(int wordSize,bool colorSpace);
-	
+
 /*
  * use mini distant segments here.
  */

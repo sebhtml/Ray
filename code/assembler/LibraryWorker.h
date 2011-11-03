@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -39,7 +39,7 @@ public:
 } ATTRIBUTE_PACKED;
 
 /*
- * Computes average outer distances 
+ * Computes average outer distances
  * \author Sébastien Boisvert
  */
 class LibraryWorker : public Worker {
@@ -63,15 +63,15 @@ class LibraryWorker : public Worker {
 	StaticVector*m_outbox;
 	bool m_EXTENSION_hasPairedReadRequested;
 	int*m_detectedDistances;
-	
+
 public:
 
 	void constructor(uint64_t id,SeedingData*seedingData,VirtualCommunicator*virtualCommunicator,RingAllocator*outboxAllocator,
 	Parameters*parameters,StaticVector*inbox,StaticVector*outbox,map<int,map<int,int> >*libraryDistances,int*detectedDistances,
 		MyAllocator*allocator);
 
-	/** work a little bit 
-	 * the class Worker provides no implementation for that 
+	/** work a little bit
+	 * the class Worker provides no implementation for that
 	*/
 	void work();
 

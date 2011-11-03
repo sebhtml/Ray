@@ -14,12 +14,12 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
 
-#ifndef _BzReader 
+#ifndef _BzReader
 #define _BzReader
 #ifdef HAVE_LIBBZ2
 
@@ -35,7 +35,7 @@ class BzReader{
 	char*m_buffer;
 	int m_bufferSize;
 	int m_bufferPosition;
-	
+
 public:
 	void open(const char*file);
 	char*readLine(char*s, int n);

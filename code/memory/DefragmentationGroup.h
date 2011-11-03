@@ -14,17 +14,17 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
 #ifndef _DefragmentationGroup_H
 #define _DefragmentationGroup_H
 
-/* 
+/*
  * How many elements per group ?
  * this is the number of values of uint16_t */
-#define ELEMENTS_PER_GROUP 65536 
+#define ELEMENTS_PER_GROUP 65536
 
 /**
  * Number of fast pointers
@@ -46,7 +46,7 @@ typedef uint16_t SmallSmartPointer;
 class DefragmentationGroup{
 	/** freed stuff to accelerate things. */
 	uint16_t m_fastPointers[FAST_POINTERS];
-	
+
 	/**
  * the number of available elements
  */
@@ -57,7 +57,7 @@ class DefragmentationGroup{
 
 	/**
  * 	Pointer to allocated memory
- * 	65536 * 18 = 1179648 bytes 
+ * 	65536 * 18 = 1179648 bytes
  */
 	uint8_t*m_block;
 
@@ -83,7 +83,7 @@ class DefragmentationGroup{
  * get a SmallSmartPointer
  */
 	SmallSmartPointer getAvailableSmallSmartPointer();
-	
+
 /*
  * returns true if defragmented something. */
 	bool defragment(int bytesPerElement,uint16_t*cellContents,uint8_t*cellOccupancies);
@@ -95,7 +95,7 @@ public:
  */
 	void setPointers();
 
-/** 
+/**
  * Initialiaze DefragmentationGroup
  */
 	void constructor(int bytesPerElement,bool show);
@@ -110,7 +110,7 @@ public:
  * deallocate will defragment the block immediately
  */
 	void deallocate(SmallSmartPointer a,int bytesPerElement,uint16_t*cellContents,uint8_t*cellOccupancies);
-/** 
+/**
  * destroy the allocator
  */
 	void destructor(bool show);
@@ -124,14 +124,14 @@ public:
  * 	translate a SmallSmartPointer to an actual pointer
  */
 	void*getPointer(SmallSmartPointer a,int bytesPerElement);
-	
+
 	/**
  * 	return yes if activated
  */
 	bool isOnline();
 
 /**
- * return the number of available elements 
+ * return the number of available elements
  */
 	int getAvailableElements();
 

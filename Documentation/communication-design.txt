@@ -34,20 +34,20 @@ This is the Ray library.
 
 == with MPICH2 (MPICH2 is a static library) ==
 <pre>
-[boi@ls30 code]$ file libRay.a 
+[boi@ls30 code]$ file libRay.a
 libRay.a: current ar archive
 
-[boi@ls30 code]$ ls -l libRay.a 
+[boi@ls30 code]$ ls -l libRay.a
 -rw-rw-r-- 1 boiseb01 boiseb01 798910 2010-11-21 17:45 libRay.a
 
 </pre>
 
 ==  with Open-MPI (Open-MPI is a shared library) ==
 <pre>
-[boi@ls30 code]$ file libRay.a 
+[boi@ls30 code]$ file libRay.a
 libRay.a: current ar archive
 
-[boi@ls30 code]$ ls -l libRay.a  
+[boi@ls30 code]$ ls -l libRay.a
 -rw-rw-r-- 1 boiseb01 boiseb01 2835066 2010-11-21 17:39 libRay.a
 </pre>
 

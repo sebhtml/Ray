@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -106,7 +106,7 @@ void Amos::slaveMode(){
 		m_contigId++;
 		m_mode_send_vertices_sequence_id_position=0;
 		m_ed->m_EXTENSION_reads_requested=false;
-		
+
 		fprintf(m_amosFile,"}\n");
 	}else{
 		if(!m_ed->m_EXTENSION_reads_requested){
@@ -118,7 +118,7 @@ void Amos::slaveMode(){
 					qlt[i]='D';
 				}
 				m_sequence_id++;
-	
+
 				#if defined(RAY_64_BITS)
 					fprintf(m_amosFile,"{CTG\niid:%u\neid:contig-%lu\ncom:\nSoftware: Ray, MPI rank: %i\n.\nseq:\n%s\n.\nqlt:\n%s\n.\n",
 					m_ed->m_EXTENSION_currentPosition+1,
@@ -192,7 +192,7 @@ void Amos::slaveMode(){
 						theEnd=t;
 						offset++;
 					}
-	
+
 					#if defined(RAY_64_BITS)
 						fprintf(m_amosFile,"{TLE\nsrc:%li\noff:%i\nclr:%i,%i\n}\n",globalIdentifier,offset,
 						start,theEnd);

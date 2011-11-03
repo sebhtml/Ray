@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -45,18 +45,18 @@ BubbleData*bubbleData,
 int minimumCoverage,OpenAssemblerChooser*oa,bool*edgesReceived,int*mode){
 
 	MACRO_COLLECT_PROFILING_INFORMATION();
-	
+
 	/* read the checkpoint */
 	if(!m_checkedCheckpoint){
 		m_checkedCheckpoint=true;
 		if(m_parameters->hasCheckpoint("Extensions")){
 
 			readCheckpoint(fusionData);
-	
+
 			(*m_mode)=RAY_SLAVE_MODE_DO_NOTHING;
 			Message aMessage(NULL,0,MASTER_RANK,RAY_MPI_TAG_EXTENSION_IS_DONE,theRank);
 			outbox->push_back(aMessage);
-	
+
 			return;
 		}
 
@@ -87,7 +87,7 @@ int minimumCoverage,OpenAssemblerChooser*oa,bool*edgesReceived,int*mode){
 	// 		choose it
 	// 	else
 	// 		use read paths or pairs of reads to resolve the repeat.
-	
+
 	// only check that at bootstrap.
 
 	if(!ed->m_EXTENSION_checkedIfCurrentVertexIsAssembled){
@@ -98,13 +98,13 @@ int minimumCoverage,OpenAssemblerChooser*oa,bool*edgesReceived,int*mode){
 		MACRO_COLLECT_PROFILING_INFORMATION();
 	}else if(
 		/* the first flow */
-		ed->m_flowNumber==1 
+		ed->m_flowNumber==1
  		/* vertex is assembled already */
-		&& ed->m_EXTENSION_vertexIsAssembledResult 
+		&& ed->m_EXTENSION_vertexIsAssembledResult
  		/* we have not exited the seed */
 		&& ed->m_EXTENSION_currentPosition<(int)ed->m_EXTENSION_currentSeed.size()
 		){
-		
+
 		skipSeed(seeds);
 
 	}else if(!ed->m_EXTENSION_markedCurrentVertexAsAssembled){
@@ -230,7 +230,7 @@ bool*vertexCoverageReceived,int size,int*receivedVertexCoverage,Chooser*chooser,
 			#endif
 		}
 	}
-				
+
 	MACRO_COLLECT_PROFILING_INFORMATION();
 }
 
@@ -257,7 +257,7 @@ int*receivedVertexCoverage,bool*edgesReceived,vector<Kmer>*receivedOutgoingEdges
 	MACRO_COLLECT_PROFILING_INFORMATION();
 
 	if(m_expiredReads.count(ed->m_EXTENSION_currentPosition)>0){
-		
+
 		processExpiredReads();
 
 		return;
@@ -279,7 +279,7 @@ int*receivedVertexCoverage,bool*edgesReceived,vector<Kmer>*receivedOutgoingEdges
 
 				m_removedUnfitLibraries=false;
 				// we received the vertex for that read,
-				// now check if it matches one of 
+				// now check if it matches one of
 				// the many choices we have
 				uint64_t uniqueId=*(ed->m_EXTENSION_readIterator);
 				ExtensionElement*element=ed->getUsedRead(uniqueId);
@@ -326,7 +326,7 @@ Presently, insertions or deletions up to 8 are supported.
 					assert(false);
 					#endif
 					// the read is now out-of-range
-					ed->m_EXTENSION_readIterator++;	
+					ed->m_EXTENSION_readIterator++;
 					return;
 				}
 
@@ -356,7 +356,7 @@ Presently, insertions or deletions up to 8 are supported.
 						// do something about the agreement
 						element->increaseAgreement();
 						match=true;
-	
+
 						//cout<<"Matched "<<uniqueId<<endl;
 
 						break;
@@ -379,7 +379,7 @@ Presently, insertions or deletions up to 8 are supported.
 					/* we only use single-end reads on
 					non-repeated vertices */
 					if(ed->m_currentCoverage<m_parameters->getRepeatCoverage()){
-						ed->m_EXTENSION_readPositionsForVertices[ed->m_EXTENSION_receivedReadVertex].push_back(distance);	
+						ed->m_EXTENSION_readPositionsForVertices[ed->m_EXTENSION_receivedReadVertex].push_back(distance);
 					}
 					ed->m_EXTENSION_readIterator++;
 				}else{// the read is paired
@@ -409,8 +409,8 @@ Presently, insertions or deletions up to 8 are supported.
 							int expectedFragmentLength=m_parameters->getLibraryAverageLength(library,peak);
 							int expectedDeviation=m_parameters->getLibraryStandardDeviation(library,peak);
 
-							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength 
-							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation 
+							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength
+							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation
 					&&( (theLeftStrand=='F' && theRightStrand=='R')
 						||(theLeftStrand=='R' && theRightStrand=='F'))
 					// the bridging pair is meaningless if both start in repeats
@@ -503,7 +503,7 @@ Presently, insertions or deletions up to 8 are supported.
 
 				if(m_parameters->showExtensionChoice()){
 					inspect(ed,currentVertex);
-					
+
 				}
 
 				MACRO_COLLECT_PROFILING_INFORMATION();
@@ -514,7 +514,7 @@ Presently, insertions or deletions up to 8 are supported.
 
 				MACRO_COLLECT_PROFILING_INFORMATION();
 
-				//int choice=IMPOSSIBLE_CHOICE; 
+				//int choice=IMPOSSIBLE_CHOICE;
 				int choice=chooseWithSeed();
 
 				// else, do a paired-end or single-end lookup if reads are in range.
@@ -600,7 +600,7 @@ size,theRank,outbox,receivedVertexCoverage,receivedOutgoingEdges,minimumCoverage
 				}
 			}else{
 				// we have a winner with tips investigation.
-				if(m_dfsData->m_doChoice_tips_newEdges.size()==1 && ed->m_EXTENSION_readsInRange.size()>0 
+				if(m_dfsData->m_doChoice_tips_newEdges.size()==1 && ed->m_EXTENSION_readsInRange.size()>0
 		&& ed->m_EXTENSION_readPositionsForVertices[ed->m_enumerateChoices_outgoingEdges[m_dfsData->m_doChoice_tips_newEdges[0]]].size()>0
 ){
 					// tip watchdog!
@@ -631,7 +631,7 @@ size,theRank,outbox,receivedVertexCoverage,receivedOutgoingEdges,minimumCoverage
 			return;
 		// bubbles detection aims polymorphisms and homopolymers stretches.
 		}else if(!bubbleData->m_doChoice_bubbles_Detected && ed->m_EXTENSION_readsInRange.size()>0){
-			
+
 			MACRO_COLLECT_PROFILING_INFORMATION();
 			bool isGenuineBubble=m_bubbleTool.isGenuineBubble((*currentVertex),&bubbleData->m_BUBBLE_visitedVertices,
 				&bubbleData->m_coverages);
@@ -664,7 +664,7 @@ size,theRank,outbox,receivedVertexCoverage,receivedOutgoingEdges,minimumCoverage
 			mustFlowAgain=false;
 
 			// we may get more range
-			if(ed->m_previouslyFlowedVertices < m_parameters->getMaximumDistance() 
+			if(ed->m_previouslyFlowedVertices < m_parameters->getMaximumDistance()
 			&& (int)ed->m_EXTENSION_extension.size() >= m_parameters->getMaximumDistance()){
 				mustFlowAgain=true;
 			}
@@ -728,7 +728,7 @@ size,theRank,outbox,receivedVertexCoverage,receivedOutgoingEdges,minimumCoverage
 			printExtensionStatus(currentVertex);
 
 			cout<<"Rank "<<m_parameters->getRank()<<" is changing direction."<<endl;
-			
+
 			#ifdef ASSERT
 			assert(m_complementedSeed.size() == ed->m_EXTENSION_extension.size());
 			#endif
@@ -751,7 +751,7 @@ size,theRank,outbox,receivedVertexCoverage,receivedOutgoingEdges,minimumCoverage
 
 			// TODO: this needs to be sliced or optimized
 			m_matesToMeet.clear();
-	
+
 			MACRO_COLLECT_PROFILING_INFORMATION();
 /*
 			m_cacheAllocator.clear();
@@ -909,7 +909,7 @@ Kmer *currentVertex,BubbleData*bubbleData){
 		}
 
 		cout<<endl;
-	
+
 		MACRO_COLLECT_PROFILING_INFORMATION();
 
 		if(m_parameters->hasOption("-show-distance-summary")){
@@ -922,13 +922,13 @@ Kmer *currentVertex,BubbleData*bubbleData){
 					int average=m_parameters->getLibraryAverageLength(lib,peak);
 					int deviation=m_parameters->getLibraryStandardDeviation(lib,peak);
 					uint64_t count=j->second;
-	
+
 					cout<<"Rank "<<theRank<<" Library: "<<lib<<" LibraryPeak: "<<peak<<" PeakAverage: "<<average<<" PeakDeviation: "<<deviation<<" Pairs: "<<count<<endl;
 				}
 			}
 		}
 
-	
+
 		uint64_t id=getPathUniqueId(theRank,ed->m_EXTENSION_currentSeedIndex);
 		ed->m_EXTENSION_identifiers.push_back(id);
 	}
@@ -985,15 +985,15 @@ void SeedExtender::checkIfCurrentVertexIsAssembled(ExtensionData*ed,StaticVector
 			m_dfsData=new DepthFirstSearchData;
 
 			m_receivedDirections.clear();
-			if(ed->m_EXTENSION_currentSeedIndex%10==0 && ed->m_EXTENSION_currentPosition==0 
+			if(ed->m_EXTENSION_currentSeedIndex%10==0 && ed->m_EXTENSION_currentPosition==0
 		&&(*last_value)!=ed->m_EXTENSION_currentSeedIndex){
 				(*last_value)=ed->m_EXTENSION_currentSeedIndex;
 				printf("Rank %i is extending seeds [%i/%i] \n",theRank,(int)ed->m_EXTENSION_currentSeedIndex+1,(int)(*seeds).size());
 				fflush(stdout);
-				
+
 			}
 			ed->m_EXTENSION_VertexAssembled_requested=true;
-	
+
 			MACRO_COLLECT_PROFILING_INFORMATION();
 
 			/* if the position is not 0 on flow 0, we don't need to send this message */
@@ -1024,7 +1024,7 @@ void SeedExtender::checkIfCurrentVertexIsAssembled(ExtensionData*ed,StaticVector
 				ed->m_EXTENSION_directVertexDone=false;
 				ed->m_EXTENSION_reads_requested=false;
 				m_messengerInitiated=false;
-			
+
 			}
 		}
 	}else if(!ed->m_EXTENSION_reverseVertexDone){
@@ -1047,9 +1047,9 @@ void SeedExtender::checkedCurrentVertex(){
  * in this method:
  * - the coverage of the vertex is obtained
  * - the reads having a read marker on this vertex are gathered
- * - the owner of the vertex is advised that there is a path passing on it 
+ * - the owner of the vertex is advised that there is a path passing on it
  *   */
-void SeedExtender::markCurrentVertexAsAssembled(Kmer*currentVertex,RingAllocator*outboxAllocator,int*outgoingEdgeIndex, 
+void SeedExtender::markCurrentVertexAsAssembled(Kmer*currentVertex,RingAllocator*outboxAllocator,int*outgoingEdgeIndex,
 StaticVector*outbox,int size,int theRank,ExtensionData*ed,bool*vertexCoverageRequested,bool*vertexCoverageReceived,
 	int*receivedVertexCoverage,int*repeatedLength,int*maxCoverage,bool*edgesRequested,
 vector<Kmer>*receivedOutgoingEdges,Chooser*chooser,
@@ -1079,7 +1079,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 		if(m_ed->m_expirations.count(previousPosition) > 0){
 			vector<uint64_t>*expired=&(m_ed->m_expirations)[previousPosition];
 
-			// erase these reads from the list of reads without mate 
+			// erase these reads from the list of reads without mate
 			// because they are expired...
 			// this just free some memory and does not change the result.
 			for(int i=0;i<(int)expired->size();i++){
@@ -1116,7 +1116,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 					ed->m_EXTENSION_currentSeedIndex,(int)(*seeds).size());
 				fflush(stdout);
 				m_flowedVertices.push_back(ed->m_EXTENSION_currentSeed.size());
-			
+
 				/* flow #0 is the seed */
 				ed->m_flowNumber++;
 			}
@@ -1140,7 +1140,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 
                         ----------------------------------------      seed
 				*			current position
-							
+
 							<------>   maximum outer distance
 
 
@@ -1210,7 +1210,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 		ed->m_EXTENSION_extension.push_back((*currentVertex));
 		ed->m_extensionCoverageValues.push_back(*receivedVertexCoverage);
 
-		// add the coverage to the sum because this vertex is 
+		// add the coverage to the sum because this vertex is
 		// part of the seed
 		if(ed->m_EXTENSION_extension.size () <= ed->m_EXTENSION_currentSeed.size()){
 			if(ed->m_EXTENSION_extension.size () == 1){
@@ -1232,7 +1232,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 						peak=i->first;
 					}
 				}
-		
+
 				cout<<"Flow number= "<<ed->m_flowNumber<<endl;
 				cout<<"Peak coverage of the seed= "<<peak<<endl;
 				cout<<"Length of the seed= "<<ed->m_EXTENSION_currentSeed.size()<<endl;
@@ -1248,7 +1248,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 		MACRO_COLLECT_PROFILING_INFORMATION();
 
 	}else{
-		// process each received marker and decide if 
+		// process each received marker and decide if
 		// if it will be utilised or not
 		if(m_sequenceIndexToCache<(int)ed->m_EXTENSION_receivedReads.size()){
 			MACRO_COLLECT_PROFILING_INFORMATION();
@@ -1263,7 +1263,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 			MACRO_COLLECT_PROFILING_INFORMATION();
 
 			/**
-			 * if the read is still within the range of the peak, update it 
+			 * if the read is still within the range of the peak, update it
 			 *
 			 * this complicated code add-on avoids the collapsing of
 			 * tandemly-repeated repeats.
@@ -1305,8 +1305,8 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 							int expectedFragmentLength=m_parameters->getLibraryAverageLength(library,peak);
 							int expectedDeviation=m_parameters->getLibraryStandardDeviation(library,peak);
 
-							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength 
-							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation 
+							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength
+							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation
 					&&( (theLeftStrand=='F' && theRightStrand=='R')
 						||(theLeftStrand=='R' && theRightStrand=='F'))
 					// the bridging pair is meaningless if both start in repeats
@@ -1319,7 +1319,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 								break;
 							}
 						}
-		
+
 						if(updateRead && anElement->canMove()){
 							anElement->setStartingPosition(startPosition);
 							ed->m_EXTENSION_readsInRange.insert(uniqueId);
@@ -1402,14 +1402,14 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 
 				// don't add it up if its is marked on a repeated vertex and
 				// its mate was not seen yet.
-				
+
 				// TODO: is 3* really the best we can do ?
 				if(addRead && ed->m_currentCoverage>=2*m_parameters->getPeakCoverage()){
 					// the vertex is repeated
 					if(ed->m_EXTENSION_pairedRead.getLibrary()!=DUMMY_LIBRARY){
 						uint64_t mateId=ed->m_EXTENSION_pairedRead.getUniqueId();
 						// the mate is required to allow proper placement
-						
+
 						ExtensionElement*extensionElement=ed->getUsedRead(mateId);
 
 						if(extensionElement==NULL){
@@ -1423,7 +1423,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 				if(addRead && ed->m_EXTENSION_pairedRead.getLibrary()!=DUMMY_LIBRARY){
 					uint64_t mateId=ed->m_EXTENSION_pairedRead.getUniqueId();
 					// the mate is required to allow proper placement
-					
+
 					ExtensionElement*extensionElement=ed->getUsedRead(mateId);
 
 					if(extensionElement!=NULL){// use to be via readsPositions
@@ -1444,8 +1444,8 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 							int expectedFragmentLength=m_parameters->getLibraryAverageLength(library,peak);
 							int expectedDeviation=m_parameters->getLibraryStandardDeviation(library,peak);
 
-							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength 
-							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation 
+							if(expectedFragmentLength-multiplier*expectedDeviation<=observedFragmentLength
+							&& observedFragmentLength <= expectedFragmentLength+multiplier*expectedDeviation
 					&&( (theLeftStrand=='F' && theRightStrand=='R')
 						||(theLeftStrand=='R' && theRightStrand=='F'))
 					// the bridging pair is meaningless if both start in repeats
@@ -1468,7 +1468,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 
 				/* after making sure the read is sane, we can add it here for sure */
 				if(addRead){
-					
+
 					if(m_parameters->showReadPlacement()){
 						cout<<"[showReadPlacement] Adding read "<<uniqueId<<" at "<<position;
 						cout<<" with read offset "<<positionOnStrand<<endl;
@@ -1476,7 +1476,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 
 					m_matesToMeet.erase(uniqueId);
 					ExtensionElement*element=ed->addUsedRead(uniqueId);
-	
+
 					// the first vertex obviously agrees.
 					element->increaseAgreement();
 
@@ -1493,11 +1493,11 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 					element->getSequence(m_receivedString,m_parameters);
 					assert(readLength==(int)strlen(m_receivedString));
 					#endif
-		
+
 					// without the +1, it would be the last k-mer provided
 					// by the read
 					int expiryPosition=position+readLength-positionOnStrand-wordSize+1;
-		
+
 					if(m_parameters->showReadPlacement()){
 						cout<<"[showReadPlacement] Read "<<uniqueId<<" will expire at "<<expiryPosition<<endl;
 					}
@@ -1520,7 +1520,7 @@ BubbleData*bubbleData,int minimumCoverage,OpenAssemblerChooser*oa,int wordSize,v
 							int expiration=startPosition+expectedFragmentLength+3*expectedDeviation;
 
 							(ed->m_expirations)[expiration].push_back(uniqueId);
-		
+
 							MACRO_COLLECT_PROFILING_INFORMATION();
 
 							m_matesToMeet.insert(mateId);
@@ -1680,7 +1680,7 @@ void SeedExtender::removeUnfitLibraries(){
 				continue;
 
 			int mean=sum/n;
-			
+
 			int minimumNumberOfBridges=2;
 
 			if(averageLength>=5000){
@@ -1835,7 +1835,7 @@ void SeedExtender::readCheckpoint(FusionData*fusionData){
 	f.close();
 
 	cout<<"Rank "<<m_parameters->getRank()<<" loaded "<<count<<" extensions from checkpoint Extensions"<<endl;
-	
+
 	#ifdef ASSERT
 	assert(count==(int)m_ed->m_EXTENSION_contigs.size());
 	assert(m_ed->m_EXTENSION_identifiers.size()==m_ed->m_EXTENSION_contigs.size());
@@ -1950,7 +1950,7 @@ void SeedExtender::processExpiredReads(){
 			}else{
 				cout<<" fair enough !"<<endl;
 			}
-		
+
 		}
 
 		#ifdef ASSERT
@@ -1965,7 +1965,7 @@ void SeedExtender::processExpiredReads(){
 		#ifdef ASSERT
 		assert(read!=NULL);
 		#endif
-		
+
 
 
 		element->removeSequence();
@@ -1988,11 +1988,11 @@ int SeedExtender::chooseWithSeed(){
 			if(m_ed->m_enumerateChoices_outgoingEdges[i]==
 				m_ed->m_EXTENSION_currentSeed[m_ed->m_EXTENSION_currentPosition]){
 /*
-				(*currentVertex)=ed->m_enumerateChoices_outgoingEdges[i]; 
-				ed->m_EXTENSION_choose=true; 
-				ed->m_EXTENSION_checkedIfCurrentVertexIsAssembled=false; 
-				ed->m_EXTENSION_directVertexDone=false; 
-				ed->m_EXTENSION_VertexAssembled_requested=false; 
+				(*currentVertex)=ed->m_enumerateChoices_outgoingEdges[i];
+				ed->m_EXTENSION_choose=true;
+				ed->m_EXTENSION_checkedIfCurrentVertexIsAssembled=false;
+				ed->m_EXTENSION_directVertexDone=false;
+				ed->m_EXTENSION_VertexAssembled_requested=false;
 */
 				return i;
 			}

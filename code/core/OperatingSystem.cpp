@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -73,7 +73,7 @@ using namespace std;
 #define OS_WIN
 
 /* this will never be picked up because WIN32 or WIN64 will be picked up */
-#elif defined(__BORLANDC__) 
+#elif defined(__BORLANDC__)
 #define OS_WIN
 
 /* SGI IRIX I guess */
@@ -95,7 +95,7 @@ using namespace std;
 
 #include <unistd.h> /* getpid */
 #include <time.h> /* possibly clock_gettime  */
-#include <sys/time.h>  /* gettimeofday*/ 
+#include <sys/time.h>  /* gettimeofday*/
 #include <sys/stat.h>	/* mkdir */
 #include <sys/types.h> /* mode_t */
 
@@ -176,7 +176,7 @@ uint64_t getMicroseconds(){
 	return seconds*1000*1000+microSeconds;
 
 	#elif defined (OS_WIN)
-	
+
 	/* TODO: get microseconds is not implemented on Windows */
 	// could start with this: http://www.decompile.com/cpp/faq/windows_timer_api.htm
 
@@ -222,12 +222,12 @@ uint64_t getThreadMicroseconds(){
 void createDirectory(const char*directory){
 	#ifdef OS_POSIX
 
-	/* 
+	/*
  * S_IRWXU
-    read, write, execute/search by owner 
+    read, write, execute/search by owner
  *
  * S_IRWXG
- *  read, write, execute/search by group 
+ *  read, write, execute/search by group
  *     */
 	mode_t mode=S_IRWXU | S_IRWXG;
 
@@ -236,7 +236,7 @@ void createDirectory(const char*directory){
 	#ifdef ASSERT
 	assert(status==0);
 	#endif
-	
+
 	#elif defined(OS_WIN)
 
 	LPSECURITY_ATTRIBUTES attr=NULL;
@@ -251,17 +251,17 @@ bool fileExists(const char*file){
 	#ifdef OS_POSIX
 	struct stat st;
 	int returnValue=stat(file,&st);
-	
+
 	bool theFileExists=(returnValue == 0);
 	return theFileExists;
-	
+
 	#elif defined(OS_WIN)
 	/* Return TRUE if file 'fileName' exists */
 	DWORD fileAttr = GetFileAttributes(fileName);
 	if(0xFFFFFFFF == fileAttr)
 		return false;
     	return true;
-	
+
 	#else
 	/* not implemented */
 	#endif
@@ -279,7 +279,7 @@ void showRayVersionShort(){
 
 /*
 content
-	cout<<"option"; 
+	cout<<"option";
 	#ifdef option
 	cout<<"y";
 	#else
@@ -288,16 +288,16 @@ content
 	cout<<endl;
 
 list
- FORCE_PACKING 
- ASSERT 
- HAVE_LIBZ 
- HAVE_LIBBZ2 
- CONFIG_PROFILER_COLLECT 
- CONFIG_CLOCK_GETTIME 
- __linux__ 
- _MSC_VER 
- __GNUC__ 
- RAY_32_BITS 
+ FORCE_PACKING
+ ASSERT
+ HAVE_LIBZ
+ HAVE_LIBBZ2
+ CONFIG_PROFILER_COLLECT
+ CONFIG_CLOCK_GETTIME
+ __linux__
+ _MSC_VER
+ __GNUC__
+ RAY_32_BITS
  RAY_64_BITS
 
 for i in $(cat list ); do exp="s/option/$i/g"; sed $exp content; done > list2

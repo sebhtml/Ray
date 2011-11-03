@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -24,7 +24,7 @@
 #include <vector>
 using namespace std;
 
-/** finds one or two peaks in the distribution of frequencies for outer distances 
+/** finds one or two peaks in the distribution of frequencies for outer distances
  * \author Sébastien Boisvert
  */
 class LibraryPeakFinder{

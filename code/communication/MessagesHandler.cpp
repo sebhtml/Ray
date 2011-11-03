@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -56,7 +56,7 @@ void MessagesHandler::sendMessages(StaticVector*outbox){
 		MPI_Request request;
 
 		//  MPI_Issend
-		//      Synchronous nonblocking. 
+		//      Synchronous nonblocking.
 		MPI_Isend(buffer,count,m_datatype,destination,tag,MPI_COMM_WORLD,&request);
 
 		// we don't need the request object because we use a ring and this ring is never violated. */
@@ -76,7 +76,7 @@ void MessagesHandler::sendMessages(StaticVector*outbox){
 }
 
 #ifdef USE_PERSISTENT_COMMUNICATION
-/*	
+/*
  * receiveMessages is implemented as recommanded by Mr. George Bosilca from
 the University of Tennessee (via the Open-MPI mailing list)
 
@@ -86,14 +86,14 @@ Reply-to: Open MPI Developers <devel@…>
 Sujet: Re: [OMPI devel] Simple program (103 lines) makes Open-1.4.3 hang
 Date: 2010-11-23 18:03:04
 
-If you know the max size of the receives I would take a different approach. 
-Post few persistent receives, and manage them in a circular buffer. 
-Instead of doing an MPI_Iprobe, use MPI_Test on the current head of your circular buffer. 
+If you know the max size of the receives I would take a different approach.
+Post few persistent receives, and manage them in a circular buffer.
+Instead of doing an MPI_Iprobe, use MPI_Test on the current head of your circular buffer.
 Once you use the data related to the receive, just do an MPI_Start on your request.
-This approach will minimize the unexpected messages, and drain the connections faster. 
+This approach will minimize the unexpected messages, and drain the connections faster.
 Moreover, at the end it is very easy to MPI_Cancel all the receives not yet matched.
 
-    george. 
+    george.
  */
 void MessagesHandler::pumpMessageFromPersistentRing(){
 	/* persistent communication is not enabled by default */
@@ -119,7 +119,7 @@ void MessagesHandler::pumpMessageFromPersistentRing(){
 
 		// the request can start again
 		MPI_Start(m_ring+m_head);
-	
+
 		// add the message in the internal inbox
 		// this inbox is not the real inbox
 		Message aMessage(incoming,count,m_rank,tag,source);
@@ -146,11 +146,11 @@ void MessagesHandler::addMessage(Message*message){
 	// this message may not be returned immediately
 	MessageNode*allocatedMessage = (MessageNode*) m_internalMessageAllocator.allocate(sizeof(MessageNode));
 
-	// the buffer of the message is already allocated in the calling function so eveyrthing is OK 
+	// the buffer of the message is already allocated in the calling function so eveyrthing is OK
 	allocatedMessage->m_message = *message; // copy data
 	allocatedMessage->m_next = NULL;
 	allocatedMessage->m_previous = NULL;
-	
+
 	// there are no message from this source
 	if(m_heads[source] == NULL && m_tails[source] == NULL){
 		#ifdef ASSERT
@@ -176,7 +176,7 @@ void MessagesHandler::addMessage(Message*message){
 
 		// Assign the next pointer for the new head
 		allocatedMessage->m_next = m_heads[source];
-		
+
 		// we have a new head
 		m_heads[source] = allocatedMessage;
 	}
@@ -198,7 +198,7 @@ void MessagesHandler::receiveMessages(StaticVector*inbox,RingAllocator*inboxAllo
 	}
 	#elif defined USE_ROUND_ROBIN
 
-	// round-robin reception seems to avoid starvation 
+	// round-robin reception seems to avoid starvation
 /** round robin with Iprobe will increase the latency because there will be a lot of calls to
  MPI_Iprobe that yield no messages at all */
 
@@ -221,7 +221,7 @@ void MessagesHandler::roundRobinReception(StaticVector*inbox,RingAllocator*inbox
 	// check if we have one message for m_currentRankToTryToReceiveFrom
 	if(m_tails[m_currentRankToTryToReceiveFrom] != NULL){
 		// we have a message
-		
+
 		MessageNode*messageNode = m_tails[m_currentRankToTryToReceiveFrom];
 		Message*selectedMessage=&(messageNode->m_message);
 
@@ -246,18 +246,18 @@ void MessagesHandler::roundRobinReception(StaticVector*inbox,RingAllocator*inbox
 
 		// allocate the buffer using the ring buffer for that
 		uint64_t*incoming=(uint64_t*)inboxAllocator->allocate(count*sizeof(uint64_t));
-	
+
 		// copy the data
 		memcpy(incoming,selectedMessage->getBuffer(),count*sizeof(uint64_t));
 
 		// recycle the old buffer
-		// all internal buffers are MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes, not count 
+		// all internal buffers are MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes, not count
 		m_internalBufferAllocator.free(selectedMessage->getBuffer(),MAXIMUM_MESSAGE_SIZE_IN_BYTES);
 
 		// set the newly created buffer
 		selectedMessage->setBuffer(incoming);
 
-		// push the message in the inbox 
+		// push the message in the inbox
 		inbox->push_back(*selectedMessage);
 
 		// recycle the old message
@@ -281,7 +281,7 @@ void MessagesHandler::roundRobinReception(StaticVector*inbox,RingAllocator*inbox
 	probeAndRead(m_currentRankToTryToReceiveFrom,MPI_ANY_TAG,inbox,inboxAllocator);
 
 	#endif
-	
+
 
 	#ifdef COMMUNICATION_IS_VERBOSE
 	if(inbox->size() > 0){
@@ -315,11 +315,11 @@ void MessagesHandler::probeAndRead(int source,int tag,StaticVector*inbox,RingAll
 		int source=status.MPI_SOURCE;
 		int count=-1;
 		MPI_Get_count(&status,datatype,&count);
-	
+
 		#ifdef ASSERT
 		assert(count >= 0);
 		#endif
-	
+
 		uint64_t*incoming=NULL;
 		if(count > 0){
 			incoming=(uint64_t*)inboxAllocator->allocate(count*sizeof(uint64_t));

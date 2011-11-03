@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -33,10 +33,10 @@ class MyHashTableIterator{
 	MyHashTable<KEY,VALUE>*m_table;
 	uint64_t m_i;
 	bool m_hasNext;
-	
+
 	void getNext();
 
-public: 
+public:
 	void constructor(MyHashTable<KEY,VALUE>*a);
 	bool hasNext();
 	VALUE*next();

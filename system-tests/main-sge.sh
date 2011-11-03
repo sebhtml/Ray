@@ -3,7 +3,7 @@
 # run system tests in parallel on the grid.
 # each system test also runs in parallel.
 #
-# "I heard you like parallel computing so 
+# "I heard you like parallel computing so
 #  I put a parallel computation in a parallel computation so you
 #  can parallel compute while you parallel compute."
 #       -
@@ -36,7 +36,7 @@ do
 	jobId=$(cat $qsubOut|awk '{print $3}')
 	echo $jobId >> jobs
 	echo "$(date) Job $testName has id $jobId"
-done 
+done
 
 echo "$(date) Done submitting jobs."
 

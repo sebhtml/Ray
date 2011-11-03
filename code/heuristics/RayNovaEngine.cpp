@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -40,7 +40,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 			initialChoice=i;
 		}
 	}
-	
+
 	if(withElements==1)
 		return initialChoice;
 
@@ -70,7 +70,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 
 	for(int i=0;i<choices;i++){
 		int numberOfEntriesForI=distances->at(i).size();
-	
+
 		if(numberOfEntriesForI < 2)
 			allHaveAtLeast2=false;
 	}
@@ -81,7 +81,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 		bool win=true;
 
 		int numberOfEntriesForI=distances->at(i).size();
-	
+
 		/* an invalid choice can not win */
 		if(invalidChoices->count(i)>0)
 			continue;
@@ -150,7 +150,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 
 		if(show){
 			cout<<"step= "<<step<<endl;
-		
+
 			cout<<"Choice: "<<i+1<<endl;
 			cout<<" DataPoints: "<<n<<endl;
 			for(int j=0;j<n;j++){
@@ -165,7 +165,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 	int selection=IMPOSSIBLE_CHOICE;
 	for(int i=0;i<choices;i++){
 		bool winner=true;
-		
+
 		if(invalidChoices->count(i) > 0)
 			continue;
 
@@ -190,7 +190,7 @@ int RayNovaEngine::choose(vector<map<int,int> >*distances,set<int>*invalidChoice
 			break;
 		}
 	}
-	
+
 	if(show){
 		if(selection==IMPOSSIBLE_CHOICE){
 			cout<<"NovaEngine Selection: IMPOSSIBLE_CHOICE"<<endl;

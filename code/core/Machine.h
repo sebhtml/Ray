@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -185,7 +185,7 @@ class Machine{
 	// coverage distribubtion
 	map<int,uint64_t> m_coverageDistribution;
 	int m_numberOfMachinesDoneSendingCoverage;
-	
+
 	string m_VERSION;
 	bool m_mode_sendDistribution;
 
@@ -201,13 +201,13 @@ class Machine{
 	// memory allocators
 	// m_outboxAllocator, m_inboxAllocator, and m_distributionAllocator are
 	// cleaned everynow and then.
-	
+
 	// allocator for outgoing messages
 	RingAllocator m_outboxAllocator;
-	
+
 	// allocator for ingoing messages
 	RingAllocator m_inboxAllocator;
-	
+
 	// allocator for persistent data
 	MyAllocator m_persistentAllocator;
 
@@ -288,7 +288,7 @@ class Machine{
 	/** slave mode callback prototypes */
 	#include <core/slave_mode_macros.h>
 	#undef MACRO_LIST_ITEM
-	
+
 public:
 	/*
  * this is the only public bit

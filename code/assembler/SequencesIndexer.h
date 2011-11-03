@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -69,7 +69,7 @@ class SequencesIndexer{
 	SplayTreeIterator<uint64_t,char> m_activeWorkerIterator;
 
 	SplayTree<uint64_t,IndexerWorker> m_aliveWorkers;
-	
+
 	bool m_communicatorWasTriggered;
 	vector<uint64_t> m_workersDone;
 	vector<uint64_t> m_waitingWorkers;

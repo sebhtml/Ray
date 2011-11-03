@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -67,13 +67,13 @@ int VirtualCommunicator::getReplyType(int tag){
 	}
 	assert(m_reverseReplyMap.count(tag) > 0);
 	#endif
-	
+
 	return m_reverseReplyMap[tag];
 }
 
 /** push a message
  * this may trigger an actual message being flushed in the
- * message-passing interface stack 
+ * message-passing interface stack
  */
 void VirtualCommunicator::pushMessage(uint64_t workerId,Message*message){
 	int tag=message->getTag();
@@ -115,7 +115,7 @@ void VirtualCommunicator::pushMessage(uint64_t workerId,Message*message){
 	assert(m_elementSizes.count(tag)>0);
 	#endif
 
-	/**  generate   a group key for the message 
+	/**  generate   a group key for the message
  * 	this is used for priority calculation
  * 	*/
 	uint64_t elementId=getPathUniqueId(destination,tag);
@@ -277,7 +277,7 @@ void VirtualCommunicator::processInbox(vector<uint64_t>*activeWorkers){
 			int elementsPerWorker=m_elementSizes[queryTag];
 			vector<uint64_t> workers=m_workerCurrentIdentifiers[m_activeTag][m_activeDestination];
 			m_workerCurrentIdentifiers[m_activeTag][m_activeDestination].clear();
-			
+
 			#ifdef ASSERT
 			assert(workers.size()>0);
 			assert(elementsPerWorker>0);
@@ -371,11 +371,11 @@ bool VirtualCommunicator::nextIsAlmostFull(){
 	if(m_priorityQueue.empty()){
 		return false;
 	}
-	
+
 	uint64_t elementId=*(m_priorityQueue.rbegin()->second.begin());
 	int selectedDestination=getRankFromPathUniqueId(elementId);
 	int selectedTag=getIdFromPathUniqueId(elementId);
-	
+
 	int period=m_elementSizes[selectedTag];
 	int currentSize=m_messageContent[selectedTag][selectedDestination].size();
 	int threshold=MAXIMUM_MESSAGE_SIZE_IN_BYTES/8;

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -121,7 +121,7 @@ Read*ArrayOfReads::at(uint64_t i){
 	#endif
 
 	int positionInSaidChunk=i%m_CHUNK_SIZE;
-	
+
 	#ifdef ASSERT
 	assert(positionInSaidChunk<m_CHUNK_SIZE);
 	#endif

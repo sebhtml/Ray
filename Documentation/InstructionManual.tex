@@ -1,4 +1,4 @@
-% TODO: add new options in Ray 1.6.2 
+% TODO: add new options in Ray 1.6.2
 % ./Ray -help lists options
 
 \documentclass{article}
@@ -31,7 +31,7 @@ Git source tree: \url{http://github.com/sebhtml/ray}
 
 \vspace{2cm}
 
-Reference to cite: 
+Reference to cite:
 \vspace{2cm}
 
 \noindent
@@ -50,10 +50,10 @@ doi:10.1089/cmb.2009.0238\\
 \section{Abstract}
 
 Ray is documented in the manual (InstructionManual.tex; available
-online and in Portable Document Format), 
+online and in Portable Document Format),
 on
 \url{http://github.com/sebhtml/ray}
- (with the README.md), in the 
+ (with the README.md), in the
 C++ code using Doxygen and in the journal paper as well.
 Enjoy the manual.
 
@@ -62,7 +62,7 @@ Enjoy the manual.
 To install Ray, you need a C++ compiler (standard 1998), make and a message-passing-interface (MPI) implementation compliant
 with the MPI standard 2.2.
 
-The software below are readily (and freely) available in most GNU/Linux distributions (I use Ubuntu, CentOS, and Fedora); 
+The software below are readily (and freely) available in most GNU/Linux distributions (I use Ubuntu, CentOS, and Fedora);
 see Table~\ref{software}).
 
 
@@ -125,7 +125,7 @@ You can also provide all compilation options as follows.
 make  PREFIX=build MPICXX=/software/openmpi-1.4.3/bin/mpic++ \
 MAXKMERLENGTH=64 HAVE_LIBZ=n HAVE_LIBBZ2=n \
 HAVE_CLOCK_GETTIME=n INTEL_COMPILER=n ASSERT=n FORCE_PACKING=y
-#wait 
+#wait
 make install
 \end{verbatim}
 
@@ -172,7 +172,7 @@ If you use a high-performance network:
 \subsection{Scheduling a MPI job}
 
 One thing that should be avoided is sharing cluster nodes between users for any given MPI job.
-Otherwise, your MPI job may fail simply because other users sharing your job nodes may make one of your job nodes crash (load factor is too high or 
+Otherwise, your MPI job may fail simply because other users sharing your job nodes may make one of your job nodes crash (load factor is too high or
 memory usage is not respectful).
 
 If you use Oracle Grid Engine (previously known as Sun Grid Engine), you should submit your MPI jobs to a queue with an allocation rule (allocation\_rule) equal to
@@ -234,7 +234,7 @@ computed by Ray. Ray may fail to compute and average outer distance when the lat
 In that case, provide the value.
 The maximum  number of paired libraries allowed by Ray is 499.
 
-\subsection{      
+\subsection{
  -debug-bubbles
 }
               Debugs bubble code.
@@ -244,22 +244,22 @@ The maximum  number of paired libraries allowed by Ray is 499.
 }
 Ray will write k-mers to PREFIX.kmers.txt.
 
-\subsection{      
+\subsection{
        -debug-seeds
 }
               Debugs seed code.
 
-\subsection{      
+\subsection{
        -show-memory-usage (only available in GNU/Linux)
 }
               Shows memory usage. Data is fetched from /proc on GNU/Linux
 
-\subsection{      
+\subsection{
        -show-ending-context
 }
               Shows the ending context of each extension.
 
-\subsection{      
+\subsection{
        -run-profiler
 }
               Runs the profiler as the code runs. Needs a real-time POSIX system (HAVE\_CLOCK\_GETTIME = y)
@@ -279,7 +279,7 @@ Shows options available.
 
 \subsection{-minimumCoverage minimumCoverage}
 
-Sets manually the minimum coverage. 
+Sets manually the minimum coverage.
 If not provided, it is computed by Ray automatically.
 
 \subsection{-peakCoverage peakCoverage}
@@ -312,11 +312,11 @@ Output files are named according to the prefix provided by the option -o.
 Average outer distance and standard deviation are computed by Ray if omitted.
 
 \begin{verbatim}
--p <leftSequencesFile> <rightSequencesFile>  
+-p <leftSequencesFile> <rightSequencesFile>
 
 OR
 
--p <leftSequencesFile> <rightSequencesFile>  <averageFragmentLength> <standardDeviation> 
+-p <leftSequencesFile> <rightSequencesFile>  <averageFragmentLength> <standardDeviation>
 \end{verbatim}
 
 Example for paired-end reads (the ends of DNA fragments):
@@ -347,7 +347,7 @@ Average outer distance and standard deviation are computed by Ray if omitted.
 
 OR
 
--i <sequencesFile>  <averageFragmentLength> <standardDeviation> 
+-i <sequencesFile>  <averageFragmentLength> <standardDeviation>
 \end{verbatim}
 
 In the interleaved file (example is for a fasta file):
@@ -440,7 +440,7 @@ To compile it, type these commands:
 make PREFIX=build VIRTUAL_SEQUENCER=y
 # wait
 make install
-./build/VirtualNextGenSequencer 
+./build/VirtualNextGenSequencer
 \end{verbatim}
 
 To use it:
@@ -528,7 +528,7 @@ Also, if you have access to compute nodes:
    \item Memory page size: getconf PAGESIZE $>$ pagesize
    \item Central processing unit: cat /proc/cpuinfo|gzip$>$ cpuinfo.gz
    \item Memory information: cat /proc/meminfo|gzip$>$ meminfo.gz
-   \item Kernel: uname -a$>$ uname-a 
+   \item Kernel: uname -a$>$ uname-a
 \end{enumerate}
 
 

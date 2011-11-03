@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -89,7 +89,7 @@ void ChunkAllocatorWithDefragmentation::constructor(int bytesPerElement,bool sho
  *  m_fastLaneNumber
  */
 void ChunkAllocatorWithDefragmentation::updateFastLane(int n){
-	/** find a DefragmentationGroup in a DefragmentationLane that 
+	/** find a DefragmentationGroup in a DefragmentationLane that
  * can accomodate the query */
 	for(int i=0;i<m_numberOfLanes;i++){
 		DefragmentationLane*lane=m_defragmentationLanes[i];
@@ -101,7 +101,7 @@ void ChunkAllocatorWithDefragmentation::updateFastLane(int n){
 
 	/** we need to add a defragmentation lane because the existing lanes have
  * 	no group that can allocate the query */
-	
+
 	DefragmentationLane*defragmentationLane=(DefragmentationLane*)__Malloc(sizeof(DefragmentationLane),RAY_MALLOC_TYPE_DEFRAG_LANE,m_show);
 	defragmentationLane->constructor(m_numberOfLanes,m_bytesPerElement,m_show);
 
@@ -142,7 +142,7 @@ SmartPointer ChunkAllocatorWithDefragmentation::allocate(int n){ /** 64 is the n
  * Finally, a call to defragment is performed.
  */
 void ChunkAllocatorWithDefragmentation::deallocate(SmartPointer a){
-	/** NULL is easy to free 
+	/** NULL is easy to free
  * 	Not sure if the code should vomit an error instead.. */
 	if(a==SmartPointer_NULL)
 		return;

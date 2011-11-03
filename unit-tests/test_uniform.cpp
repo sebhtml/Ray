@@ -17,7 +17,7 @@ void f2(){
 	srand(time(NULL));
 	int size=1536;
 	map<int,int> counts;
-	
+
 	uint64_t samples=100000000;
 	uint64_t base=rand();
 	int wordSize=63;
@@ -52,7 +52,7 @@ void f1(){
 	srand(time(NULL));
 	int size=1536;
 	map<int,int> counts;
-	
+
 	uint64_t samples=100000000;
 	uint64_t base=rand();
 	int wordSize=63;

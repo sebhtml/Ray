@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -117,7 +117,7 @@ bool SplayTree<KEY,VALUE>::remove(KEY key,bool reuse,MyAllocator*allocator){
 
 	m_size--;
 
-	// reuse the pointer 
+	// reuse the pointer
 	if(reuse){
 		allocator->free(toRemove,sizeof(SplayNode<KEY,VALUE>));
 	}
@@ -148,7 +148,7 @@ SplayNode<KEY,VALUE>*SplayTree<KEY,VALUE>::insert(KEY key,MyAllocator*allocator,
 		return m_root;
 	SplayNode<KEY,VALUE>*n=(SplayNode<KEY,VALUE>*)allocator->allocate(sizeof(SplayNode<KEY,VALUE>));
 	n->init(key);
-	
+
 	if(key<m_root->getKey()){
 		n->m_left=m_root->m_left;
 		n->m_right=m_root;

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -102,7 +102,7 @@ void Partitioner::masterMethod(){
 
 				totalSequences+=entries;
 			}
-			
+
 			f2<<endl;
 			f2<<"Summary"<<endl;
 			f2<<"	NumberOfSequences: "<<totalSequences<<endl;
@@ -125,7 +125,7 @@ void Partitioner::masterMethod(){
 				uint64_t last=first+perRank-1;
 				if(i==m_parameters->getSize()-1)
 					last=totalSequences-1;
-				
+
 				uint64_t count=last-first+1;
 				f3<<i<<"\t"<<first<<"\t"<<last<<"\t"<<count<<endl;
 			}
@@ -142,7 +142,7 @@ void Partitioner::slaveMethod(){
 		m_currentFileToCount=0;
 		m_currentlySendingCounts=false;
 		m_sentCount=false;
-		
+
 		/* possibly read the checkpoint */
 		if(m_parameters->hasCheckpoint("Partition")){
 			ifstream f(m_parameters->getCheckpointFile("Partition").c_str());
@@ -159,7 +159,7 @@ void Partitioner::slaveMethod(){
 				assert(file>=0);
 				assert(m_slaveCounts.count(file)==0);
 				#endif
-			
+
 				m_slaveCounts[file]=sequences;
 
 				#ifdef ASSERT

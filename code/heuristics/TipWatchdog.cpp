@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -36,7 +36,7 @@ bool TipWatchdog::getApproval(ExtensionData*ed,DepthFirstSearchData*dfsData,int 
 	return true;
 
 	if(ed->m_enumerateChoices_outgoingEdges.size()==2 &&
-		(int)ed->m_EXTENSION_readPositionsForVertices[ed->m_enumerateChoices_outgoingEdges[0]].size() < minimumCoverage 
+		(int)ed->m_EXTENSION_readPositionsForVertices[ed->m_enumerateChoices_outgoingEdges[0]].size() < minimumCoverage
 		&& (int)ed->m_EXTENSION_readPositionsForVertices[ed->m_enumerateChoices_outgoingEdges[1]].size() < minimumCoverage){
 		int winner=dfsData->m_doChoice_tips_newEdges[0];
 		int loser=0;

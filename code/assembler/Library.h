@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -37,7 +37,7 @@
 using namespace std;
 
 /*
- * This class computes the average outer distances 
+ * This class computes the average outer distances
  * for paired reads and mate-pairs.
  * To do so, it spawns a pool of workers.
  * These workers will push messages and these

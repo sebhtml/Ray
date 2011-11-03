@@ -7,7 +7,7 @@
 
 file=k31-Ray-Bird-20110905-1.Contigs.fasta
 
-ln -s ../$file 
+ln -s ../$file
 
 ./blat -fastMap -fastMap $file $file selfMap.psl
 

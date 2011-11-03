@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -71,7 +71,7 @@ void SeedingData::computeSeeds(){
 		return;
 	}
 
-	// flush all mode is necessary to empty buffers and 
+	// flush all mode is necessary to empty buffers and
 	// restart things from scratch..
 
 	// 1. iterate on active workers
@@ -106,7 +106,7 @@ void SeedingData::computeSeeds(){
 				#ifdef SHOW_DISCOVERIES
 				printf("Rank %i discovered a seed with %i vertices\n",m_rank,(int)seed.size());
 				#endif
-				
+
 				Kmer firstVertex=seed[0];
 				Kmer lastVertex=seed[seed.size()-1];
 				Kmer firstReverse=m_parameters->_complementVertex(&lastVertex);
@@ -127,7 +127,7 @@ void SeedingData::computeSeeds(){
 		updateStates();
 
 		//  add one worker to active workers
-		//  reason is that those already in the pool don't communicate anymore -- 
+		//  reason is that those already in the pool don't communicate anymore --
 		//  as for they need responses.
 		if(!m_virtualCommunicator->getGlobalPushedMessageStatus()&&m_activeWorkers.empty()){
 			// there is at least one worker to start
@@ -297,7 +297,7 @@ void SeedingData::sendSeedLengths(){
 
 	if(m_inbox->size()==1&&(*m_inbox)[0]->getTag()==RAY_MPI_TAG_SEND_SEED_LENGTHS_REPLY)
 		m_communicatorWasTriggered=false;
-	
+
 	if(m_communicatorWasTriggered)
 		return;
 
@@ -308,7 +308,7 @@ void SeedingData::sendSeedLengths(){
 		(*m_mode)=RAY_SLAVE_MODE_DO_NOTHING;
 		return;
 	}
-	
+
 	uint64_t*messageBuffer=(uint64_t*)m_outboxAllocator->allocate(MAXIMUM_MESSAGE_SIZE_IN_BYTES);
 	int maximumPairs=MAXIMUM_MESSAGE_SIZE_IN_BYTES/sizeof(uint64_t)/2;
 	int i=0;

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -30,7 +30,7 @@
 using namespace std;
 
 /**
- * This class counts the number of entries in each input file in parallel 
+ * This class counts the number of entries in each input file in parallel
  * \author Sébastien Boisvert
  */
 class Partitioner{

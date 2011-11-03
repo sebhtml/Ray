@@ -15,7 +15,7 @@ DESCRIPTION:
   K-mer length
 
        -k kmerLength
-              Selects the length of k-mers. The default value is 21. 
+              Selects the length of k-mers. The default value is 21.
               It must be odd because reverse-complement vertices are stored together.
               The maximum length is defined at compilation by MAXKMERLENGTH
               Larger k-mers utilise more memory.
@@ -237,7 +237,7 @@ FILES
      RayOutput/RayVersion.txt
      	The version of Ray
      RayOutput/RayCommand.txt
-     	The exact same command provided 
+     	The exact same command provided
 
   AMOS
 

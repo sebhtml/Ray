@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -194,7 +194,7 @@ void SeedWorker::do_1_1_test(){
 			m_virtualCommunicator->getMessageResponseElements(m_workerIdentifier,&elements);
 			uint8_t edges=elements[0];
 			m_mainVertexCoverage=elements[1];
-			
+
 
 			m_cache[m_SEEDING_currentVertex]=m_mainVertexCoverage;
 
@@ -278,13 +278,13 @@ void SeedWorker::do_1_1_test(){
 		bool oneParent=false;
 
 		// if OK, set m_SEEDING_currentChildVertex and m_SEEDING_currentParentVertex
-		
+
 		for(int i=0;i<(int)m_ingoingCoverages.size();i++){
 			int coverage=m_ingoingCoverages[i];
 			Kmer vertex=m_SEEDING_receivedIngoingEdges[i];
 			oneParent=true;
 
-			// we want seeds to be unique 
+			// we want seeds to be unique
 			if(coverage>= 2*m_mainVertexCoverage){
 				oneParent=false;
 				break;
@@ -305,7 +305,7 @@ void SeedWorker::do_1_1_test(){
 				break;
 			}
 		}
-		
+
 		bool oneChild=false;
 
 		for(int i=0;i<(int)m_outgoingCoverages.size();i++){
@@ -313,7 +313,7 @@ void SeedWorker::do_1_1_test(){
 			Kmer vertex=m_SEEDING_receivedOutgoingEdges[i];
 			oneChild=true;
 
-			// we want seeds to be unique 
+			// we want seeds to be unique
 			if(coverage>= 2*m_mainVertexCoverage){
 				oneParent=false;
 				break;

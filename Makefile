@@ -1,7 +1,7 @@
 VERSION = 1
 PATCHLEVEL = 7
 SUBLEVEL = 1
-EXTRAVERSION = 
+EXTRAVERSION =
 NAME = Deep Curtain of Broad Ranges
 
 RAY_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
@@ -92,7 +92,7 @@ MPICXX-y = mpicxx
 
 # mpic++ from an MPI implementation must be reachable with the PATH
 # tested implementations of MPI include Open-MPI and MPICH2
-CXXFLAGS = -Icode 
+CXXFLAGS = -Icode
 
 # optimization
 CXXFLAGS-$(OPTIMIZE) += -O3
@@ -101,7 +101,7 @@ ifeq ($(INTEL_COMPILER),n)
 # g++ options
 ifeq ($(uname_S),Linux)
 	CXXFLAGS +=  -Wall -ansi -g #-std=c++98
-	CXXFLAGS-$(PEDANTIC) += -pedantic -Wextra 
+	CXXFLAGS-$(PEDANTIC) += -pedantic -Wextra
 endif
 endif
 
@@ -110,7 +110,7 @@ CXXFLAGS-$(GPROF) += -g -pg
 LDFLAGS-$(GPROF) += -pg -g
 
 # if you use Intel's mpiicpc, uncomment the following lines
-MPICXX-$(INTEL_COMPILER) = mpiicpc 
+MPICXX-$(INTEL_COMPILER) = mpiicpc
 CXXFLAGS-$(INTEL_COMPILER) += -DMPICH_IGNORE_CXX_SEEK -DMPICH_SKIP_MPICXX
 
 #maximum k-mer length
@@ -124,7 +124,7 @@ CXXFLAGS-$(HAVE_LIBZ) += -DHAVE_LIBZ
 LDFLAGS-$(HAVE_LIBZ) += -lz
 
 #compile with libbz2
-CXXFLAGS-$(HAVE_LIBBZ2) += -DHAVE_LIBBZ2 
+CXXFLAGS-$(HAVE_LIBBZ2) += -DHAVE_LIBBZ2
 LDFLAGS-$(HAVE_LIBBZ2) += -lbz2
 
 #debug flag
@@ -150,7 +150,7 @@ TARGETS=Ray
 
 #memory
 obj-y += code/memory/ReusableMemoryStore.o code/memory/MyAllocator.o code/memory/RingAllocator.o \
-code/memory/malloc_types.o 
+code/memory/malloc_types.o
 obj-y += code/memory/allocator.o
 obj-y += code/memory/DefragmentationGroup.o code/memory/ChunkAllocatorWithDefragmentation.o code/memory/DefragmentationLane.o
 
@@ -175,15 +175,15 @@ obj-y += code/core/statistics.o
 
 #compression
 
-obj-$(HAVE_LIBBZ2) += code/compression/BzReader.o  
+obj-$(HAVE_LIBBZ2) += code/compression/BzReader.o
 
 #cryptography
 obj-y += code/cryptography/crypto.o
-obj-$(HAVE_LIBBZ2) += code/format/FastqBz2Loader.o 
-obj-$(HAVE_LIBZ) += code/format/FastqGzLoader.o 
+obj-$(HAVE_LIBBZ2) += code/format/FastqBz2Loader.o
+obj-$(HAVE_LIBZ) += code/format/FastqGzLoader.o
 
 #graph
-obj-y += code/graph/GridTable.o code/graph/GridTableIterator.o code/graph/CoverageDistribution.o 
+obj-y += code/graph/GridTable.o code/graph/GridTableIterator.o code/graph/CoverageDistribution.o
 obj-y += code/graph/CoverageGatherer.o code/graph/KmerAcademy.o code/graph/KmerAcademyIterator.o
 
 #structures
@@ -192,7 +192,7 @@ code/structures/ArrayOfReads.o  code/structures/Direction.o code/structures/Pair
 code/structures/StaticVector.o code/structures/Vertex.o code/structures/BloomFilter.o
 
 #scaffolder
-obj-y += code/scaffolder/Scaffolder.o 
+obj-y += code/scaffolder/Scaffolder.o
 obj-y += code/scaffolder/ScaffoldingLink.o
 obj-y += code/scaffolder/SummarizedLink.o
 obj-y += code/scaffolder/ScaffoldingAlgorithm.o
@@ -210,13 +210,13 @@ code/assembler/FusionData.o code/assembler/Library.o code/assembler/Loader.o \
 code/assembler/SeedExtender.o code/assembler/SequencesIndexer.o \
 code/assembler/SequencesLoader.o \
 code/assembler/TimePrinter.o code/assembler/VerticesExtractor.o \
-code/assembler/ray_main.o code/assembler/ExtensionData.o 
+code/assembler/ray_main.o code/assembler/ExtensionData.o
 obj-y += code/assembler/KmerAcademyBuilder.o
 obj-y += code/assembler/EdgePurger.o code/assembler/EdgePurgerWorker.o
 obj-y += code/assembler/Partitioner.o
-obj-y += code/assembler/FusionWorker.o 
+obj-y += code/assembler/FusionWorker.o
 obj-y += code/assembler/FusionTaskCreator.o
-obj-y += code/assembler/JoinerWorker.o 
+obj-y += code/assembler/JoinerWorker.o
 obj-y += code/assembler/JoinerTaskCreator.o
 
 obj-y += code/profiling/Profiler.o
@@ -236,7 +236,7 @@ obj-y += code/heuristics/BubbleTool.o code/heuristics/Chooser.o code/heuristics/
 # the target is Ray
 all: $(TARGETS)
 
-showOptions: 
+showOptions:
 	@echo ""
 	@echo "Compilation options (you can change them of course)"
 	@echo ""
@@ -258,7 +258,7 @@ showOptions:
 	@echo LDFLAGS = $(LDFLAGS)
 	@echo ""
 	@touch showOptions
-	
+
 # how to make Ray
 Ray: showOptions $(obj-y)
 	@$(MPICXX) $(LDFLAGS) $(obj-y) -o $@
@@ -270,5 +270,5 @@ clean:
 	@rm -f $(TARGETS) $(obj-y) showOptions PREFIX TARGETS
 	@echo CLEAN
 
-install: 
+install:
 	@scripts/install.sh

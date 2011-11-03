@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -31,6 +31,6 @@ if(expected!=actual) {\
 	cout<<"File: "<<__FILE__<<endl; \
 	cout<<"Function: "<<__func__<<endl; \
 	cout<<"Line: "<<__LINE__<<endl; \
-} 
+}
 
 #endif

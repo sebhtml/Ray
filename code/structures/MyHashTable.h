@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -23,8 +23,8 @@
  * the content of this page about Google sparse hash map.
  * \see http://google-sparsehash.googlecode.com/svn/trunk/doc/implementation.html
  *
- * 	double hashing is based on page 529 
- * 	of 
+ * 	double hashing is based on page 529
+ * 	of
  * 	Donald E. Knuth
  * 	The Art of Computer Programming, Volume 3, Second Edition
  *
@@ -63,7 +63,7 @@ class MyHashTableGroup{
 	SmartPointer m_vector;
 
 	/**
- * 	the bitmap containing the presence of absence  of a bucket 
+ * 	the bitmap containing the presence of absence  of a bucket
  */
 	uint64_t m_bitmap;
 
@@ -80,7 +80,7 @@ public:
 	VALUE*getBucket(int bucket,ChunkAllocatorWithDefragmentation*a);
 
 /**
- * get the number of occupied buckets before bucket 
+ * get the number of occupied buckets before bucket
  */
 	int getBucketsBefore(int bucket);
 
@@ -94,7 +94,7 @@ public:
  */
 	int getBit(int i);
 
-	/** 
+	/**
  * 	build a group of buckets
  */
 	void constructor(int numberOfBucketsInGroup,ChunkAllocatorWithDefragmentation*allocator);
@@ -124,7 +124,7 @@ void MyHashTableGroup<KEY,VALUE>::setBit(int bit,uint64_t value){
 	#ifdef ASSERT
 	assert(value==1||value==0);
 	#endif
-	
+
 	/** use binary and or binary or */
 
 	/* set bit to 1 */
@@ -255,7 +255,7 @@ VALUE*MyHashTableGroup<KEY,VALUE>::insert(int numberOfBucketsInGroup,int bucket,
 
 	/* assign the new bucket */
 	newVectorPointer[bucketsBefore].m_lowerKey=*key;
-	
+
 	/* garbage the old vector, ChunkAllocatorWithDefragmentation will reuse it */
 	if(m_vector!=SmartPointer_NULL)
 		allocator->deallocate(m_vector);
@@ -271,7 +271,7 @@ VALUE*MyHashTableGroup<KEY,VALUE>::insert(int numberOfBucketsInGroup,int bucket,
 		key->print();
 		cout<<"Actual"<<endl;
 		getBucket(bucket,allocator)->m_lowerKey.print();
-		
+
 		cout<<"Bucket= "<<bucket<<" BucketsBefore= "<<bucketsBefore<<" BucketsAfter= "<<bucketsAfter<<endl;
 	}
 	assert(getBucket(bucket,allocator)->m_lowerKey==*key);
@@ -307,7 +307,7 @@ bool MyHashTableGroup<KEY,VALUE>::bucketIsUtilisedBySomeoneElse(int bucket,KEY*k
 	return vectorPointer[bucketsBefore].m_lowerKey!=*key;
 }
 
-/** get direct access to the bucket 
+/** get direct access to the bucket
  * \pre the bucket must be used or the code fails
  * */
 template<class KEY,class VALUE>
@@ -333,12 +333,12 @@ VALUE*MyHashTableGroup<KEY,VALUE>::getBucket(int bucket,ChunkAllocatorWithDefrag
 	return vectorPointer+bucketsBefore;
 }
 
-/** get the number of occupied buckets before bucket 
+/** get the number of occupied buckets before bucket
  * this is done by summing the bits of all buckets before bucket
  */
 template<class KEY,class VALUE>
 int MyHashTableGroup<KEY,VALUE>::getBucketsBefore(int bucket){
-	/** the computation is done using only one variable and 
+	/** the computation is done using only one variable and
  * 	the one provided in argument */
 	int bucketsBefore=0;
 	bucket--;
@@ -347,7 +347,7 @@ int MyHashTableGroup<KEY,VALUE>::getBucketsBefore(int bucket){
 	return bucketsBefore;
 }
 
-/** finds a key in a bucket  
+/** finds a key in a bucket
  * this will *fail* if another key is found.
  * */
 template<class KEY,class VALUE>
@@ -375,7 +375,7 @@ VALUE*MyHashTableGroup<KEY,VALUE>::find(int bucket,KEY*key,ChunkAllocatorWithDef
  * this hash table is specific to DNA
  * uses open addressing with double hashing
  * class VALUE must have a public attribute of class KEY called m_lowerKey.
- * the number of buckets can not be exceeded. 
+ * the number of buckets can not be exceeded.
  * based on the description at
  * \see http://google-sparsehash.googlecode.com/svn/trunk/doc/implementation.html
  *
@@ -401,12 +401,12 @@ class MyHashTable{
  */
 	double m_maximumLoadFactor;
 
-	/** 
+	/**
  * 	chunk allocator
  */
 	ChunkAllocatorWithDefragmentation m_allocator;
 
-	/** 
+	/**
  * 	the  maximum probes required in probing
  */
 	int m_probes[MAX_SAVED_PROBE];
@@ -421,7 +421,7 @@ class MyHashTable{
 	uint64_t m_totalNumberOfBuckets;
 
 	/**
-         * Number of utilised buckets 
+         * Number of utilised buckets
          */
 	uint64_t m_utilisedBuckets;
 
@@ -445,7 +445,7 @@ class MyHashTable{
 	int m_numberOfBucketsInGroup;
 
 	/**
- * 	number of groups 
+ * 	number of groups
  */
 	int m_numberOfGroups;
 
@@ -461,7 +461,7 @@ class MyHashTable{
 	void resize();
 
 /**
- * the type of memory allocation 
+ * the type of memory allocation
  */
 	int m_mallocType;
 
@@ -512,7 +512,7 @@ public:
 	void destructor();
 
 	/**
- * 	get the number of occupied buckets 
+ * 	get the number of occupied buckets
  */
 	uint64_t size();
 
@@ -521,7 +521,7 @@ public:
  * 	will fail if empty
  */
 	VALUE*at(uint64_t a);
-	
+
 	/** get the number of buckets */
 	uint64_t capacity();
 
@@ -608,8 +608,8 @@ void MyHashTable<KEY,VALUE>::growIfNecessary(){
 	#endif
 }
 
-/** 
- * resize the whole hash table 
+/**
+ * resize the whole hash table
  */
 template<class KEY,class VALUE>
 void MyHashTable<KEY,VALUE>::resize(){
@@ -634,11 +634,11 @@ void MyHashTable<KEY,VALUE>::resize(){
  *	N/T   (elements inserted directly in the auxiliary table)
  *	N     (elements copied from the main table to the auxiliary table)
  *
- *	Thus, when the transfert is completed, the auxiliary table has 
+ *	Thus, when the transfert is completed, the auxiliary table has
  *
  *	at most N+N/T elements.
  *
- * 	We have 
+ * 	We have
  *
  * 	N+N/T <= 2N		(equation 1.)
  * 	N+N/T -N  <= 2N -N
@@ -696,7 +696,7 @@ void MyHashTable<KEY,VALUE>::resize(){
 			int bucketInGroup;
 			findBucketWithKey(key,&probe,&group,&bucketInGroup);
 			uint64_t globalBucket=group*m_numberOfBucketsInGroup+bucketInGroup;
-			
+
 			if(globalBucket!=m_currentBucketToTransfer)
 				cout<<"Expected: "<<m_currentBucketToTransfer<<" Actual: "<<globalBucket<<endl;
 			assert(globalBucket==m_currentBucketToTransfer);
@@ -707,7 +707,7 @@ void MyHashTable<KEY,VALUE>::resize(){
 			#endif
 
 			/** remove the key too */
-			/* actually, can not remove anything because otherwise it will make the double hashing 
+			/* actually, can not remove anything because otherwise it will make the double hashing
  * 			fails */
 
 			/** save the size before for further use */
@@ -722,10 +722,10 @@ void MyHashTable<KEY,VALUE>::resize(){
 
 			/* this pointer  will remain valid until the next insert. */
 			VALUE*insertedEntry=m_auxiliaryTableForIncrementalResize->insert(key);
-		
+
 			/** affect the value */
 			(*insertedEntry)=*entry;
-	
+
 			/** assert that we inserted something somewhere */
 			#ifdef ASSERT
 			if(m_auxiliaryTableForIncrementalResize->m_utilisedBuckets!=sizeBefore+1)
@@ -747,7 +747,7 @@ void MyHashTable<KEY,VALUE>::resize(){
 
 		/** destroy the current table */
 		destructor();
-	
+
 		/** copy important stuff  */
 		m_groups=m_auxiliaryTableForIncrementalResize->m_groups;
 		m_totalNumberOfBuckets=m_auxiliaryTableForIncrementalResize->m_totalNumberOfBuckets;
@@ -764,7 +764,7 @@ void MyHashTable<KEY,VALUE>::resize(){
 		/** copy probe profiles */
 		for(int i=0;i<MAX_SAVED_PROBE;i++)
 			m_probes[i]=m_auxiliaryTableForIncrementalResize->m_probes[i];
-	
+
 		/** indicates the caller that things changed places */
 
 		//printStatistics();
@@ -791,8 +791,8 @@ void MyHashTable<KEY,VALUE>::constructor(int mallocType,bool showMalloc,int rank
 	constructor(defaultSize,mallocType,showMalloc,rank);
 }
 
-/** build the hash table given a number of buckets 
- * this is private actually 
+/** build the hash table given a number of buckets
+ * this is private actually
  * */
 template<class KEY,class VALUE>
 void MyHashTable<KEY,VALUE>::constructor(uint64_t buckets,int mallocType,bool showMalloc,int rank){
@@ -800,14 +800,14 @@ void MyHashTable<KEY,VALUE>::constructor(uint64_t buckets,int mallocType,bool sh
 	/** based on Figure 42 on page 531 of
  * 	The Art of Computer Programming, Second Edition, by Donald E. Knuth
  */
-	m_maximumLoadFactor=0.9; 
+	m_maximumLoadFactor=0.9;
 
 	m_auxiliaryTableForIncrementalResize=NULL;
 	m_resizing=false;
 
 	/** set the message-passing interface rank number */
 	m_rank=rank;
-	
+
 	m_allocator.constructor(sizeof(VALUE),showMalloc);
 	m_mallocType=mallocType;
 	m_showMalloc=showMalloc;
@@ -821,13 +821,13 @@ void MyHashTable<KEY,VALUE>::constructor(uint64_t buckets,int mallocType,bool sh
 	m_utilisedBuckets=0;
 
 	/* the number of buckets in a group
- * 	this is arbitrary I believe... 
+ * 	this is arbitrary I believe...
  * 	in my case, 64 is the number of bits in a uint64_t
  * 	*/
 	m_numberOfBucketsInGroup=64;
 
 	/**
- * 	compute the required number of groups 
+ * 	compute the required number of groups
  */
 	m_numberOfGroups=(m_totalNumberOfBuckets-1)/m_numberOfBucketsInGroup+1;
 
@@ -865,7 +865,7 @@ template<class KEY,class VALUE>
 bool MyHashTable<KEY,VALUE>::isAvailable(uint64_t bucket){
 	int group=bucket/m_numberOfBucketsInGroup;
 	int bucketInGroup=bucket%m_numberOfBucketsInGroup;
-	
+
 	#ifdef ASSERT
 	assert(bucket<m_totalNumberOfBuckets);
 	assert(group<m_numberOfGroups);
@@ -886,7 +886,7 @@ MyHashTable<KEY,VALUE>::~MyHashTable(){}
 /**
  * find a bucket
  *
- * using probing, assuming a number of buckets that is a power of 2 
+ * using probing, assuming a number of buckets that is a power of 2
  * "But what is probing ?", you may ask.
  * This stuff is pretty simple actually.
  * Given an array of N elements and a key x and an hash
@@ -898,21 +898,21 @@ MyHashTable<KEY,VALUE>::~MyHashTable(){}
  * probing allows one to probe another bucket.
  *
  *  bucket =   ( HASH_FUNCTION(x) + probe(i) )%N
- *          
+ *
  *             where i is initially 0
  *             when there is a collision, increment i and check the new  bucket
  *             repeat until satisfied.
  */
 template<class KEY,class VALUE>
 void MyHashTable<KEY,VALUE>::findBucketWithKey(KEY*key,uint64_t*probe,int*group,int*bucketInGroup){
-	/** 
- * 	double hashing is based on 
- * 	page 529 
- * 	of 
+	/**
+ * 	double hashing is based on
+ * 	page 529
+ * 	of
  * 	Donald E. Knuth
  * 	The Art of Computer Programming, Volume 3, Second Edition
  */
-	(*probe)=0; 
+	(*probe)=0;
 
 	/** between 0 and M-1 inclusively -- M is m_totalNumberOfBuckets */
 	uint64_t h1=key->hash_function_2()%m_totalNumberOfBuckets;
@@ -936,7 +936,7 @@ void MyHashTable<KEY,VALUE>::findBucketWithKey(KEY*key,uint64_t*probe,int*group,
 	while(m_groups[*group].bucketIsUtilisedBySomeoneElse(*bucketInGroup,key,&m_allocator)
 		&& ((*probe)+1) < m_totalNumberOfBuckets){
 		(*probe)++;
-		
+
 		/** the stride and the number of buckets are relatively prime because
 			number of buckets = M = 2^m
 		and the stride is 1 < s < M and is odd thus does not share factor with 2^m */
@@ -953,20 +953,20 @@ void MyHashTable<KEY,VALUE>::findBucketWithKey(KEY*key,uint64_t*probe,int*group,
 
 		/** only compute the double hashing once */
 		if((*probe)==1){
-			/**  page 529 
+			/**  page 529
  * 				between 1 and M exclusive
 				odd number
  * 			*/
 
 			h2=key->hash_function_1()%m_totalNumberOfBuckets;
-			
+
 			/** h2 can not be 0 */
 			if(h2 == 0)
 				h2=3;
 
 			/** h2 can not be even */
 			if(h2%2 == 0)
-				h2--; 
+				h2--;
 
 			/* I assume it must be between 1 and M exclusive */
 			if(h2 < 3)
@@ -988,7 +988,7 @@ void MyHashTable<KEY,VALUE>::findBucketWithKey(KEY*key,uint64_t*probe,int*group,
 		#ifdef ASSERT
 		assert(h2!=0);
 		#endif
-		
+
 		/** use double hashing */
 		bucket=(h1+(*probe)*h2)%m_totalNumberOfBuckets;
 		(*group)=bucket/m_numberOfBucketsInGroup;
@@ -1032,7 +1032,7 @@ VALUE*MyHashTable<KEY,VALUE>::findKey(KEY*key,bool checkAuxiliary){
 	assert(group<m_numberOfGroups);
 	assert(bucketInGroup<m_numberOfBucketsInGroup);
 	#endif
-	
+
 	/** ask the group to find the key */
 	return m_groups[group].find(bucketInGroup,key,&m_allocator);
 }
@@ -1120,7 +1120,7 @@ VALUE*MyHashTable<KEY,VALUE>::insert(KEY*key){
 
 	/* check the load factor */
 	growIfNecessary();
-	
+
 	return entry;
 }
 
@@ -1132,7 +1132,7 @@ void MyHashTable<KEY,VALUE>::destructor(){
 }
 
 /**
- * print handy statistics 
+ * print handy statistics
  */
 template<class KEY,class VALUE>
 void MyHashTable<KEY,VALUE>::printStatistics(){

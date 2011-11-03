@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -81,7 +81,7 @@ public:
 
 	map<int,int> m_masterSeedLengths;
 	map<int,int> m_slaveSeedLengths;
-	
+
 
 	bool m_SEEDING_edgesRequested;
 	int m_SEEDING_ingoingEdgeIndex;
@@ -114,7 +114,7 @@ public:
 	vector<uint64_t> m_SEEDING_outgoingKeys;
 	bool m_SEEDING_vertexKeyAndCoverageRequested;
 	int m_SEEDING_currentParentRank;
-	
+
 	SeedExtender*m_seedExtender;
 	int getRank();
 	int getSize();

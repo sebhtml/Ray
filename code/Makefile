@@ -3,4 +3,4 @@ all:
 
 clean:
 	@cd ..;$(MAKE) $(MFLAGS) clean
-	
+

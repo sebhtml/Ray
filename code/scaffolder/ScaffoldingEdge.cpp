@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -55,7 +55,7 @@ ScaffoldingEdge ScaffoldingEdge::getReverseEdge(){
 		reverseRight='R';
 
 	ScaffoldingEdge e2(m_rightContig,reverseRight,m_leftContig,reverseLeft,m_gapSize,m_average2,m_count2,m_standardDeviation2,m_average1,m_count1,m_standardDeviation1);
-	
+
 	return e2;
 }
 
@@ -183,7 +183,7 @@ int ScaffoldingEdge::getSide(uint64_t name){
 	#endif
 
 	if(name==getLeftContig())
-		return  LEFT_SIDE; 
+		return  LEFT_SIDE;
 	else if(name==getRightContig())
 		return RIGHT_SIDE;
 

@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 */
 
@@ -75,7 +75,7 @@ void ScaffoldingAlgorithm::solve(
 
 	while(!bagOfChoices.empty()){
 		ScaffoldingEdge edge=bagOfChoices.top();
-		
+
 		//cout<<"Want to add"<<endl;
 		//edge.print();
 
@@ -117,7 +117,7 @@ void ScaffoldingAlgorithm::solve(
 				continue;
 
 			ScaffoldingEdge edge=j->second;
-		
+
 			vector<uint64_t> megaLink;
 			uint64_t leftContig=edge.getLeftContig();
 			megaLink.push_back(leftContig);
@@ -174,7 +174,7 @@ void ScaffoldingAlgorithm::solve(
 		colorMap[i].push_back(*j);
 		i++;
 	}
-	
+
 	// do some color merging.
 	for(set<uint64_t>::iterator j=vertices.begin();j!=vertices.end();j++){
 		uint64_t vertex=*j;
@@ -303,7 +303,7 @@ bool ScaffoldingAlgorithm::hasConflictWithContig(ScaffoldingEdge*edge,uint64_t c
 	for(map<uint64_t,ScaffoldingEdge>::iterator i=m_addedEdges[contig].begin();
 			i!=m_addedEdges[contig].end();i++){
 		ScaffoldingEdge otherEdge=i->second;
-		
+
 		if(hasConflictWithEdge(edge,&otherEdge))
 			return true;
 	}
@@ -365,7 +365,7 @@ bool ScaffoldingAlgorithm::hasConflictWithEdgeAroundContig(ScaffoldingEdge*edgeT
 		ScaffoldingEdge reverseEdge=alreadyAcceptedEdge->getReverseEdge();
 
 		int edge2ContigSideReverse=reverseEdge.getSide(contigToCheck);
-	
+
 		#ifdef ASSERT
 		char edge2ContigStrandReverse=reverseEdge.getStrand(contigToCheck);
 		assert(edge2ContigStrandReverse == edge1ContigStrand);

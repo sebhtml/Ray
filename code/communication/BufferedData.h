@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -32,7 +32,7 @@
  *  This class accumulates messages and flush them when the threshold is reached.
  *
  *  Messages are added in a periodic manner, and 4096 (-) something is the _real_ threshold.
- *  Currently, MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000. Therefore, it is assumed that 96 bytes 
+ *  Currently, MAXIMUM_MESSAGE_SIZE_IN_BYTES is 4000. Therefore, it is assumed that 96 bytes
  *  is an upper bound for the required space for a message's enveloppe.
  *
  *  for instance, if messages are of size 3 and the MAX_SIZE is 10,
@@ -79,8 +79,8 @@ public:
 	void reset(int i);
 
 	/**
- * return true if flushed something 
- *  The result is mainly utilized to wait for a reply to regulate the communication in order 
+ * return true if flushed something
+ *  The result is mainly utilized to wait for a reply to regulate the communication in order
  *  to not exaust resources such as the RingAllocator.
  * */
 	bool flush(int destination,int period,int tag,RingAllocator*outboxAllocator,StaticVector*outbox,int rank,bool force);

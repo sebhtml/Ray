@@ -14,7 +14,7 @@
     GNU General Public License for more details.
 
     You have received a copy of the GNU General Public License
-    along with this program (COPYING).  
+    along with this program (COPYING).
 	see <http://www.gnu.org/licenses/>
 
 */
@@ -113,7 +113,7 @@ void VerticesExtractor::process(int*m_mode_send_vertices_sequence_id,
 
 		if(m_mode_send_vertices_sequence_id_position==0){
 			(*m_myReads)[(*m_mode_send_vertices_sequence_id)]->getSeq(m_readSequence,m_parameters->getColorSpaceMode(),false);
-		
+
 			//cout<<"DEBUG Read="<<*m_mode_send_vertices_sequence_id<<" color="<<m_parameters->getColorSpaceMode()<<" Seq= "<<m_readSequence<<endl;
 		}
 		int len=strlen(m_readSequence);
@@ -129,7 +129,7 @@ void VerticesExtractor::process(int*m_mode_send_vertices_sequence_id,
 
 		char memory[1000];
 		int lll=len-wordSize+1;
-		
+
 		#ifdef ASSERT
 		assert(m_readSequence!=NULL);
 		#endif
