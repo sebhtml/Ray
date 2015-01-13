@@ -149,7 +149,7 @@ void GenomeAssemblyReader::manageCommunicationForNewKmer(string & sequence, Cove
 	if(m_loaded == 0) {
 
 		Message aMessage;
-		aMessage.setTag(CoalescenceManager::SET_KMER_LENGTH);
+		aMessage.setTag(CoalescenceManager::SET_KMER_INFO);
 
 		int length = sequence.length();
 		aMessage.setBuffer(&length);

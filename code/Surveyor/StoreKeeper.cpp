@@ -91,11 +91,12 @@ void StoreKeeper::receive(Message & message) {
 
 	} else if(tag == MERGE_GRAM_MATRIX) {
 
-
-		// printName();
-		// cout << "DEBUG at MERGE_GRAM_MATRIX message reception ";
-		// cout << "(StoreKeeper) received " << m_receivedObjects << " objects in total";
-		// cout << " with " << m_receivedPushes << " push operations" << endl;
+#if 0
+		printName();
+		cout << "DEBUG at MERGE_GRAM_MATRIX message reception ";
+		cout << "(StoreKeeper) received " << m_receivedObjects << " objects in total";
+		cout << " with " << m_receivedPushes << " push operations" << endl;
+#endif
 		computeLocalGramMatrix();
 
 
@@ -103,11 +104,10 @@ void StoreKeeper::receive(Message & message) {
 
 		memcpy(&m_matrixOwner, buffer, sizeof(m_matrixOwner));
 
-		/*
+/*
 		printName();
 		cout << "DEBUG m_matrixOwner " << m_matrixOwner << endl;
 */
-
 		m_iterator1 = m_localGramMatrix.begin();
 
 		if(m_iterator1 != m_localGramMatrix.end()) {
@@ -132,13 +132,17 @@ void StoreKeeper::receive(Message & message) {
 
 	} else if(tag == KmerMatrixOwner::PUSH_KMER_SAMPLES_OK) {
 		sendKmersSamples();
-	} else if(tag == CoalescenceManager::SET_KMER_LENGTH) {
+	} else if(tag == CoalescenceManager::SET_KMER_INFO) {
 
 		int kmerLength = 0;
 		int position = 0;
+
 		char * buffer = (char*)message.getBufferBytes();
 		memcpy(&kmerLength, buffer + position, sizeof(kmerLength));
 		position += sizeof(kmerLength);
+		memcpy(&m_sampleInputTypes, buffer + position, sizeof(m_sampleInputTypes));
+		position += sizeof(m_sampleInputTypes);
+
 
 		if(m_kmerLength == 0)
 			m_kmerLength = kmerLength;
@@ -152,9 +156,18 @@ void StoreKeeper::receive(Message & message) {
 		m_colorSpaceMode = false;
 
 #if 0
-		cout << "DEBUG StoreKeeper SET_KMER_LENGTH ";
-		cout << m_kmerLength;
+		std::ostringstream ss;
+		for(std::vector<int>::iterator it = m_sampleInputTypes->begin(); it != m_sampleInputTypes->end(); ++it) {
+			ss << *it;
+		}
+
+		cout << "DEBUG StoreKeeper SET_KMER_INFO ";
+		cout << m_kmerLength << endl;
+
+		cout << "DEBUG StoreKeeper list of filters :";
+		cout << ss.str();
 		cout << endl;
+
 #endif
 
 	}
@@ -281,10 +294,7 @@ void StoreKeeper::computeLocalGramMatrix() {
 		// This directed survey only aims at counting colored kmers with colors
 		// other than sample colors
 
-		bool useFirstColorToFilter = false;
-
-		int filterColor = 0;
-		bool hasFilter = samples->count(filterColor) > 0;
+		bool filterOutKmer = checkKmerFilter(samples);
 
 		// since people are going to use this to check
 		// for genome size, don't duplicate counts
@@ -342,20 +352,14 @@ void StoreKeeper::computeLocalGramMatrix() {
 				//if(sample2 < sample1)
 				// this is a diagonal matrix
 
-				if(useFirstColorToFilter && !hasFilter) {
+				if(filterOutKmer)
 					continue;
-				}
 
 				m_localGramMatrix[sample1Index][sample2Index] += hits;
 
-				/*
-				cout << "DEBUG count entry ";
-				cout << "[ " << sample1Index << " ";
-				cout << sample2Index << " ";
-				cout <<
-				*/
-
+#if 0
 				sum += hits;
+#endif
 				//m_localGramMatrix[sample2Index][sample1Index] += hits;
 			}
 		}
@@ -672,5 +676,55 @@ void StoreKeeper::sendKmersSamples() {
 	}
 
 	send(m_kmerMatrixOwner, message);
+
+}
+
+
+
+bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples) {
+
+// #define INPUT_TYPE_GRAPH 0
+// #define INPUT_FILTERIN_GRAPH 1
+// #define INPUT_FILTEROUT_GRAPH 2
+// #define INPUT_TYPE_ASSEMBLY 3
+// #define INPUT_FILTERIN_ASSEMBLY 4
+// #define INPUT_FILTEROUT_ASSEMBLY 5
+
+	bool skipKmer = false;
+	vector<int> samplesFILTERIN;
+
+	for(std::vector<int>::iterator it = m_sampleInputTypes->begin(); it != m_sampleInputTypes->end(); ++it) {
+
+		int sample = distance(m_sampleInputTypes->begin(),it);
+
+		if(*it == 0 || *it == 3){
+			continue;
+		}
+		else if(*it == 1 || *it == 4){
+			// Store the FILTERIN for later lookup
+			samplesFILTERIN.push_back(sample);
+		}
+		else if(*it == 2 || *it == 5){
+			// Skip the Kmer if part of a FILTEROUT
+			if (samples->count(sample) > 0){
+				return true;
+			}
+		}
+
+	}
+
+	// Look if the Kmer is not part of a FILTERIN
+	// Only incorporates kmers from FILTERIN samples if not already Filtered OUT
+	if(!samplesFILTERIN.empty()) {
+		skipKmer = true;
+		for(std::vector<int>::iterator it = samplesFILTERIN.begin(); it != samplesFILTERIN.end(); ++it) {
+			if (samples->count(*it) > 0){
+				return false;
+			}
+		}
+	}
+
+
+	return skipKmer;
 
 }

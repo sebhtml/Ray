@@ -39,7 +39,11 @@ using namespace std;
 #define PLAN_MOTHER_ACTORS_PER_RANK 1
 #define PLAN_GENOME_GRAPH_READER_ACTORS_PER_RANK 999999
 #define INPUT_TYPE_GRAPH 0
-#define INPUT_TYPE_ASSEMBLY 1
+#define INPUT_FILTERIN_GRAPH 1
+#define INPUT_FILTEROUT_GRAPH 2
+#define INPUT_TYPE_ASSEMBLY 3
+#define INPUT_FILTERIN_ASSEMBLY 4
+#define INPUT_FILTEROUT_ASSEMBLY 5
 
 Mother::Mother() {
 
@@ -435,7 +439,11 @@ void Mother::startSurveyor() {
 			map<string,int> fastTable;
 
 			fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
+			fastTable["-filter-in-graph"] = INPUT_FILTERIN_GRAPH;
+			fastTable["-filter-out-graph"] = INPUT_FILTEROUT_GRAPH;
 			fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
+			fastTable["-filter-in-assembly"] = INPUT_FILTERIN_ASSEMBLY;
+			fastTable["-filter-out-assembly"] = INPUT_FILTEROUT_ASSEMBLY;
 
 			// Unsupported option
 			if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
@@ -495,13 +503,23 @@ void Mother::startSurveyor() {
 
 		send(m_coalescenceManager, dummyMessage);
 
+		// send kmerLength and sampleInputTypes to localStore
 		int kmerLength = m_parameters->getWordSize();
+		vector<int> * sampleInputTypes = & m_sampleInputTypes;
 
-		// send the kmer to local store
+		char buffer[32];
+		int offset = 0;
+		memcpy(buffer + offset, &kmerLength, sizeof(kmerLength));
+		offset += sizeof(kmerLength);
+		memcpy(buffer + offset, &sampleInputTypes, sizeof(sampleInputTypes));
+		offset += sizeof(sampleInputTypes);
+
 		Message kmerMessage;
 		kmerMessage.setBuffer(&kmerLength);
 		kmerMessage.setNumberOfBytes(sizeof(kmerLength));
-		kmerMessage.setTag(CoalescenceManager::SET_KMER_LENGTH);
+		kmerMessage.setBuffer(&buffer);
+		kmerMessage.setNumberOfBytes(sizeof(buffer));
+		kmerMessage.setTag(CoalescenceManager::SET_KMER_INFO);
 		send(localStore, kmerMessage);
 	}
 
@@ -535,12 +553,11 @@ void Mother::spawnReader() {
 		int type = m_sampleInputTypes[sampleIdentifier];
 		m_fileIterator++;
 
-		if(type == INPUT_TYPE_GRAPH){
+		if(type < 3){
 			GenomeGraphReader * actor = new GenomeGraphReader();
 
 			spawn(actor);
 			actor->setFileName(fileName, sampleIdentifier);
-
 
 			int coalescenceManagerName = m_coalescenceManager;
 			int destination = actor->getName();
@@ -555,7 +572,7 @@ void Mother::spawnReader() {
 			send(destination, dummyMessage);
 
 
-		} else if(type == INPUT_TYPE_ASSEMBLY) {
+		} else if(type > 2) {
 
 			GenomeAssemblyReader * actor = new GenomeAssemblyReader();
 			spawn(actor);

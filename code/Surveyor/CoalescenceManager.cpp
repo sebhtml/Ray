@@ -85,7 +85,7 @@ void CoalescenceManager::receive(Message & message) {
 
 		die();
 
-	} else if(tag == SET_KMER_LENGTH) {
+	} else if(tag == SET_KMER_INFO) {
 
 		int kmerLength = 0;
 		char * buffer = (char*)message.getBufferBytes();
@@ -107,13 +107,13 @@ void CoalescenceManager::receive(Message & message) {
 		m_colorSpaceMode = false;
 
 		Message response;
-		response.setTag(SET_KMER_LENGTH_OK);
+		response.setTag(SET_KMER_INFO_OK);
 
 		int source = message.getSourceActor();
 
 		/*
 		printName();
-		cout << "DEBUG Sending SET_KMER_LENGTH_OK to " << source << endl;
+		cout << "DEBUG Sending SET_KMER_INFO_OK to " << source << endl;
 		*/
 
 		send(source, response);

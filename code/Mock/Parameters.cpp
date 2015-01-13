@@ -1617,6 +1617,16 @@ void Parameters::showUsage(){
 	showOption("-read-sample-assembly SampleName SampleAssemblyFile", "Reads an assembly (a fasta file)");
 	cout<<endl;
 
+	showOption("-filter-in-[assembly|graph] SampleName Sample[Assembly|Graph]File", "Incorporate only the sample kmers in the similarity and distance matrices");
+	showOptionDescription("If there's multiple instances of this option than the kmer will be incorporate if present in one sample");
+	showOptionDescription("No need to read the sample before using this option");
+	cout<<endl;
+	showOption("-filter-out-[assembly|graph] SampleName Sample[Assembly|Graph]File", "Filter out the sample kmers from the similarity and distance matrices");
+	showOptionDescription("No need to read the sample before using this option");
+	cout<<endl;
+
+
+
 	showOption("-write-kmer-matrix", "Write a 0|1 kmer matrix into RayOutput/Surveyor/KmerMatrix.tsv");
 	showOptionDescription("Rows being all the kmers and columns being all the samples.");
 	cout<<endl;
