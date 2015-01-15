@@ -553,7 +553,7 @@ void Mother::spawnReader() {
 		int type = m_sampleInputTypes[sampleIdentifier];
 		m_fileIterator++;
 
-		if(type < 3){
+		if(type == INPUT_TYPE_GRAPH || type == INPUT_FILTERIN_GRAPH || type == INPUT_FILTEROUT_GRAPH) {
 			GenomeGraphReader * actor = new GenomeGraphReader();
 
 			spawn(actor);
@@ -572,7 +572,7 @@ void Mother::spawnReader() {
 			send(destination, dummyMessage);
 
 
-		} else if(type > 2) {
+		} else if(type == INPUT_TYPE_ASSEMBLY || type == INPUT_FILTERIN_ASSEMBLY || type == INPUT_FILTEROUT_ASSEMBLY){
 
 			GenomeAssemblyReader * actor = new GenomeAssemblyReader();
 			spawn(actor);
