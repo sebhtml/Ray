@@ -260,7 +260,9 @@ void StoreKeeper::printColorReport() {
 
 void StoreKeeper::computeLocalGramMatrix() {
 
+#if 0
 	uint64_t sum = 0;
+#endif
 
 	// compute the local Gram matrix
 
