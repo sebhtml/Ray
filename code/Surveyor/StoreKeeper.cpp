@@ -38,6 +38,15 @@ using namespace std;
 
 #include <assert.h>
 
+
+#define INPUT_TYPE_GRAPH 0
+#define INPUT_FILTERIN_GRAPH 1
+#define INPUT_FILTEROUT_GRAPH 2
+#define INPUT_TYPE_ASSEMBLY 3
+#define INPUT_FILTERIN_ASSEMBLY 4
+#define INPUT_FILTEROUT_ASSEMBLY 5
+
+
 StoreKeeper::StoreKeeper() {
 
 	m_storeDataCalls = 0;
@@ -685,12 +694,6 @@ void StoreKeeper::sendKmersSamples() {
 
 bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples) {
 
-// #define INPUT_TYPE_GRAPH 0
-// #define INPUT_FILTERIN_GRAPH 1
-// #define INPUT_FILTEROUT_GRAPH 2
-// #define INPUT_TYPE_ASSEMBLY 3
-// #define INPUT_FILTERIN_ASSEMBLY 4
-// #define INPUT_FILTEROUT_ASSEMBLY 5
 
 	bool skipKmer = false;
 	vector<int> samplesFILTERIN;
@@ -699,14 +702,14 @@ bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples) {
 
 		int sample = distance(m_sampleInputTypes->begin(),it);
 
-		if(*it == 0 || *it == 3){
+		if(*it == INPUT_TYPE_GRAPH || *it == INPUT_TYPE_ASSEMBLY){
 			continue;
 		}
-		else if(*it == 1 || *it == 4){
+		else if(*it == INPUT_FILTERIN_GRAPH || *it == INPUT_FILTERIN_ASSEMBLY){
 			// Store the FILTERIN for later lookup
 			samplesFILTERIN.push_back(sample);
 		}
-		else if(*it == 2 || *it == 5){
+		else if(*it == INPUT_FILTEROUT_GRAPH || *it == INPUT_FILTEROUT_ASSEMBLY){
 			// Skip the Kmer if part of a FILTEROUT
 			if (samples->count(sample) > 0){
 				return true;
