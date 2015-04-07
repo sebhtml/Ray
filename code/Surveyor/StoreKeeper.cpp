@@ -347,14 +347,15 @@ void StoreKeeper::computeLocalGramMatrix() {
 		// TODO: samples could be ordered and stored in a vector
 		// to stop as soon as j > i
 
-		// Complexity: quadratic in the number of samples.
+		// Complexity: quadratic in the number of samples -> physical colors of the virtual color.
+		// .. Now N*LogN in the number of samples VS quadratic
 		for(set<PhysicalKmerColor>::iterator sample1 = samples->begin();
 				sample1 != samples->end();
 				++sample1) {
 
 			SampleIdentifier sample1Index = *sample1;
 
-			for(set<PhysicalKmerColor>::iterator sample2 = samples->begin();
+			for(set<PhysicalKmerColor>::iterator sample2 = sample1;
 				sample2 != samples->end();
 				++sample2) {
 
@@ -367,6 +368,9 @@ void StoreKeeper::computeLocalGramMatrix() {
 					continue;
 
 				m_localGramMatrix[sample1Index][sample2Index] += hits;
+
+				if (sample1Index != sample2Index)
+					m_localGramMatrix[sample2Index][sample1Index] += hits;
 
 #if 0
 				sum += hits;
