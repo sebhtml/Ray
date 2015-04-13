@@ -70,28 +70,19 @@ void Mother::receive(Message & message) {
 	char * buffer = message.getBufferBytes();
 
 	if(tag == Actor::BOOT) {
-
 		boot(message);
 	} else if (tag == Mother::HELLO) {
 		hello(message);
-
 	} else if(tag == GenomeGraphReader::START_PARTY_OK) {
 
 		// spawn the next reader now !
-
-		/*
-		printName();
-		cout << "DEBUG spawnReader because START_PARTY_OK" << endl;
-*/
 		spawnReader();
 
 	} else if(tag == GenomeGraphReader::DONE) {
 
 		m_aliveReaders--;
 
-
 		if(m_aliveReaders == 0) {
-
 			notifyController();
 		}
 
@@ -155,6 +146,8 @@ void Mother::receive(Message & message) {
 		// is caused by the fact that this message is not
 		// received .
 
+		// do nothing
+
 	} else if(tag == FINISH_JOB) {
 
 		m_finishedMothers++;
@@ -163,28 +156,14 @@ void Mother::receive(Message & message) {
 
 			// all readers have finished,
 			// now tell mother to flush aggregators
-
-			/*
-			printName();
-			cout << "DEBUG  m_finishedMothers: " << m_finishedMothers << " ";
-			cout << " starting pair FLUSH_AGGREGATOR, FLUSH_AGGREGATOR_RETURN";
-			cout << endl;
-			*/
-
 			sendToFirstMother(FLUSH_AGGREGATOR, FLUSH_AGGREGATOR_RETURN);
 		}
 
 	} else if(tag == FLUSH_AGGREGATOR) {
 
-		/*
-		printName();
-		cout << "DEBUG received FLUSH_AGGREGATOR" << endl;
-		*/
-
 		m_bigMother = source;
 
 		// forward the message to the aggregator
-
 		Message newMessage;
 		newMessage.setTag(CoalescenceManager::FLUSH_BUFFERS);
 		send(m_coalescenceManager, newMessage);
@@ -195,19 +174,11 @@ void Mother::receive(Message & message) {
 
 	} else if(tag == CoalescenceManager::FLUSH_BUFFERS_OK) {
 
-		/*
-		printName();
-		cout << "DEBUG CoalescenceManager sent FLUSH_BUFFERS_OK to mother." << endl;
-		*/
-
+		// notice bigMother that the CoalescenceManager flushed its buffers
+		// .. for this rank's mother
 		Message response;
 		response.setTag(FLUSH_AGGREGATOR_OK);
 		send(m_bigMother, response);
-
-		/*
-		printName();
-		cout << "DEBUG sending FLUSH_AGGREGATOR_OK to m_bigMother" << endl;
-		*/
 
 	} else if(tag == MatrixOwner::GRAM_MATRIX_IS_READY) {
 
@@ -232,8 +203,6 @@ void Mother::receive(Message & message) {
 
 	} else if(tag == FLUSH_AGGREGATOR_OK) {
 
-		// printName();
-
 		m_flushedMothers++;
 
 		if(m_flushedMothers < getSize())
@@ -244,22 +213,19 @@ void Mother::receive(Message & message) {
 	} else if(tag == m_responseTag) {
 
 		if(m_responseTag == SHUTDOWN_OK) {
-
+			// do nothing
 		} else if(m_responseTag == MERGE_GRAM_MATRIX_OK) {
+
 			// All mothers merged their GRAM MATRIX
 			// Spawn KmerMatrixOwner to print
 			if(m_motherToKill < getSize() && m_printKmerMatrix){
 				spawnKmerMatrixOwner();
 			}
+
 		} else if(m_responseTag == MERGE_KMER_MATRIX_OK) {
-
+			// do nothing
 		} else if(m_responseTag == FLUSH_AGGREGATOR_RETURN) {
-
-			/*
-			printName();
-			cout << "DEBUG FLUSH_AGGREGATOR_RETURN received ";
-			cout << "m_motherToKill " << m_motherToKill << endl;
-			*/
+			// do nothing
 		}
 
 		// every mother was not informed.
@@ -267,7 +233,6 @@ void Mother::receive(Message & message) {
 			sendMessageWithReply(m_motherToKill, m_forwardTag);
 			m_motherToKill--;
 		}
-
 	}
 }
 
@@ -280,13 +245,10 @@ void Mother::sendToFirstMother(int forwardTag, int responseTag) {
 
 	sendMessageWithReply(m_motherToKill, m_forwardTag);
 	m_motherToKill--;
+
 }
 
 void Mother::sendMessageWithReply(int & actor, int tag) {
-/*
-	printName();
-	cout << "kills Mother " << actor << endl;
-	*/
 
 	Message message;
 	message.setTag(tag);
@@ -298,25 +260,20 @@ void Mother::sendMessageWithReply(int & actor, int tag) {
 		message.setBuffer(&m_kmerMatrixOwner);
 		message.setNumberOfBytes(sizeof(m_kmerMatrixOwner));
 	} else if(tag == FLUSH_AGGREGATOR) {
-
-		/*
-		printName();
-		cout << " DEBUG sending message FLUSH_AGGREGATOR" << endl;
-		*/
+		// do nothing
 	}
 
 	send(actor, message);
+
 }
 
 void Mother::notifyController() {
+
 	Message message2;
 	message2.setTag(FINISH_JOB);
 
 	// first Mother
 	int controller = getSize();
-
-	printName();
-	cout << "Mother notifies controller " << controller << endl;
 	send(controller, message2);
 
 }
@@ -347,55 +304,20 @@ void Mother::stop() {
 }
 
 void Mother::hello(Message & message) {
-	/*
-	printName();
-	cout << "received HELLO from ";
-	cout << message.getSourceActor();
-	cout << " bytes: " << message.getNumberOfBytes();
-	cout << " content: " << *((int*) message.getBufferBytes());
-	*/
-
-	//char * buffer = (char*) message.getBufferBytes();
-	/*
-	uint32_t checksum = computeCyclicRedundancyCode32((uint8_t*) message.getBufferBytes(),
-			message.getNumberOfBytes());
-			*/
-	//cout << "DEBUG CRC32= " << checksum << endl;
-
-	//cout << endl;
+	// dump for testing purposes
 }
 
 void Mother::boot(Message & message) {
 
 	m_aliveReaders = 0;
 
-	/*
-	printName();
-	cout << "Mother is booting and says hello" << endl;
-*/
 	Message message2;
-	/*
-	char joe[4000];
-
-	int i = 4000;
-	char value = 0;
-	while(i)
-		joe[i--]=value++;
-*/
 
 	int joe = 9921;
 
 	message2.setBuffer(&joe);
-	//message2.setNumberOfBytes(4000);
+
 	message2.setNumberOfBytes( sizeof(int) * 1 );
-
-	//cout << "DEBUG sending " << joe << endl;
-
-	/*
-	uint32_t checksum = computeCyclicRedundancyCode32((uint8_t*) message2.getBufferBytes(),
-		       message2.getNumberOfBytes()	);
-	cout << "DEBUG CRC32= " << checksum << endl;
-*/
 
 	message2.setTag(Mother::HELLO);
 
@@ -479,8 +401,7 @@ void Mother::startSurveyor() {
 
 	m_coalescenceManager = coalescenceManager->getName();
 
-	// spawn the local store keeper and introduce the CoalescenceManager
-	// to the StoreKeeper
+	// spawn the local StoreKeeper and introduce the CoalescenceManager to him
 
 	// spawn actors for storing the graph.
 	for(int i = 0 ; i < PLAN_STORE_KEEPER_ACTORS_PER_RANK; ++i) {
@@ -525,7 +446,6 @@ void Mother::startSurveyor() {
 
 
 	// spawn an actor for each file that this actor owns
-
 	for(int i = 0; i < (int) m_inputFileNames.size() ; ++i) {
 
 		int mother = getName() % getSize();
@@ -596,7 +516,6 @@ void Mother::spawnReader() {
 	}
 
 	if(m_aliveReaders == 0) {
-
 		notifyController();
 	}
 }
@@ -613,9 +532,8 @@ void Mother::spawnMatrixOwner() {
 	printName();
 	cout << "Spawned MatrixOwner actor !" << m_matrixOwner << endl;
 
-	// tell the StoreKeeper actors to send their stuff to the
-	// MatrixOwner actor
-	// The Mother of Mother will wait for a signal from MatrixOwner
+	// tell the StoreKeeper actors to send their stuff to the MatrixOwner actor
+	// bigMother will wait for a signal from MatrixOwner
 
 	Message greetingMessage;
 
@@ -648,9 +566,8 @@ void Mother::spawnKmerMatrixOwner() {
 	printName();
 	cout << "Spawned KmerMatrixOwner actor !" << m_kmerMatrixOwner << endl;
 
-	// tell the StoreKeeper actors to send their stuff to the
-	// KmerMatrixOwner actor
-	// The Mother of Mother will wait for a signal from MatrixOwner
+	// tell the StoreKeeper actors to send their stuff to the KmerMatrixOwner actor
+	// bigMother will wait for a signal from KmerMatrixOwner
 
 	Message greetingMessage;
 
