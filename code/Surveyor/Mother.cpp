@@ -146,7 +146,7 @@ void Mother::receive(Message & message) {
 		// is caused by the fact that this message is not
 		// received .
 
-		// do nothing
+		// does nothing
 
 	} else if(tag == FINISH_JOB) {
 
@@ -213,7 +213,7 @@ void Mother::receive(Message & message) {
 	} else if(tag == m_responseTag) {
 
 		if(m_responseTag == SHUTDOWN_OK) {
-			// do nothing
+			// does nothing
 		} else if(m_responseTag == MERGE_GRAM_MATRIX_OK) {
 
 			// All mothers merged their GRAM MATRIX
@@ -223,9 +223,9 @@ void Mother::receive(Message & message) {
 			}
 
 		} else if(m_responseTag == MERGE_KMER_MATRIX_OK) {
-			// do nothing
+			// does nothing
 		} else if(m_responseTag == FLUSH_AGGREGATOR_RETURN) {
-			// do nothing
+			// does nothing
 		}
 
 		// every mother was not informed.
@@ -260,7 +260,7 @@ void Mother::sendMessageWithReply(int & actor, int tag) {
 		message.setBuffer(&m_kmerMatrixOwner);
 		message.setNumberOfBytes(sizeof(m_kmerMatrixOwner));
 	} else if(tag == FLUSH_AGGREGATOR) {
-		// do nothing
+		// does nothing
 	}
 
 	send(actor, message);
