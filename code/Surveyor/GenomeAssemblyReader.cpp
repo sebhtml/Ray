@@ -38,7 +38,7 @@ using namespace std;
 
 #include <string.h>
 
-// TODO: need to know the kmer size
+// DONE: need to know the kmer size
 
 GenomeAssemblyReader::GenomeAssemblyReader() {
 
@@ -52,21 +52,12 @@ void GenomeAssemblyReader::receive(Message & message) {
 
 	int type = message.getTag();
 
-	/*
-	  printName();
-	  cout << "received tag " << type << endl;
-	*/
-
 	if(type == START_PARTY) {
 
 		startParty(message);
 
 	} else if(type == CoalescenceManager::PAYLOAD_RESPONSE) {
 
-		/*
-		  printName();
-		  cout << " DEBUG readLine because PAYLOAD_RESPONSE" << endl;
-		*/
 		// read the next line now !
 		readKmer();
 	}
@@ -82,7 +73,7 @@ void GenomeAssemblyReader::startParty(Message & message) {
 	m_loaded = 0;
 
 	printName();
-	cout << " [AssemblyReader] opens file " << m_fileName << endl;
+	cout << "[AssemblyReader] opens file " << m_fileName << endl;
 
 	m_parent = message.getSourceActor();
 
@@ -104,9 +95,6 @@ void GenomeAssemblyReader::readKmer() {
 	CoverageDepth coverage = 1;
 	string badParent = "";
 	string badChild = "";
-
-	// ofstream outFile;
-	// outFile.open("kmers-created.txt", ios::app);
 
 	if(m_kmerReader.hasAnotherKmer()){
 
@@ -206,14 +194,10 @@ void GenomeAssemblyReader::manageCommunicationForNewKmer(string & sequence, Cove
 
 	position += sizeof(m_sample);
 
-// maybe: accumulate many objects before flushing it.
-// we can go up to MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes.
+	// maybe: accumulate many objects before flushing it.
+	// we can go up to MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes.
 
-	/*
-	  printName();
-	  cout << " got data line " << buffer;
-	  cout << " sending PAYLOAD to " << m_aggregator << endl;
-	*/
+	// Sending PAYLOAD to the CoalescenceManager
 	Message message;
 	message.setTag(CoalescenceManager::PAYLOAD);
 	message.setBuffer(messageBuffer);
@@ -221,7 +205,7 @@ void GenomeAssemblyReader::manageCommunicationForNewKmer(string & sequence, Cove
 
 #if 0
 	printName();
-	cout << " DEBUG sending PAYLOAD to " << m_aggregator;
+	cout << "DEBUG sending PAYLOAD to " << m_aggregator;
 	cout << " with " << position << " bytes ";
 	vertex.print(sequence.length(), false);
 	cout << endl;
@@ -230,7 +214,7 @@ void GenomeAssemblyReader::manageCommunicationForNewKmer(string & sequence, Cove
 	int period = 1000000;
 	if(m_loaded % period == 0 && m_loaded > 0) {
 		printName();
-		cout << " [AssemblyReader] loaded " << m_loaded << " sequences" << endl;
+		cout << "[AssemblyReader] loaded " << m_loaded << " sequences" << endl;
 	}
 	m_loaded ++;
 	send(m_aggregator, message);
@@ -245,7 +229,7 @@ void GenomeAssemblyReader::setFileName(string & fileName, int sample) {
 
 #if 0
 	printName();
-	cout << " DEBUG setFileName " << m_fileName << endl;
+	cout << "DEBUG setFileName " << m_fileName << endl;
 #endif
 
 }
