@@ -186,14 +186,14 @@ void Mother::receive(Message & message) {
 			sendToFirstMother(SHUTDOWN, SHUTDOWN_OK);
 		}else {
 			printName();
-			cout << "GRAM_MATRIX_IS_READY" << endl;
+			cout << "[BigMother] GRAM_MATRIX_IS_READY" << endl;
 			m_matricesAreReady = true;
 		}
 
 	} else if(tag == KmerMatrixOwner::KMER_MATRIX_IS_READY) {
 
 		printName();
-		cout << "KMER_MATRIX_IS_READY" << endl;
+		cout << "[BigMother] KMER_MATRIX_IS_READY" << endl;
 
 		if(m_matricesAreReady){
 			sendToFirstMother(SHUTDOWN, SHUTDOWN_OK);
@@ -329,8 +329,7 @@ void Mother::boot(Message & message) {
 		next += getSize();
 
 	printName();
-	cout << " local Mother is " << getName() << ",";
-	cout << " friend is # " << next << endl;
+	cout << "[RankMother] friend of [RankMother] #" << next << endl;
 
 	send(next, message2);
 
@@ -392,7 +391,9 @@ void Mother::startSurveyor() {
 
 	if(isRoot) {
 		printName();
-		cout << "samples= " << m_sampleNames.size() << endl;
+		cout << "[BigMother] I am the Survey's Goddess and I am watching you!" << endl;
+		printName();
+		cout << "[BigMother] Total number of samples to compare: " << m_sampleNames.size() << endl;
 	}
 
 
@@ -457,7 +458,7 @@ void Mother::startSurveyor() {
 	}
 
 	printName();
-	cout << " readers to spawn: " << m_filesToSpawn.size() << endl;
+	cout << "[RankMother] readers to spawn: " << m_filesToSpawn.size() << endl;
 
 	m_fileIterator = 0;
 	spawnReader();
@@ -530,7 +531,7 @@ void Mother::spawnMatrixOwner() {
 	m_matrixOwner = matrixOwner->getName();
 
 	printName();
-	cout << "Spawned MatrixOwner actor !" << m_matrixOwner << endl;
+	cout << "[BigMother] Spawned [MatrixOwner] actor #" << m_matrixOwner << endl;
 
 	// tell the StoreKeeper actors to send their stuff to the MatrixOwner actor
 	// bigMother will wait for a signal from MatrixOwner
@@ -557,14 +558,14 @@ void Mother::spawnMatrixOwner() {
 
 void Mother::spawnKmerMatrixOwner() {
 
-	// spawn the MatrixOwner here !
+	// spawn the KmerMatrixOwner here !
 	KmerMatrixOwner * kmerMatrixOwner = new KmerMatrixOwner();
 	spawn(kmerMatrixOwner);
 
 	m_kmerMatrixOwner = kmerMatrixOwner->getName();
 
 	printName();
-	cout << "Spawned KmerMatrixOwner actor !" << m_kmerMatrixOwner << endl;
+	cout << "[BigMother] Spawned [KmerMatrixOwner] actor #" << m_kmerMatrixOwner << endl;
 
 	// tell the StoreKeeper actors to send their stuff to the KmerMatrixOwner actor
 	// bigMother will wait for a signal from KmerMatrixOwner

@@ -119,6 +119,11 @@ void KmerMatrixOwner::receive(Message & message) {
 			coolMessage.setTag(KMER_MATRIX_IS_READY);
 			send(m_mother, coolMessage);
 			m_kmerMatrixFile.close();
+
+			string kmerMatrix = m_kmerMatrix.str();
+			printName();
+			cout << "[KmerMatrixOwner] printed the Kmers Matrix: ";
+			cout << kmerMatrix << endl;
 		}
 
 	}

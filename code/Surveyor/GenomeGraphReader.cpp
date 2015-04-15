@@ -83,7 +83,7 @@ void GenomeGraphReader::startParty(Message & message) {
 	m_loaded = 0;
 
 	printName();
-	cout <<"opens file " << m_fileName << endl;
+	cout << " [GraphReader] opens file " << m_fileName << endl;
 
 	m_parent = message.getSourceActor();
 
@@ -120,11 +120,11 @@ void GenomeGraphReader::readLine() {
 		printName();
 
 		if(m_bad) {
-			cout << " Error: file " << m_fileName << " does not exist";
+			cout << " [GraphReader] Error: file " << m_fileName << " does not exist";
 			cout << endl;
 
 		} else {
-			cout << " finished reading file " << m_fileName;
+			cout << " [GraphReader] finished reading file " << m_fileName;
 			cout << " got " << m_loaded << " objects" << endl;
 		}
 
@@ -250,17 +250,16 @@ void GenomeGraphReader::readLine() {
 
 #if 0
 		printName();
-		cout << "DEBUG sending PAYLOAD to " << m_aggregator;
+		cout << " DEBUG sending PAYLOAD to " << m_aggregator;
 		cout << " with " << position << " bytes ";
 		vertex.print(sequence.length(), false);
 		cout << endl;
 #endif
 
 		int period = 1000000;
-		if(m_loaded % period == 0) {
+		if(m_loaded % period == 0 && m_loaded > 0) {
 			printName();
-			cout << " loaded " << m_loaded << " sequences" << endl;
-
+			cout << " [GraphReader] loaded " << m_loaded << " sequences" << endl;
 		}
 		m_loaded ++;
 		send(m_aggregator, message);

@@ -82,7 +82,7 @@ void StoreKeeper::receive(Message & message) {
 	} else if( tag == CoalescenceManager::DIE) {
 
 		printName();
-		cout << "(StoreKeeper) received " << m_receivedObjects << " objects in total";
+		cout << "[StoreKeeper] received " << m_receivedObjects << " objects in total";
 		cout << " with " << m_receivedPushes << " push operations" << endl;
 
 
@@ -90,11 +90,11 @@ void StoreKeeper::receive(Message & message) {
 		uint64_t size = m_hashTable.size() * 2;
 
 		printName();
-		cout << "has " << size << " Kmer objects in MyHashTable instance (final)" << endl;
+		cout << "[StoreKeeper] has " << size << " Kmer objects in MyHashTable instance (final)" << endl;
 
 
 		printName();
-		cout << "will now die (StoreKeeper)" << endl;
+		cout << "[StoreKeeper] will now die " << endl;
 
 		die();
 
@@ -103,7 +103,7 @@ void StoreKeeper::receive(Message & message) {
 #if 0
 		printName();
 		cout << "DEBUG at MERGE_GRAM_MATRIX message reception ";
-		cout << "(StoreKeeper) received " << m_receivedObjects << " objects in total";
+		cout << "[StoreKeeper] received " << m_receivedObjects << " objects in total";
 		cout << " with " << m_receivedPushes << " push operations" << endl;
 #endif
 		computeLocalGramMatrix();
@@ -158,7 +158,7 @@ void StoreKeeper::receive(Message & message) {
 
 		if(kmerLength != m_kmerLength) {
 
-			cout << "Error: the k-mer value is different this time !" << endl;
+			cout << "[StoreKeeper] ERROR: the k-mer value is different this time !" << endl;
 		}
 
 		// the color space mode is an artefact.
@@ -231,6 +231,7 @@ void StoreKeeper::sendMatrixCell() {
 	m_localGramMatrix.clear();
 
 	printName();
+	cout << "[StoreKeeper] local Gram Matrix clearance!" << endl;
 
 	Message response;
 	response.setTag(MatrixOwner::PUSH_PAYLOAD_END);
@@ -262,7 +263,7 @@ void StoreKeeper::configureHashTable() {
 void StoreKeeper::printColorReport() {
 
 	printName();
-	cout << "Coloring Report:" << endl;
+	cout << "Coloring Report: " << endl;
 
 	m_colorSet.printColors(&cout);
 }
@@ -382,10 +383,10 @@ void StoreKeeper::computeLocalGramMatrix() {
 
 #if 0
 	printName();
-	cout << "DEBUG checksum " << sum << endl;
+	cout << " DEBUG checksum " << sum << endl;
 
 	uint64_t size = m_hashTable.size();
-	cout << "DEBUG m_hashTable.size() " << size << endl;
+	cout << " DEBUG m_hashTable.size() " << size << endl;
 #endif
 
 }
@@ -394,7 +395,7 @@ void StoreKeeper::computeLocalGramMatrix() {
 void StoreKeeper::printLocalGramMatrix() {
 
 	printName();
-	cout << "Local Gram Matrix: " << endl;
+	cout << "[StoreKeeper] Local Gram Matrix:" << endl;
 	cout << endl;
 
 	for(map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator column = m_localGramMatrix.begin();
@@ -490,7 +491,7 @@ void StoreKeeper::pushSampleVertex(Message & message) {
 void StoreKeeper::printStatus() {
 
 	printName();
-	cout << "(StoreKeeper) received " << m_receivedObjects << " objects so far !" << endl;
+	cout << "[StoreKeeper] received " << m_receivedObjects << " objects so far !" << endl;
 }
 
 void StoreKeeper::storeData(Vertex & vertex, int & sample) {
@@ -528,7 +529,7 @@ void StoreKeeper::storeData(Vertex & vertex, int & sample) {
 	if(size % period == 0 && size != m_lastSize) {
 
 		printName();
-		cout << "has " << size << " Kmer objects in MyHashTable instance" << endl;
+		cout << " has " << size << " Kmer objects in MyHashTable instance" << endl;
 
 		m_lastSize = size;
 	}
@@ -571,7 +572,7 @@ void StoreKeeper::storeData(Vertex & vertex, int & sample) {
 #ifdef CONFIG_ASSERT2
 	if(oldVirtualColor == newVirtualColor) {
 
-		cout << "new sampleColor " << sampleColor << endl;
+		cout << " new sampleColor " << sampleColor << endl;
 		//cout << "References " << m_colorSet.getNumberOfReferences(newVirtualColor);
 		cout << endl;
 

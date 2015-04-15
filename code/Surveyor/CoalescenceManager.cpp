@@ -97,7 +97,7 @@ void CoalescenceManager::receive(Message & message) {
 		if(m_kmerLength != kmerLength) {
 
 			printName();
-			cout << " Error: the k-mer length is not the same in all input files !";
+			cout << "[CoalescenceManager] ERROR: the k-mer length is not the same in all input files !";
 			cout << endl;
 		}
 
@@ -172,8 +172,8 @@ void CoalescenceManager::receive(Message & message) {
 		m_storeLastActor = last;
 
 		printName();
-		cout << " is now acquainted with StoreKeeper actors from ";
-		cout << m_storeFirstActor << " to " << m_storeLastActor << endl;
+		cout << "[CoalescenceManager] is now acquainted with [StoreKeepers] from #";
+		cout << m_storeFirstActor << " to #" << m_storeLastActor << endl;
 
 		// allocate buffers too
 
@@ -368,7 +368,7 @@ bool CoalescenceManager::addKmerInBuffer(int producer, int & actor, int & sample
 
 #if 0
 	printName();
-	cout << "sends bits to StoreKeeper # " << storageDestination;
+	cout << "sends bits to [StoreKeeper] #" << storageDestination;
 	cout << endl;
 #endif
 

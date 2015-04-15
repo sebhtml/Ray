@@ -82,7 +82,7 @@ void GenomeAssemblyReader::startParty(Message & message) {
 	m_loaded = 0;
 
 	printName();
-	cout <<"opens file " << m_fileName << endl;
+	cout << " [AssemblyReader] opens file " << m_fileName << endl;
 
 	m_parent = message.getSourceActor();
 
@@ -221,17 +221,16 @@ void GenomeAssemblyReader::manageCommunicationForNewKmer(string & sequence, Cove
 
 #if 0
 	printName();
-	cout << "DEBUG sending PAYLOAD to " << m_aggregator;
+	cout << " DEBUG sending PAYLOAD to " << m_aggregator;
 	cout << " with " << position << " bytes ";
 	vertex.print(sequence.length(), false);
 	cout << endl;
 #endif
 
 	int period = 1000000;
-	if(m_loaded % period == 0) {
+	if(m_loaded % period == 0 && m_loaded > 0) {
 		printName();
-		cout << " loaded " << m_loaded << " sequences" << endl;
-
+		cout << " [AssemblyReader] loaded " << m_loaded << " sequences" << endl;
 	}
 	m_loaded ++;
 	send(m_aggregator, message);

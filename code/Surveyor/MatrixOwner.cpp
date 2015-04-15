@@ -103,7 +103,7 @@ void MatrixOwner::receive(Message & message) {
 		if(m_completedStoreActors == getSize()) {
 
 			printName();
-			cout << "MatrixOwner received " << m_receivedPayloads << " payloads" << endl;
+			cout << "[MatrixOwner] received " << m_receivedPayloads << " payloads" << endl;
 
 			// create directory for Surveyor
 			ostringstream matrixFile;
@@ -126,7 +126,7 @@ void MatrixOwner::receive(Message & message) {
 			similarityFile.close();
 
 			printName();
-			cout << "MatrixOwner printed the Similarity Matrix: ";
+			cout << "[MatrixOwner] printed the Similarity Matrix: ";
 			cout << similarityMatrix << endl;
 
 			// create DistanceMatrix
@@ -145,7 +145,7 @@ void MatrixOwner::receive(Message & message) {
 			distanceFile.close();
 
 			printName();
-			cout << "MatrixOwner printed the Distance Matrix: ";
+			cout << "[MatrixOwner] printed the Distance Matrix: ";
 			cout << distanceMatrix << endl;
 
 
