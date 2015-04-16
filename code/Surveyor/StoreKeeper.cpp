@@ -113,10 +113,6 @@ void StoreKeeper::receive(Message & message) {
 
 		memcpy(&m_matrixOwner, buffer, sizeof(m_matrixOwner));
 
-/*
-		printName();
-		cout << "DEBUG m_matrixOwner " << m_matrixOwner << endl;
-*/
 		m_iterator1 = m_localGramMatrix.begin();
 
 		if(m_iterator1 != m_localGramMatrix.end()) {
@@ -310,7 +306,6 @@ void StoreKeeper::computeLocalGramMatrix() {
 
 		// since people are going to use this to check
 		// for genome size, don't duplicate counts
-		//
 		bool reportTwoDNAStrands = false;
 
 #if 0
@@ -345,7 +340,7 @@ void StoreKeeper::computeLocalGramMatrix() {
 		if(reportTwoDNAStrands)
 			hits *= 2;
 
-		// TODO: samples could be ordered and stored in a vector
+		// DONE: samples could be ordered and stored in a vector
 		// to stop as soon as j > i
 
 		// Complexity: quadratic in the number of samples -> physical colors of the virtual color.
@@ -376,7 +371,7 @@ void StoreKeeper::computeLocalGramMatrix() {
 #if 0
 				sum += hits;
 #endif
-				//m_localGramMatrix[sample2Index][sample1Index] += hits;
+
 			}
 		}
 	}
@@ -439,11 +434,6 @@ void StoreKeeper::pushSampleVertex(Message & message) {
 	bytes -= sizeof(producer);
 	memcpy(&producer, buffer + bytes, sizeof(producer));
 
-	/*
-	printName();
-	cout << "Received payload, last producer was " << producer << endl;
-	*/
-
 	while(position < bytes) {
 		Vertex vertex;
 
@@ -454,17 +444,6 @@ void StoreKeeper::pushSampleVertex(Message & message) {
 		position += sizeof(sample);
 
 		storeData(vertex, sample);
-
-	/*
-		printName();
-		cout << " DEBUG received ";
-		cout << "(from " << message.getSourceActor();
-		cout << ") ";
-		cout << "vertex for sample " << sample;
-		cout << " with sequence ";
-		vertex.print(m_kmerLength, m_colorSpaceMode);
-		cout << endl;
-		*/
 
 		m_receivedObjects ++;
 
@@ -538,7 +517,6 @@ void StoreKeeper::storeData(Vertex & vertex, int & sample) {
 	cout << "DEBUG Growth -> " << before << " -> " << size << endl;
 #endif
 
-
 	// add the PhysicalKmerColor to the node.
 
 	PhysicalKmerColor sampleColor = sample;
@@ -573,7 +551,6 @@ void StoreKeeper::storeData(Vertex & vertex, int & sample) {
 	if(oldVirtualColor == newVirtualColor) {
 
 		cout << " new sampleColor " << sampleColor << endl;
-		//cout << "References " << m_colorSet.getNumberOfReferences(newVirtualColor);
 		cout << endl;
 
 		cout << " >>> Old samples " << oldSamples.size () << endl;
@@ -621,24 +598,6 @@ void StoreKeeper::storeData(Vertex & vertex, int & sample) {
 	m_colorSet.incrementReferences(newVirtualColor);
 	m_colorSet.decrementReferences(oldVirtualColor);
 
-	/*
-	LargeCount referencesForOld = m_colorSet.getNumberOfReferences(oldVirtualColor);
-	LargeCount referencesForNew = m_colorSet.getNumberOfReferences(newVirtualColor);
-
-#if 1
-	printName();
-	cout << "DEBUG Kmer " << kmer.idToWord(m_kmerLength, m_colorSpaceMode);
-	cout << " Sample " << sample << endl;
-	cout << "  DEBUG Lower " << lowerKey.idToWord(m_kmerLength, m_colorSpaceMode) << endl;
-#endif
-
-
-
-	cout << "DEBUG referencesForOld " << referencesForOld;
-	cout << " " << " referencesForNew " << referencesForNew;
-	cout << endl;
-
-	*/
 }
 
 
