@@ -26,6 +26,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <bitset>
 using namespace std;
 
 #include <math.h>
@@ -70,17 +71,18 @@ void KmerMatrixOwner::receive(Message & message) {
 
 	} else if(tag == PUSH_KMER_SAMPLES) {
 
-		vector<bool> samplesWithKmer;
+		vector<char> samplesWithKmer;
 
 		int offset = 0;
 
 		Kmer kmer;
 		offset += kmer.load(buffer);
 		int numberOfSamples = m_sampleNames->size();
+
 		char * bufferForSamples = buffer + offset;
 
 		for(int i=0; i<numberOfSamples; ++i){
-			bool state = bufferForSamples[i];
+			char state = bufferForSamples[i];
 			samplesWithKmer.push_back(state);
 		}
 
@@ -92,17 +94,18 @@ void KmerMatrixOwner::receive(Message & message) {
 
 	} else if(tag == PUSH_KMER_SAMPLES_END) {
 
-		vector<bool> samplesWithKmer;
+		vector<char> samplesWithKmer;
 
 		int offset = 0;
 
 		Kmer kmer;
 		offset += kmer.load(buffer);
 		int numberOfSamples = m_sampleNames->size();
+
 		char * bufferForSamples = buffer + offset;
 
 		for(int i=0; i<numberOfSamples; ++i){
-			bool state = bufferForSamples[i];
+			char state = bufferForSamples[i];
 			samplesWithKmer.push_back(state);
 		}
 
@@ -130,11 +133,14 @@ void KmerMatrixOwner::receive(Message & message) {
 }
 
 
-void KmerMatrixOwner::dumpKmerMatrixBuffer(Kmer & kmer, vector<bool> & samplesWithKmer, bool force) {
+void KmerMatrixOwner::dumpKmerMatrixBuffer(Kmer & kmer, vector<char> & samplesWithKmer, bool force) {
+
 	m_kmerMatrix << kmer.idToWord(m_parameters->getWordSize(),0);
-	for(int i =0; i < (signed) samplesWithKmer.size(); ++i){
+	// int checkpoint = 500;
+	for(int i=0; i < (signed) samplesWithKmer.size(); ++i){
 		m_kmerMatrix << "\t" << samplesWithKmer[i];
 	}
+
 	m_kmerMatrix << endl;
 
 	flushFileOperationBuffer(force, &m_kmerMatrix, &m_kmerMatrixFile, CONFIG_FILE_IO_BUFFER_SIZE);

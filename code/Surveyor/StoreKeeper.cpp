@@ -32,6 +32,8 @@
 #include <sstream>
 #include <iomanip>
 #include <fstream>
+#include <bitset>
+
 using namespace std;
 
 #include <string.h>
@@ -608,13 +610,19 @@ void StoreKeeper::setSampleSize(int sampleSize) {
 
 void StoreKeeper::sendKmersSamples() {
 
-	char buffer[MAXIMUM_MESSAGE_SIZE_IN_BYTES];
+	char buffer[m_sampleSize+256];
 	int bytes = 0;
 
 	ExperimentVertex * currentVertex = NULL;
 	VirtualKmerColorHandle currentVirtualColor = NULL_VIRTUAL_COLOR;
 
-	vector<bool> samplesVector (m_sampleSize, false);
+	char samplesArray[m_sampleSize+1];
+	samplesArray[m_sampleSize] = '\0';
+
+	// Set all samples to 0
+	for (int i=0; i<m_sampleSize; i++) {
+		samplesArray[i] = '0';
+	}
 
 	if(m_hashTableIterator.hasNext()){
 
@@ -629,14 +637,15 @@ void StoreKeeper::sendKmersSamples() {
 		for(set<PhysicalKmerColor>:: iterator sampleIterator = samples->begin();
 			sampleIterator != samples->end(); ++sampleIterator) {
 			PhysicalKmerColor value = *sampleIterator;
-			samplesVector[value] = true;
+			samplesArray[value] = '1';
 		}
 
-		for (std::vector<bool>::iterator it = samplesVector.begin();
-			it != samplesVector.end(); ++it) {
-			buffer[bytes] = *it;
+
+		for (int i=0; i<m_sampleSize; i++) {
+			buffer[bytes] = samplesArray[i];
 			bytes++;
 		}
+
 	}
 
 

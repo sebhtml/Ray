@@ -43,7 +43,7 @@ private:
 	ostringstream m_kmerMatrix;
 	ofstream m_kmerMatrixFile;
 
-	void dumpKmerMatrixBuffer(Kmer & kmer, vector<bool> & samplesWithKmer, bool force);
+	void dumpKmerMatrixBuffer(Kmer & kmer, vector<char> & samplesWithKmer, bool force);
 	void createKmersMatrixOutputFile();
 
 	void printMatrixHeader();
