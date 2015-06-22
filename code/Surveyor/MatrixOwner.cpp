@@ -92,6 +92,12 @@ void MatrixOwner::receive(Message & message) {
 		m_receivedPayloads ++;
 
 		m_localGramMatrix[sample1][sample2] += count;
+		if (gramMatrices.size() < 1) {
+			gramMatrices.push_back(m_localGramMatrix);
+		} else {
+			gramMatrices[0][sample1][sample2] += count;
+		}
+
 
 		Message response;
 		response.setTag(PUSH_PAYLOAD_OK);
@@ -122,7 +128,8 @@ void MatrixOwner::receive(Message & message) {
 			string similarityMatrix = matrixFile.str();
 			ofstream similarityFile;
 			similarityFile.open(similarityMatrix.c_str());
-			printLocalGramMatrix(similarityFile, m_localGramMatrix);
+			// printLocalGramMatrix(similarityFile, m_localGramMatrix);
+			printLocalGramMatrix(similarityFile, gramMatrices[0]);
 			similarityFile.close();
 
 			printName();

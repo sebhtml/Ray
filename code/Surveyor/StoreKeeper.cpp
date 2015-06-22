@@ -110,7 +110,6 @@ void StoreKeeper::receive(Message & message) {
 #endif
 		computeLocalGramMatrix();
 
-
 		m_mother = source;
 
 		memcpy(&m_matrixOwner, buffer, sizeof(m_matrixOwner));
@@ -118,7 +117,6 @@ void StoreKeeper::receive(Message & message) {
 		m_iterator1 = m_localGramMatrix.begin();
 
 		if(m_iterator1 != m_localGramMatrix.end()) {
-
 			m_iterator2 = m_iterator1->second.begin();
 		}
 
@@ -136,7 +134,7 @@ void StoreKeeper::receive(Message & message) {
 
 		sendKmersSamples();
 	} else if (tag == KmerMatrixOwner::PUSH_KMER_SAMPLES_END) {
-
+		// empty
 	} else if(tag == KmerMatrixOwner::PUSH_KMER_SAMPLES_OK) {
 		sendKmersSamples();
 	} else if(tag == CoalescenceManager::SET_KMER_INFO) {

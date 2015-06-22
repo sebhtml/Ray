@@ -75,7 +75,25 @@ private:
 
 	vector<string> m_sampleNames;
 	vector<string> m_inputFileNames;
+
 	vector<int> m_sampleInputTypes;
+
+	/* int filterIdentifier; */
+	/* int matrixIndex; */
+	// map< matrixIndex, map< matrixNb for output
+	/* vector < map<int, vector<int> > m_filterMatrices; */
+
+	map< int, vector<int> > m_filterMatrices;
+
+	/* struct Filter{ */
+	/* 	int m_filterNumber; */
+	/* 	vector<int> m_sampleInputTypes; */
+	/* }; */
+
+
+	/* vector<Filter> m_filterMatrices; */
+
+
 
 	int m_bigMother;
 	int m_aliveReaders;

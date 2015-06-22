@@ -1611,20 +1611,28 @@ void Parameters::showUsage(){
 	showOptionDescription("RayOutput/Surveyor/DistanceMatrix.tsv is a distance matrix (kernel-based).");
 	cout << endl;
 
-	showOption("-read-sample-graph SampleName SampleGraphFile", "Reads a sample graph (generated with -write-kmers)");
+	showOption("-read-sample-graph SampleName SampleGraphFile", "Reads a sample graph (generated with -write-kmers from a Ray's assembly)");
 	cout<<endl;
 
-	showOption("-read-sample-assembly SampleName SampleAssemblyFile", "Reads an assembly (a fasta file)");
+	showOption("-read-sample-assembly SampleName SampleAssemblyFile", "Reads an assembly (fasta file)");
+	cout<<endl;
 	cout<<endl;
 
-	showOption("-filter-in-[assembly|graph] SampleName Sample[Assembly|Graph]File", "Incorporate only the sample kmers in the similarity and distance matrices");
-	showOptionDescription("If there's multiple instances of this option than the kmer will be incorporate if present in one sample");
-	showOptionDescription("No need to read the sample before using this option");
-	cout<<endl;
-	showOption("-filter-out-[assembly|graph] SampleName Sample[Assembly|Graph]File", "Filter out the sample kmers from the similarity and distance matrices");
-	showOptionDescription("No need to read the sample before using this option");
-	cout<<endl;
+	cout << "    [Filtering] : you can filter the similarity and distance matrices with input datasets !" << endl;
+	cout << "        Surveyor will output the global matrices and the filtered matrices as well " << endl;
+	cout << "        .. you can associate many filters to a single output matrix by giving the same number -<X>" << endl;
+	cout << endl;
 
+	showOption("-filter-in-[assembly|graph]-<X> SampleName Sample[Assembly|Graph]File", "Incorporate only these dataset kmers when building the similarity and distance matrices");
+	showOptionDescription("If there's multiple instances of this option than the kmer will be incorporate if present in one dataset");
+	showOptionDescription("No need to read the dataset as a sample before using this option");
+	showOptionDescription("X is the number of the filter");
+
+	cout<<endl;
+	showOption("-filter-out-[assembly|graph]-<X> SampleName Sample[Assembly|Graph]File", "Filter out the dataset kmers when building the similarity and distance matrices");
+	showOptionDescription("No need to read the dataset as a sample before using this option");
+	showOptionDescription("X is the number of the filter");
+	cout<<endl;
 
 
 	showOption("-write-kmer-matrix", "Write a 0|1 kmer matrix into RayOutput/Surveyor/KmerMatrix.tsv");

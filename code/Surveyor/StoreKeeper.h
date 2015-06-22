@@ -60,6 +60,7 @@ private:
 	int m_mother;
 	int m_matrixOwner;
 	int m_kmerMatrixOwner;
+
 	vector<int> * m_sampleInputTypes;
 
 	bool m_configured;

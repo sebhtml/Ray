@@ -42,6 +42,12 @@ private:
 	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_localGramMatrix;
 	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_kernelDistanceMatrix;
 
+	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localGramMatrix;
+	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localDistMatrix;
+
+	vector<localGramMatrix> gramMatrices;
+	vector<localDistMatrix> distMatrices;
+
 	int m_mother;
 	int m_completedStoreActors;
 

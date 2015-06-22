@@ -347,6 +347,9 @@ void Mother::startSurveyor() {
 	// Set matricesAreReady to true in case user doesn't want
 	// to print out kmers matrix.
 	m_matricesAreReady = true;
+	int matricesIterator = 0;
+	int filterTypes [4] = {INPUT_FILTERIN_GRAPH, INPUT_FILTEROUT_GRAPH, INPUT_FILTERIN_ASSEMBLY, INPUT_FILTEROUT_ASSEMBLY};
+	int typeIndex = 0;
 
 	vector<string> * commands = m_parameters->getCommands();
 
@@ -358,29 +361,96 @@ void Mother::startSurveyor() {
 			// DONE: Check bounds for file names
 
 			map<string,int> fastTable;
+			int filterIndex = 0;
 
-			fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
-			fastTable["-filter-in-graph"] = INPUT_FILTERIN_GRAPH;
-			fastTable["-filter-out-graph"] = INPUT_FILTEROUT_GRAPH;
-			fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
-			fastTable["-filter-in-assembly"] = INPUT_FILTERIN_ASSEMBLY;
-			fastTable["-filter-out-assembly"] = INPUT_FILTEROUT_ASSEMBLY;
+			if (element.find("-filter") != string::npos) {
 
-			// Unsupported option
-			if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
-				continue;
+				int i = 4;
+				char * filterStr = new char[element.length()+1];
+				char * strIt;
 
-			string sampleName = commands->at(++i);
-			string fileName = commands->at(++i);
+				strcpy(filterStr, element.c_str());
 
-			m_sampleNames.push_back(sampleName);
+				strIt = strtok(filterStr, "-");
 
-			// DONE implement this m_assemblyFileNames + type
-			m_inputFileNames.push_back(fileName);
+				while (strIt != NULL && i > 0) {
+					cout << "DEBUG: iterator " << i << " filterStr " << strIt << endl;
+					strIt = strtok (NULL, "-");
 
-			int type = fastTable[element];
+					// filter_cmd = tolower(*strIt);
 
-			m_sampleInputTypes.push_back(type);
+					// m_filterMatrices[matrices_iterator] = [strIt][];
+					// -filter-in-graph-1
+
+					switch (i) {
+					case 4:
+						filterIndex = atoi(strIt);
+						break;
+					case 3 :
+						if (strcasecmp(strIt,"in") != 0)
+							typeIndex += 1;
+						break;
+					case 2 :
+						if (strcasecmp(strIt,"graph") != 0)
+							typeIndex += 2;
+						break;
+					case 1 :
+						// filter word
+						break;
+
+					}
+
+					i = i - 1;
+				}
+
+				map<int,vector<int>>::iterator it = m_filterMatrices.find(filterIndex);
+				if (it != m_filterMatrices.end()) {
+					
+				} else {
+					vector<int> inputSampleTypes;
+					inputSampleTypes.push_back(filterTypes[filterIndex]);
+					m_filterMatrices.insert (std::pair<int,vector<int>>(filterIndex,inputSampleTypes));
+				}
+
+				// m_filterMatrices
+				if(std::find(m_filterMatrices.begin(), m_filterMatrices.end(), item)!=m_filterMatrices.end()){
+					// Find the item
+				}
+
+				// Filter f;
+				// f.m_filterNumber = filterIndex;
+				// // f.m_sampleInputTypes = new vector<int>;
+
+				// m_filterMatrices.push_back(f);
+
+			} else {
+
+				fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
+				fastTable["-filter-in-graph"] = INPUT_FILTERIN_GRAPH;
+				fastTable["-filter-out-graph"] = INPUT_FILTEROUT_GRAPH;
+
+				fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
+				fastTable["-filter-in-assembly"] = INPUT_FILTERIN_ASSEMBLY;
+				fastTable["-filter-out-assembly"] = INPUT_FILTEROUT_ASSEMBLY;
+
+
+				// Unsupported option
+				if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
+					continue;
+
+				string sampleName = commands->at(++i);
+				string fileName = commands->at(++i);
+
+				m_sampleNames.push_back(sampleName);
+
+				// DONE implement this m_assemblyFileNames + type
+				m_inputFileNames.push_back(fileName);
+
+				int type = fastTable[element];
+
+				m_sampleInputTypes.push_back(type);
+
+			}
 
 		} else {
 			m_matricesAreReady = false;
