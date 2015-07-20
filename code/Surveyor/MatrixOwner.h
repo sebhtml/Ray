@@ -39,19 +39,18 @@ private:
 	Parameters * m_parameters;
 	vector<string> * m_sampleNames;
 
-	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_localGramMatrix;
 	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_kernelDistanceMatrix;
 
 	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localGramMatrix;
-	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localDistMatrix;
+	map <int, localGramMatrix > m_gramMatrices;
 
-	vector<localGramMatrix> gramMatrices;
-	vector<localDistMatrix> distMatrices;
+	map< int, vector<int> > * m_filterMatrices;
+	map <int, vector<int> > m_sampleByFilter;
 
 	int m_mother;
 	int m_completedStoreActors;
 
-	void printLocalGramMatrix(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, LargeCount> > & matrix);
+	void printLocalGramMatrix(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, LargeCount> > & matrix, vector<int> & samplesToInclude);
 	void printLocalGramMatrixWithHash(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, LargeCount> > & matrix);
 
 	void computeDistanceMatrix();

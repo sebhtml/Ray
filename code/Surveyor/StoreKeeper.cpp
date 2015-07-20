@@ -114,9 +114,16 @@ void StoreKeeper::receive(Message & message) {
 
 		memcpy(&m_matrixOwner, buffer, sizeof(m_matrixOwner));
 
-		m_iterator1 = m_localGramMatrix.begin();
+		// m_iterator1 = m_localGramMatrix.begin();
 
-		if(m_iterator1 != m_localGramMatrix.end()) {
+		// if(m_iterator1 != m_localGramMatrix.end()) {
+		// 	m_iterator2 = m_iterator1->second.begin();
+		// }
+
+		m_iterator0 = m_localGramMatrices.begin();
+		m_iterator1 = m_localGramMatrices[m_iterator0->first].begin();
+
+		if(m_iterator1 != m_localGramMatrices[m_iterator0->first].end()) {
 			m_iterator2 = m_iterator1->second.begin();
 		}
 
@@ -147,13 +154,13 @@ void StoreKeeper::receive(Message & message) {
 		position += sizeof(kmerLength);
 		memcpy(&m_sampleInputTypes, buffer + position, sizeof(m_sampleInputTypes));
 		position += sizeof(m_sampleInputTypes);
-
+		memcpy(&m_filterMatrices, buffer + position, sizeof(m_filterMatrices));
+		position += sizeof(m_filterMatrices);
 
 		if(m_kmerLength == 0)
 			m_kmerLength = kmerLength;
 
 		if(kmerLength != m_kmerLength) {
-
 			cout << "[StoreKeeper] ERROR: the k-mer value is different this time !" << endl;
 		}
 
@@ -180,51 +187,63 @@ void StoreKeeper::receive(Message & message) {
 
 void StoreKeeper::sendMatrixCell() {
 
-	if(m_iterator1 != m_localGramMatrix.end()) {
+	if (m_iterator0 != m_localGramMatrices.end()) {
 
-		if(m_iterator2 != m_iterator1->second.end()) {
+		if(m_iterator1 != m_localGramMatrices[m_iterator0->first].end()) {
 
-			SampleIdentifier sample1 = m_iterator1->first;
-			SampleIdentifier sample2 = m_iterator2->first;
-			LargeCount count = m_iterator2->second;
+			if(m_iterator2 != m_iterator1->second.end()) {
 
-			Message message;
-			char buffer[20];
-			int offset = 0;
-			memcpy(buffer + offset, &sample1, sizeof(sample1));
-			offset += sizeof(sample1);
-			memcpy(buffer + offset, &sample2, sizeof(sample2));
-			offset += sizeof(sample2);
-			memcpy(buffer + offset, &count, sizeof(count));
-			offset += sizeof(count);
+				SampleIdentifier sample1 = m_iterator1->first;
+				SampleIdentifier sample2 = m_iterator2->first;
+				LargeCount count = m_iterator2->second;
+				int matrixNb = m_iterator0->first;
 
-			message.setBuffer(buffer);
-			message.setNumberOfBytes(offset);
-			message.setTag(MatrixOwner::PUSH_PAYLOAD);
+				Message message;
+				char buffer[20];
+				int offset = 0;
+				memcpy(buffer + offset, &sample1, sizeof(sample1));
+				offset += sizeof(sample1);
+				memcpy(buffer + offset, &sample2, sizeof(sample2));
+				offset += sizeof(sample2);
+				memcpy(buffer + offset, &count, sizeof(count));
+				offset += sizeof(count);
+				memcpy(buffer + offset, &matrixNb, sizeof(matrixNb));
+				offset += sizeof(matrixNb);
 
-			send(m_matrixOwner, message);
+				message.setBuffer(buffer);
+				message.setNumberOfBytes(offset);
+				message.setTag(MatrixOwner::PUSH_PAYLOAD);
 
-			m_iterator2++;
+				send(m_matrixOwner, message);
 
-			// end of the line
-			if(m_iterator2 == m_iterator1->second.end()) {
+				m_iterator2++;
 
-				m_iterator1++;
+				// end of the line
+				if(m_iterator2 == m_iterator1->second.end()) {
 
-				if(m_iterator1 != m_localGramMatrix.end()) {
+					m_iterator1++;
 
-					m_iterator2 = m_iterator1->second.begin();
+					if(m_iterator1 != m_localGramMatrices[m_iterator0->first].end()) {
+						m_iterator2 = m_iterator1->second.begin();
+					} else {
+						m_iterator0++;
+						if (m_iterator0 != m_localGramMatrices.end()) {
+							m_iterator1 = m_localGramMatrices[m_iterator0->first].begin();
+							m_iterator2 = m_iterator1->second.begin();
+						}
+					}
 				}
-			}
 
-			return;
+				return;
+			}
 		}
+
 	}
 
 	// we processed all the matrix
 
 	// free memory.
-	m_localGramMatrix.clear();
+	m_localGramMatrices.clear();
 
 	printName();
 	cout << "[StoreKeeper] local Gram Matrix clearance!" << endl;
@@ -302,8 +321,6 @@ void StoreKeeper::computeLocalGramMatrix() {
 		// This directed survey only aims at counting colored kmers with colors
 		// other than sample colors
 
-		bool filterOutKmer = checkKmerFilter(samples);
-
 		// since people are going to use this to check
 		// for genome size, don't duplicate counts
 		bool reportTwoDNAStrands = false;
@@ -336,6 +353,11 @@ void StoreKeeper::computeLocalGramMatrix() {
 
 #endif
 
+
+		// bool filterOutKmer = checkKmerFilter(samples);
+		bool filterOutKmer = false;
+
+
 		// we have 2 DNA strands !!!
 		if(reportTwoDNAStrands)
 			hits *= 2;
@@ -357,16 +379,17 @@ void StoreKeeper::computeLocalGramMatrix() {
 
 				SampleIdentifier sample2Index = *sample2;
 
-				//if(sample2 < sample1)
-				// this is a diagonal matrix
+				for(map< int, vector<int> >::iterator filter = m_filterMatrices->begin();
+				    filter != m_filterMatrices->end(); ++filter) {
 
-				if(filterOutKmer)
-					continue;
+					filterOutKmer = checkKmerFilter(samples, &filter->second);
 
-				m_localGramMatrix[sample1Index][sample2Index] += hits;
+					if(filterOutKmer) {
+						continue;
+					}
 
-				if (sample1Index != sample2Index)
-					m_localGramMatrix[sample2Index][sample1Index] += hits;
+					m_localGramMatrices[filter->first][sample1Index][sample2Index] += hits;
+				}
 
 #if 0
 				sum += hits;
@@ -393,8 +416,8 @@ void StoreKeeper::printLocalGramMatrix() {
 	cout << "[StoreKeeper] Local Gram Matrix:" << endl;
 	cout << endl;
 
-	for(map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator column = m_localGramMatrix.begin();
-			column != m_localGramMatrix.end(); ++column) {
+	for(map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator column = m_localGramMatrices[-1].begin();
+			column != m_localGramMatrices[-1].end(); ++column) {
 
 		SampleIdentifier sample = column->first;
 
@@ -403,8 +426,8 @@ void StoreKeeper::printLocalGramMatrix() {
 
 	cout << endl;
 
-	for(map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator row = m_localGramMatrix.begin();
-			row != m_localGramMatrix.end(); ++row) {
+	for(map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator row = m_localGramMatrices[-1].begin();
+			row != m_localGramMatrices[-1].end(); ++row) {
 
 		SampleIdentifier sample1 = row->first;
 
@@ -663,15 +686,16 @@ void StoreKeeper::sendKmersSamples() {
 
 
 
-bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples) {
-
+bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples, vector<int> * sampleInputTypes) {
 
 	bool skipKmer = false;
 	vector<int> samplesFILTERIN;
 
-	for(std::vector<int>::iterator it = m_sampleInputTypes->begin(); it != m_sampleInputTypes->end(); ++it) {
+	for(std::vector<int>::iterator it = sampleInputTypes->begin(); it != sampleInputTypes->end(); ++it) {
 
-		int sample = distance(m_sampleInputTypes->begin(),it);
+		// cout << "DEBUG [storekeeper checkfilter] sampleInputTypes : " << *it << endl;
+
+		int sample = distance(sampleInputTypes->begin(),it);
 
 		if(*it == INPUT_TYPE_GRAPH || *it == INPUT_TYPE_ASSEMBLY){
 			continue;
@@ -686,7 +710,6 @@ bool StoreKeeper::checkKmerFilter (set<PhysicalKmerColor> * samples) {
 				return true;
 			}
 		}
-
 	}
 
 	// Look if the Kmer is not part of a FILTERIN

@@ -38,6 +38,7 @@ using namespace std;
 #define PLAN_RANK_ACTORS_PER_RANK 1
 #define PLAN_MOTHER_ACTORS_PER_RANK 1
 #define PLAN_GENOME_GRAPH_READER_ACTORS_PER_RANK 999999
+
 #define INPUT_TYPE_GRAPH 0
 #define INPUT_FILTERIN_GRAPH 1
 #define INPUT_FILTEROUT_GRAPH 2
@@ -347,117 +348,121 @@ void Mother::startSurveyor() {
 	// Set matricesAreReady to true in case user doesn't want
 	// to print out kmers matrix.
 	m_matricesAreReady = true;
-	int matricesIterator = 0;
 	int filterTypes [4] = {INPUT_FILTERIN_GRAPH, INPUT_FILTEROUT_GRAPH, INPUT_FILTERIN_ASSEMBLY, INPUT_FILTEROUT_ASSEMBLY};
-	int typeIndex = 0;
+
+	map<string,int> fastTable;
+
+	fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
+	fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
 
 	vector<string> * commands = m_parameters->getCommands();
+
+	vector<int> sampleTypesTmpBuffer;
+
+	vector<int> inputSampleTypes;
+	m_filterMatrices.insert (std::pair<int,vector<int> >(-1,inputSampleTypes));
 
 	for(int i = 0 ; i < (int) commands->size() ; ++i) {
 
 		string & element = commands->at(i);
 
-		if (element != "-write-kmer-matrix") {
-			// DONE: Check bounds for file names
-
-			map<string,int> fastTable;
-			int filterIndex = 0;
-
-			if (element.find("-filter") != string::npos) {
-
-				int i = 4;
-				char * filterStr = new char[element.length()+1];
-				char * strIt;
-
-				strcpy(filterStr, element.c_str());
-
-				strIt = strtok(filterStr, "-");
-
-				while (strIt != NULL && i > 0) {
-					cout << "DEBUG: iterator " << i << " filterStr " << strIt << endl;
-					strIt = strtok (NULL, "-");
-
-					// filter_cmd = tolower(*strIt);
-
-					// m_filterMatrices[matrices_iterator] = [strIt][];
-					// -filter-in-graph-1
-
-					switch (i) {
-					case 4:
-						filterIndex = atoi(strIt);
-						break;
-					case 3 :
-						if (strcasecmp(strIt,"in") != 0)
-							typeIndex += 1;
-						break;
-					case 2 :
-						if (strcasecmp(strIt,"graph") != 0)
-							typeIndex += 2;
-						break;
-					case 1 :
-						// filter word
-						break;
-
-					}
-
-					i = i - 1;
-				}
-
-				map<int,vector<int>>::iterator it = m_filterMatrices.find(filterIndex);
-				if (it != m_filterMatrices.end()) {
-					
-				} else {
-					vector<int> inputSampleTypes;
-					inputSampleTypes.push_back(filterTypes[filterIndex]);
-					m_filterMatrices.insert (std::pair<int,vector<int>>(filterIndex,inputSampleTypes));
-				}
-
-				// m_filterMatrices
-				if(std::find(m_filterMatrices.begin(), m_filterMatrices.end(), item)!=m_filterMatrices.end()){
-					// Find the item
-				}
-
-				// Filter f;
-				// f.m_filterNumber = filterIndex;
-				// // f.m_sampleInputTypes = new vector<int>;
-
-				// m_filterMatrices.push_back(f);
-
-			} else {
-
-				fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
-				fastTable["-filter-in-graph"] = INPUT_FILTERIN_GRAPH;
-				fastTable["-filter-out-graph"] = INPUT_FILTEROUT_GRAPH;
-
-				fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
-				fastTable["-filter-in-assembly"] = INPUT_FILTERIN_ASSEMBLY;
-				fastTable["-filter-out-assembly"] = INPUT_FILTEROUT_ASSEMBLY;
-
-
-				// Unsupported option
-				if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
-					continue;
-
-				string sampleName = commands->at(++i);
-				string fileName = commands->at(++i);
-
-				m_sampleNames.push_back(sampleName);
-
-				// DONE implement this m_assemblyFileNames + type
-				m_inputFileNames.push_back(fileName);
-
-				int type = fastTable[element];
-
-				m_sampleInputTypes.push_back(type);
-
-			}
-
-		} else {
+		if (element == "-write-kmer-matrix") {
 			m_matricesAreReady = false;
 			m_printKmerMatrix = true;
+			continue;
+		}
+
+		int filterIndex = 0;
+		int typeIndex = 0;
+
+		if (element.find("-filter") == 0) {
+
+			int j = 4;
+			char * filterStr = new char[element.length()+1];
+			char * strIt;
+			string type = "graph";
+
+			strcpy(filterStr, element.c_str());
+
+			strIt = strtok(filterStr, "-");
+
+			while (strIt != NULL && j > 0) {
+
+				strIt = strtok (NULL, "-");
+
+				switch (j) {
+				case 4:
+					if (strcmp(strIt,"in") != 0) {
+						typeIndex += 1;
+					}
+					break;
+				case 3 :
+					if (strcmp(strIt,"graph") != 0) {
+						typeIndex += 2;
+						type = "assembly";
+					}
+					break;
+				case 2 :
+					filterIndex = atoi(strIt);
+					break;
+				case 1 :
+					// filter word
+					break;
+				}
+
+				j = j - 1;
+			}
+
+
+			bool new_filter = true;
+			for (map<int,vector<int> >::iterator it = m_filterMatrices.begin(); it!= m_filterMatrices.end(); ++it) {
+				if (it->first == filterIndex) {
+					it->second.push_back(filterTypes[typeIndex]);
+					new_filter = false;
+				} else {
+					it->second.push_back(fastTable["-read-sample-"+type]);
+				}
+			}
+
+			if (new_filter == true) {
+				vector<int> inputSampleTypes;
+				inputSampleTypes.insert(inputSampleTypes.end(),m_filterMatrices[-1].begin(),--m_filterMatrices[-1].end());
+				inputSampleTypes.push_back(filterTypes[typeIndex]);
+				m_filterMatrices.insert (std::pair<int,vector<int> >(filterIndex,inputSampleTypes));
+			}
+
+			m_sampleInputTypes.push_back(fastTable["-read-sample-"+type]);
+
+
+			// add samples
+			string sampleName = commands->at(++i);
+			string fileName = commands->at(++i);
+			m_sampleNames.push_back(sampleName);
+			m_inputFileNames.push_back(fileName);
+
+		} else if (element.find("-read-sample") == 0) {
+
+			// Unsupported option
+			if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
+				continue;
+
+			int type = fastTable[element];
+			m_sampleInputTypes.push_back(type);
+
+			for (map< int, vector<int> >::iterator it = m_filterMatrices.begin(); it != m_filterMatrices.end(); ++it) {
+				it->second.push_back(type);
+			}
+
+			// add samples
+			string sampleName = commands->at(++i);
+			string fileName = commands->at(++i);
+			m_sampleNames.push_back(sampleName);
+			m_inputFileNames.push_back(fileName);
+
 		}
 
 	}
+
 
 	if(isRoot) {
 		printName();
@@ -498,6 +503,7 @@ void Mother::startSurveyor() {
 		// send kmerLength and sampleInputTypes to localStore
 		int kmerLength = m_parameters->getWordSize();
 		vector<int> * sampleInputTypes = & m_sampleInputTypes;
+		map< int, vector<int> > * filterMatrices = & m_filterMatrices;
 
 		char buffer[32];
 		int offset = 0;
@@ -505,6 +511,9 @@ void Mother::startSurveyor() {
 		offset += sizeof(kmerLength);
 		memcpy(buffer + offset, &sampleInputTypes, sizeof(sampleInputTypes));
 		offset += sizeof(sampleInputTypes);
+		memcpy(buffer + offset, &filterMatrices, sizeof(filterMatrices));
+		offset += sizeof(filterMatrices);
+
 
 		Message kmerMessage;
 		kmerMessage.setBuffer(&kmerLength);
@@ -609,6 +618,7 @@ void Mother::spawnMatrixOwner() {
 	Message greetingMessage;
 
 	vector<string> * names = & m_sampleNames;
+	map< int, vector<int> > * filterMatrices = & m_filterMatrices;
 
 	char buffer[32];
 	int offset = 0;
@@ -616,6 +626,9 @@ void Mother::spawnMatrixOwner() {
 	offset += sizeof(m_parameters);
 	memcpy(buffer + offset, &names, sizeof(names));
 	offset += sizeof(names);
+	memcpy(buffer + offset, &filterMatrices, sizeof(filterMatrices));
+	offset += sizeof(filterMatrices);
+
 
 	greetingMessage.setBuffer(&buffer);
 	greetingMessage.setNumberOfBytes(offset);

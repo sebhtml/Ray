@@ -91,13 +91,13 @@ void CoalescenceManager::receive(Message & message) {
 		char * buffer = (char*)message.getBufferBytes();
 		memcpy(&kmerLength, buffer, sizeof(kmerLength));
 
+
 		if(m_kmerLength == 0)
 			m_kmerLength = kmerLength;
 
 		if(m_kmerLength != kmerLength) {
-
 			printName();
-			cout << "[CoalescenceManager] ERROR: the k-mer length is not the same in all input files !";
+			cout << "[CoalescenceManager] ERROR: the k-mer length is not the same in all input files : " << m_kmerLength;
 			cout << endl;
 		}
 
