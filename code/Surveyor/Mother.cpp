@@ -348,6 +348,8 @@ void Mother::startSurveyor() {
 	// Set matricesAreReady to true in case user doesn't want
 	// to print out kmers matrix.
 	m_matricesAreReady = true;
+	m_printKmerMatrix = false;
+
 	int filterTypes [4] = {INPUT_FILTERIN_GRAPH, INPUT_FILTEROUT_GRAPH, INPUT_FILTERIN_ASSEMBLY, INPUT_FILTEROUT_ASSEMBLY};
 
 	map<string,int> fastTable;
