@@ -39,7 +39,12 @@ private:
 	Parameters * m_parameters;
 	vector<string> * m_sampleNames;
 
+	// Distance matrix
 	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_kernelDistanceMatrix;
+
+	// Normalized matrices
+	map<SampleIdentifier, map<SampleIdentifier, double> > m_normalizedSimilarityMatrix;
+	map<SampleIdentifier, map<SampleIdentifier, double> > m_normalizedDistanceMatrix;
 
 	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localGramMatrix;
 	map <int, localGramMatrix > m_gramMatrices;
@@ -51,9 +56,12 @@ private:
 	int m_completedStoreActors;
 
 	void printLocalGramMatrix(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, LargeCount> > & matrix, vector<int> & samplesToInclude);
+	void printLocalGramMatrix(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, double> > & matrix, vector<int> & samplesToInclude);
+
 	void printLocalGramMatrixWithHash(ostream & stream, map<SampleIdentifier, map<SampleIdentifier, LargeCount> > & matrix);
 
 	void computeDistanceMatrix();
+	void normalizeMatrix();
 
 public:
 
