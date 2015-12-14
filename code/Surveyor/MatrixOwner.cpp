@@ -293,31 +293,6 @@ void MatrixOwner::computeDistanceMatrix() {
 
 
 	// normalized matrix
-	// for(map<SampleIdentifier, map<SampleIdentifier, double> >::iterator row = m_normalizedSimilarityMatrix.begin();
-	// 		row != m_normalizedSimilarityMatrix.end(); ++row) {
-
-	// 	SampleIdentifier sample1 = row->first;
-
-	// 	for(map<SampleIdentifier, double>::iterator cell = row->second.begin();
-	// 			cell != row->second.end(); ++cell) {
-
-	// 		SampleIdentifier sample2 = cell->first;
-
-
-	// 		// This is not Euclidean distance .. d(x, x') = sqrt( k(x,x) + k(x', x') - 2 k (x, x'))
-	// 		double distance = 0;
-	// 		distance += m_normalizedSimilarityMatrix[sample1][sample1];
-	// 		distance += m_normalizedSimilarityMatrix[sample2][sample2];
-	// 		distance -= 2 * m_normalizedSimilarityMatrix[sample1][sample2];
-
-	// 		distance = (double) sqrt((double)distance);
-
-	// 		m_normalizedDistanceMatrix[sample1][sample2] = distance;
-	// 	}
-
-	// }
-
-
 	for(map<SampleIdentifier, map<SampleIdentifier, double> >::iterator row = m_normalizedSimilarityMatrix.begin();
 	    row != m_normalizedSimilarityMatrix.end(); ++row) {
 
@@ -330,7 +305,6 @@ void MatrixOwner::computeDistanceMatrix() {
 			x += 1;
 		}
 
-		// 		SampleIdentifier sample2 = cell->first;
 
 		for(map<SampleIdentifier, map<SampleIdentifier, double> >::iterator row2 = row;
 		    row2 != m_normalizedSimilarityMatrix.end(); ++row2) {
