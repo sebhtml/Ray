@@ -67,6 +67,7 @@ def condense_matrix(df_dist):
             vec.append(float(row[j]))
         dist_matrix.append(vec)
 
+    return dist_matrix
 
 def build_tree(dist_matrix, names_list, clust):
 
@@ -77,13 +78,15 @@ def build_tree(dist_matrix, names_list, clust):
         tree_scikit = nj(dm,result_constructor=str)
         tree = Tree(tree_scikit)
     elif clust == 'upgma':
-        dm = _DistanceMatrix(names=names_list, matrix=dist_matrix)
+        dm = _DistanceMatrix(names=names_list, matrix=condense_matrix(dist_matrix))
         constructor = DistanceTreeConstructor()
-        tree_biopython = constructor.upgma(condense_matrix(dm))
-        # # remove InnerNode names
-        # for i in tree_biopython.get_nonterminals():
-        #     i.name = None
-        tree = Tree(tree_biopython)
+        tree_biopython = constructor.upgma(dm)
+        # remove InnerNode names
+        for i in tree_biopython.get_nonterminals():
+            i.name = None
+        output = StringIO()
+        Phylo.write(tree_biopython,output, "newick")
+        tree = Tree(output.getvalue())
     else:
         print("Unknown tree clustering method ! Aborting")
         sys.exit()
