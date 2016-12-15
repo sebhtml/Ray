@@ -33,8 +33,9 @@ def read_args():
     mandatory_group.add_argument('--dist', default='euclidean',
                                  help='Distance metric [euclidean, cosine, minkowski, .. see https://goo.gl/zg2584')
     mandatory_group.add_argument('--tree', default='nj',
-                                 help='Clustering algorithm to build the tree: nj (neighbor joining) or upgma (rooted - not recommanded) ')
+                                 help='Clustering algorithm to build the tree: nj (neighbor joining) or upgma (rooted - not recommended)')
     mandatory_group.add_argument('--norm', help='Normalized the similarity matrix first', action='store_true')
+    mandatory_group.add_argument('--norms-matrix', help='Normalized with the norms of this matrix')
     mandatory_group.add_argument('--format', default='newick', help='Output Tree Format [newick or phyloxml]')
     mandatory_group.add_argument('-h', '--help', help='help message', action='store_true')
 
@@ -51,9 +52,12 @@ def read_matrix(file):
     pd_frame = pd.read_table(file,sep='\t', skipinitialspace=True, index_col=0)
     return pd_frame
 
-
-def normalize_gram_matrix(K):
-    normX = np.sqrt(K.diagonal())
+def normalize_gram_matrix(K,K2=None):
+    normX = None
+    if K2 is not None:
+        normX = np.sqrt(K2.diagonal())
+    else:
+        normX = np.sqrt(K.diagonal())
     return ((K/normX).T/normX).T
 
 def condense_matrix(df_dist):
@@ -146,7 +150,13 @@ if __name__ == "__main__":
     del_minus_fn = lambda *arr: np.clip(*arr,0,99999999999999999999999999)
 
     if args['norm']:
-        norm_dist = normalize_gram_matrix(df.as_matrix())
+        norm_dist = None
+        if args['norms_matrix']:
+            norm_dist = normalize_gram_matrix(df.as_matrix(), read_matrix(args['norms_matrix']).as_matrix())
+        else:
+            norm_dist = normalize_gram_matrix(df.as_matrix())
+        # norm_matrix_out = pd.DataFrame(norm_dist, index=df.index, columns=df.columns)
+        # norm_matrix_out.to_csv(path_or_buf=outfile+".normalizedout.tsv", sep="\t")
         mat_dist = squareform(pdist(norm_dist, args['dist']))
         # mat_dist = del_minus_fn(squareform(pdist(norm_dist, args['dist'])))
     else:
