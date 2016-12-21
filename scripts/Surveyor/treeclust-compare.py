@@ -93,7 +93,7 @@ def compare_clusters(args):
 
     ref_df = pd.read_table(args['ref'], sep='\t', skipinitialspace=True, index_col=0).as_matrix()
     check_symmetry(ref_df)
-    linkage_ref = linkage(ref_df, 'ward')
+    linkage_ref = linkage(ref_df, 'average')
     c_ref, coph_dists_ref = cophenet(linkage_ref, pdist(ref_df))
 
     outfile = open(args['output'],"w")
@@ -109,7 +109,7 @@ def compare_clusters(args):
         n = 0
         try:
             mantel_coeff, p_value_mantel, n = mantel(ref_df, fst_df)
-            linkage_fst = linkage(fst_df, 'ward')
+            linkage_fst = linkage(fst_df, 'average')
             c_fst, coph_dists_fst = cophenet(linkage_fst, pdist(fst_df))
             cophenetic_pearson, p_value_cophenetic = pearsonr(coph_dists_ref, coph_dists_fst)
         except Exception as e:
