@@ -21,7 +21,8 @@ def read_args():
     mandatory_group.add_argument('-o', '--output', metavar='matrix.transformed.tsv',
                                  default='matrix.transformed.tsv', help='Output matrix name')
     mandatory_group.add_argument('-n', '--normalize', help='Normalize the similarity matrix', action='store_true')
-    mandatory_group.add_argument('-m', '--norms-matrix', metavar='norms-matrix.tsv', help='Normalize the similarity matrix')
+    mandatory_group.add_argument('-m', '--norms-matrix', metavar='norms-matrix.tsv',
+                                 help='Use the diagonal of this matrix to normalize the similarity matrix')
     mandatory_group.add_argument('-d', '--drop-indices', metavar='0,1,2', help='Drop indices list separated by coma e.g. 0,1,2')
     mandatory_group.add_argument('-h', '--help', help='help message', action='store_true')
 
