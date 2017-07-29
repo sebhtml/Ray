@@ -50,7 +50,10 @@ private:
 
 	int m_storeDataCalls;
 	int m_receivedPushes;
-	map<SampleIdentifier, map<SampleIdentifier, LargeCount> > m_localGramMatrix;
+
+	typedef map<SampleIdentifier, map<SampleIdentifier, LargeCount> > localGramMatrix;
+	map <int, localGramMatrix > m_localGramMatrices;
+	map <int, localGramMatrix >::iterator m_iterator0;
 
 	map<SampleIdentifier, map<SampleIdentifier, LargeCount> >::iterator m_iterator1;
 	map<SampleIdentifier, LargeCount>::iterator m_iterator2;
@@ -60,6 +63,9 @@ private:
 	int m_mother;
 	int m_matrixOwner;
 	int m_kmerMatrixOwner;
+
+	vector<int> * m_sampleInputTypes;
+	map< int, vector<int> > * m_filterMatrices;
 
 	bool m_configured;
 
@@ -92,6 +98,7 @@ private:
 
 	void sendMatrixCell();
 
+	bool checkKmerFilter(set<PhysicalKmerColor> * samples, vector<int> * sampleInputTypes);
 public:
 
 	StoreKeeper();

@@ -85,19 +85,19 @@ void CoalescenceManager::receive(Message & message) {
 
 		die();
 
-	} else if(tag == SET_KMER_LENGTH) {
+	} else if(tag == SET_KMER_INFO) {
 
 		int kmerLength = 0;
 		char * buffer = (char*)message.getBufferBytes();
 		memcpy(&kmerLength, buffer, sizeof(kmerLength));
 
+
 		if(m_kmerLength == 0)
 			m_kmerLength = kmerLength;
 
 		if(m_kmerLength != kmerLength) {
-
 			printName();
-			cout << " Error: the k-mer length is not the same in all input files !";
+			cout << "[CoalescenceManager] ERROR: the k-mer length is not the same in all input files : " << m_kmerLength;
 			cout << endl;
 		}
 
@@ -107,13 +107,13 @@ void CoalescenceManager::receive(Message & message) {
 		m_colorSpaceMode = false;
 
 		Message response;
-		response.setTag(SET_KMER_LENGTH_OK);
+		response.setTag(SET_KMER_INFO_OK);
 
 		int source = message.getSourceActor();
 
 		/*
 		printName();
-		cout << "DEBUG Sending SET_KMER_LENGTH_OK to " << source << endl;
+		cout << "DEBUG Sending SET_KMER_INFO_OK to " << source << endl;
 		*/
 
 		send(source, response);
@@ -172,8 +172,8 @@ void CoalescenceManager::receive(Message & message) {
 		m_storeLastActor = last;
 
 		printName();
-		cout << " is now acquainted with StoreKeeper actors from ";
-		cout << m_storeFirstActor << " to " << m_storeLastActor << endl;
+		cout << "[CoalescenceManager] is now acquainted with [StoreKeepers] from #";
+		cout << m_storeFirstActor << " to #" << m_storeLastActor << endl;
 
 		// allocate buffers too
 
@@ -368,7 +368,7 @@ bool CoalescenceManager::addKmerInBuffer(int producer, int & actor, int & sample
 
 #if 0
 	printName();
-	cout << "sends bits to StoreKeeper # " << storageDestination;
+	cout << "sends bits to [StoreKeeper] #" << storageDestination;
 	cout << endl;
 #endif
 

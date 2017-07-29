@@ -18,7 +18,7 @@
     along with Ray Surveyor.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO: validate that the kmer length is the same for this file
+// DONE: validate that the kmer length is the same for this file
 // and the provided -k argument
 
 #include "GenomeGraphReader.h"
@@ -47,21 +47,12 @@ void GenomeGraphReader::receive(Message & message) {
 
 	int type = message.getTag();
 
-	/*
-	printName();
-	cout << "received tag " << type << endl;
-*/
-
 	if(type == START_PARTY) {
 
 		startParty(message);
 
 	} else if(type == CoalescenceManager::PAYLOAD_RESPONSE) {
 
-		/*
-		printName();
-		cout << " DEBUG readLine because PAYLOAD_RESPONSE" << endl;
-		*/
 		// read the next line now !
 		readLine();
 	}
@@ -83,7 +74,7 @@ void GenomeGraphReader::startParty(Message & message) {
 	m_loaded = 0;
 
 	printName();
-	cout <<"opens file " << m_fileName << endl;
+	cout << "[GraphReader] opens file " << m_fileName << endl;
 
 	m_parent = message.getSourceActor();
 
@@ -120,11 +111,11 @@ void GenomeGraphReader::readLine() {
 		printName();
 
 		if(m_bad) {
-			cout << " Error: file " << m_fileName << " does not exist";
+			cout << "[GraphReader] Error: file " << m_fileName << " does not exist";
 			cout << endl;
 
 		} else {
-			cout << " finished reading file " << m_fileName;
+			cout << "[GraphReader] finished reading file " << m_fileName;
 			cout << " got " << m_loaded << " objects" << endl;
 		}
 
@@ -181,7 +172,7 @@ void GenomeGraphReader::readLine() {
 		if(m_loaded == 0) {
 
 			Message aMessage;
-			aMessage.setTag(CoalescenceManager::SET_KMER_LENGTH);
+			aMessage.setTag(CoalescenceManager::SET_KMER_INFO);
 
 			int length = sequence.length();
 			aMessage.setBuffer(&length);
@@ -235,14 +226,10 @@ void GenomeGraphReader::readLine() {
 
 		position += sizeof(m_sample);
 
-// maybe: accumulate many objects before flushing it.
-// we can go up to MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes.
+		// maybe: accumulate many objects before flushing it.
+		// we can go up to MAXIMUM_MESSAGE_SIZE_IN_BYTES bytes.
 
-		/*
-		printName();
-		cout << " got data line " << buffer;
-		cout << " sending PAYLOAD to " << m_aggregator << endl;
-*/
+		// Sending PAYLOAD to the CoalescenceManager
 		Message message;
 		message.setTag(CoalescenceManager::PAYLOAD);
 		message.setBuffer(messageBuffer);
@@ -257,10 +244,9 @@ void GenomeGraphReader::readLine() {
 #endif
 
 		int period = 1000000;
-		if(m_loaded % period == 0) {
+		if(m_loaded % period == 0 && m_loaded > 0) {
 			printName();
-			cout << " loaded " << m_loaded << " sequences" << endl;
-
+			cout << "[GraphReader] loaded " << m_loaded << " sequences" << endl;
 		}
 		m_loaded ++;
 		send(m_aggregator, message);

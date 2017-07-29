@@ -38,8 +38,13 @@ using namespace std;
 #define PLAN_RANK_ACTORS_PER_RANK 1
 #define PLAN_MOTHER_ACTORS_PER_RANK 1
 #define PLAN_GENOME_GRAPH_READER_ACTORS_PER_RANK 999999
+
 #define INPUT_TYPE_GRAPH 0
-#define INPUT_TYPE_ASSEMBLY 1
+#define INPUT_FILTERIN_GRAPH 1
+#define INPUT_FILTEROUT_GRAPH 2
+#define INPUT_TYPE_ASSEMBLY 3
+#define INPUT_FILTERIN_ASSEMBLY 4
+#define INPUT_FILTEROUT_ASSEMBLY 5
 
 Mother::Mother() {
 
@@ -66,28 +71,19 @@ void Mother::receive(Message & message) {
 	char * buffer = message.getBufferBytes();
 
 	if(tag == Actor::BOOT) {
-
 		boot(message);
 	} else if (tag == Mother::HELLO) {
 		hello(message);
-
 	} else if(tag == GenomeGraphReader::START_PARTY_OK) {
 
 		// spawn the next reader now !
-
-		/*
-		printName();
-		cout << "DEBUG spawnReader because START_PARTY_OK" << endl;
-*/
 		spawnReader();
 
 	} else if(tag == GenomeGraphReader::DONE) {
 
 		m_aliveReaders--;
 
-
 		if(m_aliveReaders == 0) {
-
 			notifyController();
 		}
 
@@ -151,6 +147,8 @@ void Mother::receive(Message & message) {
 		// is caused by the fact that this message is not
 		// received .
 
+		// does nothing
+
 	} else if(tag == FINISH_JOB) {
 
 		m_finishedMothers++;
@@ -159,28 +157,14 @@ void Mother::receive(Message & message) {
 
 			// all readers have finished,
 			// now tell mother to flush aggregators
-
-			/*
-			printName();
-			cout << "DEBUG  m_finishedMothers: " << m_finishedMothers << " ";
-			cout << " starting pair FLUSH_AGGREGATOR, FLUSH_AGGREGATOR_RETURN";
-			cout << endl;
-			*/
-
 			sendToFirstMother(FLUSH_AGGREGATOR, FLUSH_AGGREGATOR_RETURN);
 		}
 
 	} else if(tag == FLUSH_AGGREGATOR) {
 
-		/*
-		printName();
-		cout << "DEBUG received FLUSH_AGGREGATOR" << endl;
-		*/
-
 		m_bigMother = source;
 
 		// forward the message to the aggregator
-
 		Message newMessage;
 		newMessage.setTag(CoalescenceManager::FLUSH_BUFFERS);
 		send(m_coalescenceManager, newMessage);
@@ -191,19 +175,11 @@ void Mother::receive(Message & message) {
 
 	} else if(tag == CoalescenceManager::FLUSH_BUFFERS_OK) {
 
-		/*
-		printName();
-		cout << "DEBUG CoalescenceManager sent FLUSH_BUFFERS_OK to mother." << endl;
-		*/
-
+		// notice bigMother that the CoalescenceManager flushed its buffers
+		// .. for this rank's mother
 		Message response;
 		response.setTag(FLUSH_AGGREGATOR_OK);
 		send(m_bigMother, response);
-
-		/*
-		printName();
-		cout << "DEBUG sending FLUSH_AGGREGATOR_OK to m_bigMother" << endl;
-		*/
 
 	} else if(tag == MatrixOwner::GRAM_MATRIX_IS_READY) {
 
@@ -211,14 +187,14 @@ void Mother::receive(Message & message) {
 			sendToFirstMother(SHUTDOWN, SHUTDOWN_OK);
 		}else {
 			printName();
-			cout << "GRAM_MATRIX_IS_READY" << endl;
+			cout << "[BigMother] GRAM_MATRIX_IS_READY" << endl;
 			m_matricesAreReady = true;
 		}
 
 	} else if(tag == KmerMatrixOwner::KMER_MATRIX_IS_READY) {
 
 		printName();
-		cout << "KMER_MATRIX_IS_READY" << endl;
+		cout << "[BigMother] KMER_MATRIX_IS_READY" << endl;
 
 		if(m_matricesAreReady){
 			sendToFirstMother(SHUTDOWN, SHUTDOWN_OK);
@@ -227,8 +203,6 @@ void Mother::receive(Message & message) {
 		}
 
 	} else if(tag == FLUSH_AGGREGATOR_OK) {
-
-		// printName();
 
 		m_flushedMothers++;
 
@@ -240,22 +214,19 @@ void Mother::receive(Message & message) {
 	} else if(tag == m_responseTag) {
 
 		if(m_responseTag == SHUTDOWN_OK) {
-
+			// does nothing
 		} else if(m_responseTag == MERGE_GRAM_MATRIX_OK) {
+
 			// All mothers merged their GRAM MATRIX
 			// Spawn KmerMatrixOwner to print
 			if(m_motherToKill < getSize() && m_printKmerMatrix){
 				spawnKmerMatrixOwner();
 			}
+
 		} else if(m_responseTag == MERGE_KMER_MATRIX_OK) {
-
+			// does nothing
 		} else if(m_responseTag == FLUSH_AGGREGATOR_RETURN) {
-
-			/*
-			printName();
-			cout << "DEBUG FLUSH_AGGREGATOR_RETURN received ";
-			cout << "m_motherToKill " << m_motherToKill << endl;
-			*/
+			// does nothing
 		}
 
 		// every mother was not informed.
@@ -263,7 +234,6 @@ void Mother::receive(Message & message) {
 			sendMessageWithReply(m_motherToKill, m_forwardTag);
 			m_motherToKill--;
 		}
-
 	}
 }
 
@@ -276,13 +246,10 @@ void Mother::sendToFirstMother(int forwardTag, int responseTag) {
 
 	sendMessageWithReply(m_motherToKill, m_forwardTag);
 	m_motherToKill--;
+
 }
 
 void Mother::sendMessageWithReply(int & actor, int tag) {
-/*
-	printName();
-	cout << "kills Mother " << actor << endl;
-	*/
 
 	Message message;
 	message.setTag(tag);
@@ -294,25 +261,20 @@ void Mother::sendMessageWithReply(int & actor, int tag) {
 		message.setBuffer(&m_kmerMatrixOwner);
 		message.setNumberOfBytes(sizeof(m_kmerMatrixOwner));
 	} else if(tag == FLUSH_AGGREGATOR) {
-
-		/*
-		printName();
-		cout << " DEBUG sending message FLUSH_AGGREGATOR" << endl;
-		*/
+		// does nothing
 	}
 
 	send(actor, message);
+
 }
 
 void Mother::notifyController() {
+
 	Message message2;
 	message2.setTag(FINISH_JOB);
 
 	// first Mother
 	int controller = getSize();
-
-	printName();
-	cout << "Mother notifies controller " << controller << endl;
 	send(controller, message2);
 
 }
@@ -343,55 +305,20 @@ void Mother::stop() {
 }
 
 void Mother::hello(Message & message) {
-	/*
-	printName();
-	cout << "received HELLO from ";
-	cout << message.getSourceActor();
-	cout << " bytes: " << message.getNumberOfBytes();
-	cout << " content: " << *((int*) message.getBufferBytes());
-	*/
-
-	//char * buffer = (char*) message.getBufferBytes();
-	/*
-	uint32_t checksum = computeCyclicRedundancyCode32((uint8_t*) message.getBufferBytes(),
-			message.getNumberOfBytes());
-			*/
-	//cout << "DEBUG CRC32= " << checksum << endl;
-
-	//cout << endl;
+	// dump for testing purposes
 }
 
 void Mother::boot(Message & message) {
 
 	m_aliveReaders = 0;
 
-	/*
-	printName();
-	cout << "Mother is booting and says hello" << endl;
-*/
 	Message message2;
-	/*
-	char joe[4000];
-
-	int i = 4000;
-	char value = 0;
-	while(i)
-		joe[i--]=value++;
-*/
 
 	int joe = 9921;
 
 	message2.setBuffer(&joe);
-	//message2.setNumberOfBytes(4000);
+
 	message2.setNumberOfBytes( sizeof(int) * 1 );
-
-	//cout << "DEBUG sending " << joe << endl;
-
-	/*
-	uint32_t checksum = computeCyclicRedundancyCode32((uint8_t*) message2.getBufferBytes(),
-		       message2.getNumberOfBytes()	);
-	cout << "DEBUG CRC32= " << checksum << endl;
-*/
 
 	message2.setTag(Mother::HELLO);
 
@@ -403,8 +330,7 @@ void Mother::boot(Message & message) {
 		next += getSize();
 
 	printName();
-	cout << " local Mother is " << getName() << ",";
-	cout << " friend is # " << next << endl;
+	cout << "[RankMother] friend of [RankMother] #" << next << endl;
 
 	send(next, message2);
 
@@ -422,47 +348,129 @@ void Mother::startSurveyor() {
 	// Set matricesAreReady to true in case user doesn't want
 	// to print out kmers matrix.
 	m_matricesAreReady = true;
+	m_printKmerMatrix = false;
+
+	int filterTypes [4] = {INPUT_FILTERIN_GRAPH, INPUT_FILTEROUT_GRAPH, INPUT_FILTERIN_ASSEMBLY, INPUT_FILTEROUT_ASSEMBLY};
+
+	map<string,int> fastTable;
+
+	fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
+	fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
 
 	vector<string> * commands = m_parameters->getCommands();
+
+	vector<int> sampleTypesTmpBuffer;
+
+	vector<int> inputSampleTypes;
+	m_filterMatrices.insert (std::pair<int,vector<int> >(-1,inputSampleTypes));
 
 	for(int i = 0 ; i < (int) commands->size() ; ++i) {
 
 		string & element = commands->at(i);
 
-		if (element != "-write-kmer-matrix") {
-			// DONE: Check bounds for file names
+		if (element == "-write-kmer-matrix") {
+			m_matricesAreReady = false;
+			m_printKmerMatrix = true;
+			continue;
+		}
 
-			map<string,int> fastTable;
+		int filterIndex = 0;
+		int typeIndex = 0;
 
-			fastTable["-read-sample-graph"] = INPUT_TYPE_GRAPH;
-			fastTable["-read-sample-assembly"] = INPUT_TYPE_ASSEMBLY;
+		if (element.find("-filter") == 0) {
+
+			int j = 4;
+			char * filterStr = new char[element.length()+1];
+			char * strIt;
+			string type = "graph";
+
+			strcpy(filterStr, element.c_str());
+
+			strIt = strtok(filterStr, "-");
+
+			while (strIt != NULL && j > 0) {
+
+				strIt = strtok (NULL, "-");
+
+				switch (j) {
+				case 4:
+					if (strcmp(strIt,"in") != 0) {
+						typeIndex += 1;
+					}
+					break;
+				case 3 :
+					if (strcmp(strIt,"graph") != 0) {
+						typeIndex += 2;
+						type = "assembly";
+					}
+					break;
+				case 2 :
+					filterIndex = atoi(strIt);
+					break;
+				case 1 :
+					// filter word
+					break;
+				}
+
+				j = j - 1;
+			}
+
+
+			bool new_filter = true;
+			for (map<int,vector<int> >::iterator it = m_filterMatrices.begin(); it!= m_filterMatrices.end(); ++it) {
+				if (it->first == filterIndex) {
+					it->second.push_back(filterTypes[typeIndex]);
+					new_filter = false;
+				} else {
+					it->second.push_back(fastTable["-read-sample-"+type]);
+				}
+			}
+
+			if (new_filter == true) {
+				vector<int> inputSampleTypes;
+				inputSampleTypes.insert(inputSampleTypes.end(),m_filterMatrices[-1].begin(),--m_filterMatrices[-1].end());
+				inputSampleTypes.push_back(filterTypes[typeIndex]);
+				m_filterMatrices.insert (std::pair<int,vector<int> >(filterIndex,inputSampleTypes));
+			}
+
+			m_sampleInputTypes.push_back(fastTable["-read-sample-"+type]);
+
+
+			// add samples
+			string sampleName = commands->at(++i);
+			string fileName = commands->at(++i);
+			m_sampleNames.push_back(sampleName);
+			m_inputFileNames.push_back(fileName);
+
+		} else if (element.find("-read-sample") == 0) {
 
 			// Unsupported option
 			if(fastTable.count(element) == 0 || i+2 > (int) commands->size())
 				continue;
 
-			string sampleName = commands->at(++i);
-			string fileName = commands->at(++i);
-
-			m_sampleNames.push_back(sampleName);
-
-			// DONE implement this m_assemblyFileNames + type
-			m_inputFileNames.push_back(fileName);
-
 			int type = fastTable[element];
-
 			m_sampleInputTypes.push_back(type);
 
-		} else {
-			m_matricesAreReady = false;
-			m_printKmerMatrix = true;
+			for (map< int, vector<int> >::iterator it = m_filterMatrices.begin(); it != m_filterMatrices.end(); ++it) {
+				it->second.push_back(type);
+			}
+
+			// add samples
+			string sampleName = commands->at(++i);
+			string fileName = commands->at(++i);
+			m_sampleNames.push_back(sampleName);
+			m_inputFileNames.push_back(fileName);
+
 		}
 
 	}
 
+
 	if(isRoot) {
 		printName();
-		cout << "samples= " << m_sampleNames.size() << endl;
+		cout << "[BigMother] I am the Survey's Goddess and I am watching you!" << endl;
+		printName();
+		cout << "[BigMother] Total number of samples to compare: " << m_sampleNames.size() << endl;
 	}
 
 
@@ -471,8 +479,7 @@ void Mother::startSurveyor() {
 
 	m_coalescenceManager = coalescenceManager->getName();
 
-	// spawn the local store keeper and introduce the CoalescenceManager
-	// to the StoreKeeper
+	// spawn the local StoreKeeper and introduce the CoalescenceManager to him
 
 	// spawn actors for storing the graph.
 	for(int i = 0 ; i < PLAN_STORE_KEEPER_ACTORS_PER_RANK; ++i) {
@@ -495,19 +502,32 @@ void Mother::startSurveyor() {
 
 		send(m_coalescenceManager, dummyMessage);
 
+		// send kmerLength and sampleInputTypes to localStore
 		int kmerLength = m_parameters->getWordSize();
+		vector<int> * sampleInputTypes = & m_sampleInputTypes;
+		map< int, vector<int> > * filterMatrices = & m_filterMatrices;
 
-		// send the kmer to local store
+		char buffer[32];
+		int offset = 0;
+		memcpy(buffer + offset, &kmerLength, sizeof(kmerLength));
+		offset += sizeof(kmerLength);
+		memcpy(buffer + offset, &sampleInputTypes, sizeof(sampleInputTypes));
+		offset += sizeof(sampleInputTypes);
+		memcpy(buffer + offset, &filterMatrices, sizeof(filterMatrices));
+		offset += sizeof(filterMatrices);
+
+
 		Message kmerMessage;
 		kmerMessage.setBuffer(&kmerLength);
 		kmerMessage.setNumberOfBytes(sizeof(kmerLength));
-		kmerMessage.setTag(CoalescenceManager::SET_KMER_LENGTH);
+		kmerMessage.setBuffer(&buffer);
+		kmerMessage.setNumberOfBytes(sizeof(buffer));
+		kmerMessage.setTag(CoalescenceManager::SET_KMER_INFO);
 		send(localStore, kmerMessage);
 	}
 
 
 	// spawn an actor for each file that this actor owns
-
 	for(int i = 0; i < (int) m_inputFileNames.size() ; ++i) {
 
 		int mother = getName() % getSize();
@@ -519,7 +539,7 @@ void Mother::startSurveyor() {
 	}
 
 	printName();
-	cout << " readers to spawn: " << m_filesToSpawn.size() << endl;
+	cout << "[RankMother] readers to spawn: " << m_filesToSpawn.size() << endl;
 
 	m_fileIterator = 0;
 	spawnReader();
@@ -535,12 +555,11 @@ void Mother::spawnReader() {
 		int type = m_sampleInputTypes[sampleIdentifier];
 		m_fileIterator++;
 
-		if(type == INPUT_TYPE_GRAPH){
+		if(type == INPUT_TYPE_GRAPH || type == INPUT_FILTERIN_GRAPH || type == INPUT_FILTEROUT_GRAPH) {
 			GenomeGraphReader * actor = new GenomeGraphReader();
 
 			spawn(actor);
 			actor->setFileName(fileName, sampleIdentifier);
-
 
 			int coalescenceManagerName = m_coalescenceManager;
 			int destination = actor->getName();
@@ -555,7 +574,7 @@ void Mother::spawnReader() {
 			send(destination, dummyMessage);
 
 
-		} else if(type == INPUT_TYPE_ASSEMBLY) {
+		} else if(type == INPUT_TYPE_ASSEMBLY || type == INPUT_FILTERIN_ASSEMBLY || type == INPUT_FILTEROUT_ASSEMBLY){
 
 			GenomeAssemblyReader * actor = new GenomeAssemblyReader();
 			spawn(actor);
@@ -579,7 +598,6 @@ void Mother::spawnReader() {
 	}
 
 	if(m_aliveReaders == 0) {
-
 		notifyController();
 	}
 }
@@ -594,15 +612,15 @@ void Mother::spawnMatrixOwner() {
 	m_matrixOwner = matrixOwner->getName();
 
 	printName();
-	cout << "Spawned MatrixOwner actor !" << m_matrixOwner << endl;
+	cout << "[BigMother] Spawned [MatrixOwner] actor #" << m_matrixOwner << endl;
 
-	// tell the StoreKeeper actors to send their stuff to the
-	// MatrixOwner actor
-	// The Mother of Mother will wait for a signal from MatrixOwner
+	// tell the StoreKeeper actors to send their stuff to the MatrixOwner actor
+	// bigMother will wait for a signal from MatrixOwner
 
 	Message greetingMessage;
 
 	vector<string> * names = & m_sampleNames;
+	map< int, vector<int> > * filterMatrices = & m_filterMatrices;
 
 	char buffer[32];
 	int offset = 0;
@@ -610,6 +628,9 @@ void Mother::spawnMatrixOwner() {
 	offset += sizeof(m_parameters);
 	memcpy(buffer + offset, &names, sizeof(names));
 	offset += sizeof(names);
+	memcpy(buffer + offset, &filterMatrices, sizeof(filterMatrices));
+	offset += sizeof(filterMatrices);
+
 
 	greetingMessage.setBuffer(&buffer);
 	greetingMessage.setNumberOfBytes(offset);
@@ -622,18 +643,17 @@ void Mother::spawnMatrixOwner() {
 
 void Mother::spawnKmerMatrixOwner() {
 
-	// spawn the MatrixOwner here !
+	// spawn the KmerMatrixOwner here !
 	KmerMatrixOwner * kmerMatrixOwner = new KmerMatrixOwner();
 	spawn(kmerMatrixOwner);
 
 	m_kmerMatrixOwner = kmerMatrixOwner->getName();
 
 	printName();
-	cout << "Spawned KmerMatrixOwner actor !" << m_kmerMatrixOwner << endl;
+	cout << "[BigMother] Spawned [KmerMatrixOwner] actor #" << m_kmerMatrixOwner << endl;
 
-	// tell the StoreKeeper actors to send their stuff to the
-	// KmerMatrixOwner actor
-	// The Mother of Mother will wait for a signal from MatrixOwner
+	// tell the StoreKeeper actors to send their stuff to the KmerMatrixOwner actor
+	// bigMother will wait for a signal from KmerMatrixOwner
 
 	Message greetingMessage;
 

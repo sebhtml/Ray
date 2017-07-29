@@ -22,7 +22,6 @@
 #define GenomeAssemblyReaderHeader
 
 #include <RayPlatform/actors/Actor.h>
-/* #include <RayPlatform/files/FileReader.h> */
 
 #include "GenomeAssemblyReader.h"
 #include "CoalescenceManager.h"

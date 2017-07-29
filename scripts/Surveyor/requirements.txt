@@ -1,0 +1,10 @@
+biopython==1.68
+pyparsing==2.1.10
+pandas==0.19.0
+ete3==3.0.0b35
+numpy==1.11.2
+scipy==0.18.1
+pyani==0.2.1
+Pyvolve==0.8.2
+scikit-bio==0.5.0
+matplotlib==1.5.3

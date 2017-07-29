@@ -56,12 +56,12 @@ class Mother: public Actor {
 private:
 
 	int m_matrixOwner;
-        int m_kmerMatrixOwner;
+	int m_kmerMatrixOwner;
 
 	int m_flushedMothers;
 	int m_finishedMothers;
-        bool m_matricesAreReady;
-        bool m_printKmerMatrix;
+	bool m_matricesAreReady;
+	bool m_printKmerMatrix;
 
 	Parameters * m_parameters;
 
@@ -75,7 +75,10 @@ private:
 
 	vector<string> m_sampleNames;
 	vector<string> m_inputFileNames;
-        vector<int> m_sampleInputTypes;
+
+	vector<int> m_sampleInputTypes;
+
+	map< int, vector<int> > m_filterMatrices;
 
 	int m_bigMother;
 	int m_aliveReaders;
@@ -84,7 +87,8 @@ private:
 	int m_forwardTag;
 	int m_responseTag;
 
-	void spawnReader();
+
+	// Mother methods
 	void startSurveyor();
 	void hello(Message & message);
 	void boot(Message & message);
@@ -97,12 +101,10 @@ private:
 	 */
 	void sendToFirstMother(int forwardTag, int responseTag);
 
-        /* int m_kmerMatrixBlocNumber; */
-        /* void printLocalKmersMatrix(string & kmer, string & samples_kmers, bool force); */
-        /* void createKmersMatrixOutputFile(); */
-
-        void spawnMatrixOwner();
-        void spawnKmerMatrixOwner();
+	// Actor spawning
+	void spawnReader();
+	void spawnMatrixOwner();
+	void spawnKmerMatrixOwner();
 
 public:
 
@@ -131,4 +133,3 @@ public:
 };
 
 #endif
-
